@@ -1,0 +1,46 @@
+
+<ion-content padding>
+
+    <div padding>
+      <ion-segment [(ngModel)]="loginSegment">
+        <ion-segment-button value="login">
+          Sign in
+      </ion-segment-button>
+      <ion-segment-button value="signup">
+          Create account
+      </ion-segment-button>
+  </ion-segment>
+</div>
+
+<div [ngSwitch]="loginSegment">
+    <ion-list *ngSwitchCase="'login'">
+      <ion-item>
+        <ion-input type="email" placeholder="Email" #loginUsername></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-input type="password" placeholder="Password" #loginPassword></ion-input>
+    </ion-item>
+
+    <button ion-button block (click)="login(loginUsername,loginPassword)">
+        Sign in
+    </button>
+  <button ion-button block color="danger" (click)="loginWithGoogle()">
+    Sign in with Google+
+</button>
+</ion-list>
+
+<ion-list *ngSwitchCase="'signup'">
+    <ion-item>
+      <ion-input type="email" placeholder="Email" #signupUsername></ion-input>
+  </ion-item>
+
+  <ion-item>
+      <ion-input type="password" placeholder="Password" #signupPassword></ion-input>
+  </ion-item>
+
+  <button ion-button block (click)="signup(signupUsername,signupPassword)">Create account</button>
+</ion-list>
+</div>
+
+</ion-content>
