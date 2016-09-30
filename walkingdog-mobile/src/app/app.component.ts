@@ -39,7 +39,7 @@ import { Auth } from '@ionic/cloud-angular';
 })
 export class MyApp {
     @ViewChild('rootNavController') navCtrl : NavController;
-    private rootPage: any;
+    rootPage: any;
     homePage: any;
     aboutPage: any;
     contactPage: any;
@@ -61,7 +61,12 @@ export class MyApp {
     }
 
     logout() {
+        console.log(`User logged out`)
         this.auth.logout();
-        this.navCtrl.setRoot(LoginPage);
+        this.navCtrl.setRoot(LoginPage).then(data => {
+                  console.log(`Data is ${data}`);
+              }, (error) => {
+                  console.log(`Error is ${error}`);
+              });
     }
 }
