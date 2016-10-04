@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Auth, User, UserDetails, IDetailedError } from '@ionic/cloud-angular';
 
+import { FormBuilder,FormGroup } from '@angular/forms';
+
 import { HomePage } from '../home/home';
 
 
@@ -18,22 +20,35 @@ import { HomePage } from '../home/home';
   })
   export class LoginPage {
 
-      loginSegment: string;
+      segments: string;
       loader: any;
+      loginForm: FormGroup;
+      signupForm: FormGroup;
 
       constructor(
           public auth: Auth, 
           public user: User, 
           public loadingCtrl: LoadingController,
-          public navCtrl: NavController) {
+          public navCtrl: NavController,
+          fb: FormBuilder) {
 
           if (this.auth.isAuthenticated()) {
               this.navCtrl.setRoot(HomePage);
           }
 
-          this.loginSegment = 'login';
+          this.segments = 'login';
           this.loader = this.loadingCtrl.create({
               content: "Please wait..."
+          });
+
+          this.loginForm = fb.group({
+            'email': [''],
+            'password': ['']
+          });
+
+          this.signupForm = fb.group({
+            'email': [''],
+            'password': ['']
           });
       }
 
@@ -41,12 +56,13 @@ import { HomePage } from '../home/home';
           console.log('Hello Login Page');
       }
 
-      signup(email: HTMLInputElement, password: HTMLInputElement) {
+      signup(value: string) {
           this.loader.present();
-          console.log(`Submitted values : email = ${email.value}, password = ${password.value}`);
-          let details: UserDetails = {'email': email.value, 'password': password.value};
+          console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
+          let details: UserDetails = {'email': value.email, 'password': value.password};
           this.auth.signup(details).then(() => {
               alert('Signed up')
+              this.segments = 'login';
               this.loader.dismiss();
           }, (err: IDetailedError<string[]>) => {
               for (let e of err.details) {
@@ -60,10 +76,10 @@ import { HomePage } from '../home/home';
           });
       }
 
-      login(email: HTMLInputElement, password: HTMLInputElement) {
+      login(value: string) {
           this.loader.present();
-          console.log(`Submitted values : email = ${email.value}, password = ${password.value}`);
-          let details: UserDetails = {'email': email.value, 'password': password.value};
+          console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
+          let details: UserDetails = {'email': value.email, 'password': value.password};
           this.auth.login('basic', details).then( () =>{
               this.loader.dismiss();
               this.navCtrl.setRoot(HomePage);
