@@ -13,9 +13,6 @@ import { Auth } from '@ionic/cloud-angular';
 @Component({
   template: `
   <ion-menu [content]="content" *ngIf="auth.isAuthenticated()">
-  <ion-toolbar>
-  <ion-title>Menu</ion-title>
-  </ion-toolbar>
   <ion-content>
   <ion-list>
   <button menuClose ion-item (click)="openPage(homePage)">

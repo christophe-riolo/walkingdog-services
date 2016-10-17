@@ -56,7 +56,7 @@ import { HomePage } from '../home/home';
       console.log('Hello Login Page');
     }
 
-    signup(value: string) {
+    signup(value: any) {
       this.loader.present();
       console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
       let details: UserDetails = {'email': value.email, 'password': value.password};
@@ -76,7 +76,7 @@ import { HomePage } from '../home/home';
       });
     }
 
-    login(value: string) {
+    login(value: any) {
       this.loader.present();
       console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
       let details: UserDetails = {'email': value.email, 'password': value.password};
