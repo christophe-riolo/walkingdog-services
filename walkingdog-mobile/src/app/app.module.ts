@@ -5,6 +5,7 @@ import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { DogComponent } from '../pages/home/components/dog.component';
+import { LocationTracker } from '../pages/home/components/location-tracker';
 import { ListTab } from '../pages/home/list-tab/list-tab';
 import { MapTab } from '../pages/home/map-tab/map-tab';
 import { LoginPage } from '../pages/login/login';
@@ -42,6 +43,8 @@ const cloudSettings: CloudSettings = {
     ListTab,
     MapTab
   ],
-  providers: []
+  providers: [
+    LocationTracker
+  ]
 })
 export class AppModule {}

@@ -1,8 +1,9 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { Geolocation } from 'ionic-native';
+//import { Geolocation } from 'ionic-native';
 import { LoadingController } from 'ionic-angular';
+import { LocationTracker } from '../components/location-tracker';
 
 // Comes from Google Maps JavaScript API. See index.html
 declare var google;
@@ -17,8 +18,13 @@ export class MapTab {
   @ViewChild('map') mapElement: ElementRef;
   loader: any;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
-    
+  currentUserMarker: any;
+
+  constructor(
+    public navCtrl: NavController, 
+    public loadingCtrl: LoadingController,
+    public locationTracker: LocationTracker) {
+
   }
   
   // http://www.joshmorony.com/ionic-2-how-to-use-google-maps-geolocation-video-tutorial/
@@ -28,15 +34,29 @@ export class MapTab {
 
   ionViewDidLoad() {
     this.loadMap();
+    this.track();
+    
   }
 
   ionViewDidEnter() {
     
   }
 
+  track() {
+    // Refresh map every 15 secondes
+    setInterval(() => {
+      // Delete previous marker
+      if (this.currentUserMarker) {
+        this.currentUserMarker.setMap(null);
+      }
+      // Creates and stores a new marker with the current position.
+      this.currentUserMarker = this.addMarker(this.locationTracker.lat, this.locationTracker.lng);
+    }, 10000);
+  }
+
   loadMap() {
     this.loader = this.loadingCtrl.create({
-      content: "Retrieving current position"
+      content: "Loading current position..."
     });
     this.loader.present();
 
@@ -53,16 +73,30 @@ export class MapTab {
     });
 
     // Centering the map on the user current position.
-    Geolocation.getCurrentPosition().then((position) => {
-      let currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      this.map.setCenter(currentPosition);
-      this.loader.dismiss();
-    }, (err) => {
-      console.log(err);
-      this.loader.dismiss();
-      alert('Unable to get current position');
-    });
+    let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
+    this.map.setCenter(currentPosition);
+    this.currentUserMarker = this.addMarker(this.locationTracker.lat, this.locationTracker.lng);
+    this.loader.dismiss();
 
+  }
+
+  addMarker(lat: number, lng : number): any {
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: this.map.getCenter()
+    });
+    let content = "<h4>You</h4>";          
+    this.addInfoWindow(marker, content);
+  }
+
+  addInfoWindow(marker, content){
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
   }
 
 }
