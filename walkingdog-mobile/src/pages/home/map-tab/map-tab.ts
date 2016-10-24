@@ -2,6 +2,7 @@ import { Component,ViewChild,ElementRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Geolocation } from 'ionic-native';
+import { LoadingController } from 'ionic-angular';
 
 // Comes from Google Maps JavaScript API. See index.html
 declare var google;
@@ -14,8 +15,9 @@ export class MapTab {
 
   map: any;
   @ViewChild('map') mapElement: ElementRef;
+  loader: any;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
     
   }
   
@@ -33,20 +35,32 @@ export class MapTab {
   }
 
   loadMap() {
-    Geolocation.getCurrentPosition().then((position) => {
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    this.loader = this.loadingCtrl.create({
+      content: "Retrieving current position"
+    });
+    this.loader.present();
 
-      google.maps.event.addListenerOnce(this.map, 'idle', () => { 
-        this.mapElement.nativeElement.classList.add('show-map'); 
-      });
+    // Loading a map with default position.
+    let latLng = new google.maps.LatLng(51.528308, -0.3817765,10);
+    let mapOptions = {
+      center: latLng,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+    google.maps.event.addListenerOnce(this.map, 'idle', () => { 
+      this.mapElement.nativeElement.classList.add('show-map'); 
+    });
+
+    // Centering the map on the user current position.
+    Geolocation.getCurrentPosition().then((position) => {
+      let currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      this.map.setCenter(currentPosition);
+      this.loader.dismiss();
     }, (err) => {
       console.log(err);
+      this.loader.dismiss();
+      alert('Unable to get current position');
     });
 
   }
