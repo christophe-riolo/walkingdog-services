@@ -1,15 +1,8 @@
-<ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Home</ion-title>
-  </ion-navbar>
-</ion-header>
 
-<ion-content padding>
-  <h2>Dogs around you</h2>
-  <ion-list>
-    <dog-item [dog]="dog" *ngFor="let dog of dogs"></dog-item>
-  </ion-list>
-</ion-content>
+<ion-tabs>
+  <ion-tab tabIcon="list" [root]="listTab"></ion-tab>
+  <ion-tab tabIcon="map" [root]="mapTab"></ion-tab>
+</ion-tabs>`
+
+
+

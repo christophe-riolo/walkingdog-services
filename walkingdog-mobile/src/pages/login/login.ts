@@ -53,12 +53,10 @@ import { HomePage } from '../home/home';
     }
 
     ionViewDidLoad() {
-      console.log('Hello Login Page');
     }
 
     signup(value: any) {
       this.loader.present();
-      console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
       let details: UserDetails = {'email': value.email, 'password': value.password};
       this.auth.signup(details).then(() => {
         alert('Signed up')
@@ -78,7 +76,6 @@ import { HomePage } from '../home/home';
 
     login(value: any) {
       this.loader.present();
-      console.log(`Submitted values : email = ${value.email}, password = ${value.password}`);
       let details: UserDetails = {'email': value.email, 'password': value.password};
       this.auth.login('basic', details).then( () =>{
         this.loader.dismiss();

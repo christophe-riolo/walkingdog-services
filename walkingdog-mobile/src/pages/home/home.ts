@@ -3,7 +3,8 @@ import { NavController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { Auth } from '@ionic/cloud-angular';
 
-import { Dog } from './components/dog.component';
+import { ListTab } from './list-tab/list-tab';
+import { MapTab } from './map-tab/map-tab';
 
 @Component({
   selector: 'page-home',
@@ -11,14 +12,13 @@ import { Dog } from './components/dog.component';
 })
 export class HomePage {
 
-  dogs: Array<Dog>;
+
+  listTab: any;
+  mapTab: any;
 
   constructor(public navCtrl: NavController, public auth: Auth) {
-    this.dogs = new Array();
-    let hyumiko: Dog = new Dog('Hyumiko','Acting like a cat. But can bark.', 'assets/dogs/shiba.jpg');
-    this.dogs.push(hyumiko);
-    let reveur: Dog = new Dog('Reveur','Acting like a carpet.', 'assets/dogs/teckel.jpg');
-    this.dogs.push(reveur);
+    this.listTab = ListTab;
+    this.mapTab = MapTab;
   }
 
   logout() {

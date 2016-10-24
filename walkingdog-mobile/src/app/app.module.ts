@@ -5,6 +5,8 @@ import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { DogComponent } from '../pages/home/components/dog.component';
+import { ListTab } from '../pages/home/list-tab/list-tab';
+import { MapTab } from '../pages/home/map-tab/map-tab';
 import { LoginPage } from '../pages/login/login';
 
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
@@ -22,7 +24,9 @@ const cloudSettings: CloudSettings = {
     ContactPage,
     HomePage,
     LoginPage,
-    DogComponent
+    DogComponent,
+    ListTab,
+    MapTab
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -34,7 +38,9 @@ const cloudSettings: CloudSettings = {
     AboutPage,
     ContactPage,
     HomePage,
-    LoginPage
+    LoginPage,
+    ListTab,
+    MapTab
   ],
   providers: []
 })
