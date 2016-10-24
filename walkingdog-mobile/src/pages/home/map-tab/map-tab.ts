@@ -17,7 +17,6 @@ export class MapTab {
   map: any;
   @ViewChild('map') mapElement: ElementRef;
   loader: any;
-
   currentUserMarker: any;
 
   constructor(
@@ -45,7 +44,7 @@ export class MapTab {
   track() {
     // Refresh map every 15 secondes
     setInterval(() => {
-      // Delete previous marker
+      // Deletes previous marker
       if (this.currentUserMarker) {
         this.currentUserMarker.setMap(null);
       }
@@ -81,13 +80,15 @@ export class MapTab {
   }
 
   addMarker(lat: number, lng : number): any {
+    let currentPosition = {lat: lat, lng: lng};
     let marker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
-      position: this.map.getCenter()
+      position: currentPosition
     });
     let content = "<h4>You</h4>";          
     this.addInfoWindow(marker, content);
+    return marker;
   }
 
   addInfoWindow(marker, content){
