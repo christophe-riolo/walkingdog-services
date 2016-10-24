@@ -64,7 +64,13 @@ export class MapTab {
     let mapOptions = {
       center: latLng,
       zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      zoomControl: false,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: false
     }
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     google.maps.event.addListenerOnce(this.map, 'idle', () => { 
