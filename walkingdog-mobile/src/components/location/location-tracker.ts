@@ -14,8 +14,24 @@ export class LocationTracker {
   }
 
   startTracking() {
-    // Background Tracking
+    // Every 15 seconds
+    this.backgroundTracking();
+    // Every 15 seconds
+    this.foregroundTracking();
+  }
 
+  stopTracking() {
+    console.log('stopTracking');
+    BackgroundGeolocation.finish();
+    this.watch.unsubscribe();
+  }
+
+  hasPosition(): boolean {
+    return this.lat != 0 && this.lng != 0;
+  }
+
+  private backgroundTracking() {
+    // Background Tracking
     let config = {
       desiredAccuracy: 0,
       stationaryRadius: 20,
@@ -38,7 +54,9 @@ export class LocationTracker {
 
     // Turn ON the background-geolocation system.
     BackgroundGeolocation.start();
+  }
 
+  private foregroundTracking() {
     // Foreground Tracking
     let options = {
       frequency: 15000, 
@@ -58,13 +76,5 @@ export class LocationTracker {
     });
 
   }
-
-  stopTracking() {
-    console.log('stopTracking');
-    BackgroundGeolocation.finish();
-    this.watch.unsubscribe();
-  }
-
-
 
 }

@@ -1,9 +1,6 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
-//import { Geolocation } from 'ionic-native';
-import { LoadingController } from 'ionic-angular';
-import { LocationTracker } from '../components/location-tracker';
+import { LocationTracker } from '../../../components/location/location-tracker';
 
 // Comes from Google Maps JavaScript API. See index.html
 declare var google;
@@ -16,12 +13,10 @@ export class MapTab {
 
   map: any;
   @ViewChild('map') mapElement: ElementRef;
-  loader: any;
   currentUserMarker: any;
 
   constructor(
     public navCtrl: NavController, 
-    public loadingCtrl: LoadingController,
     public locationTracker: LocationTracker) {
 
   }
@@ -42,7 +37,7 @@ export class MapTab {
   }
 
   track() {
-    // Refresh map every 15 secondes
+    // Refresh map every n secondes
     setInterval(() => {
       // Deletes previous marker
       if (this.currentUserMarker) {
@@ -54,11 +49,7 @@ export class MapTab {
   }
 
   loadMap() {
-    this.loader = this.loadingCtrl.create({
-      content: "Loading current position..."
-    });
-    this.loader.present();
-
+ 
     // Loading a map with default position.
     let latLng = new google.maps.LatLng(51.528308, -0.3817765,10);
     let mapOptions = {
@@ -81,8 +72,6 @@ export class MapTab {
     let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
     this.map.setCenter(currentPosition);
     this.currentUserMarker = this.addMarker(this.locationTracker.lat, this.locationTracker.lng);
-    this.loader.dismiss();
-
   }
 
   addMarker(lat: number, lng : number): any {
