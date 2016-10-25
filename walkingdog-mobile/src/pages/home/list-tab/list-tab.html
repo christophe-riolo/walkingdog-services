@@ -9,6 +9,7 @@
 
 
 <ion-content padding>
+  <button ion-button block (click)="startWalk()">Start a walk !</button>
   <ion-list>
     <dog-item [dog]="dog" *ngFor="let dog of dogs"></dog-item>
   </ion-list>
