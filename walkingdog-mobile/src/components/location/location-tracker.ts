@@ -8,6 +8,7 @@ export class LocationTracker {
   public watch: any;    
   public lat: number = 0;
   public lng: number = 0;
+  public walking: boolean = false;
 
   constructor(public zone: NgZone) {
 
@@ -18,12 +19,14 @@ export class LocationTracker {
     this.backgroundTracking();
     // Every 15 seconds
     this.foregroundTracking();
+    this.walking = true;
   }
 
   stopTracking() {
     console.log('stopTracking');
     BackgroundGeolocation.finish();
     this.watch.unsubscribe();
+    this.walking = false;
   }
 
   hasPosition(): boolean {
@@ -64,8 +67,6 @@ export class LocationTracker {
     };
 
     this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
-
-      console.log(position);
 
       // Run update inside of Angular's zone
       this.zone.run(() => {

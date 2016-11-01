@@ -6,6 +6,7 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { DogComponent } from '../components/dog/dog.component';
 import { LocationTracker } from '../components/location/location-tracker';
+import { TimerComponent } from '../components/timer/timer';
 import { ListTab } from '../pages/home/list-tab/list-tab';
 import { MapTab } from '../pages/home/map-tab/map-tab';
 import { LoginPage } from '../pages/login/login';
@@ -26,6 +27,7 @@ const cloudSettings: CloudSettings = {
     HomePage,
     LoginPage,
     DogComponent,
+    TimerComponent,
     ListTab,
     MapTab
   ],
