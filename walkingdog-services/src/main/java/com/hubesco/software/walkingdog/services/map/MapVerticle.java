@@ -33,7 +33,8 @@ public class MapVerticle extends AbstractVerticle {
                 .listen(
                         // Retrieve the port from the configuration,
                         // default to 8080.
-                        config().getInteger("http.port", 8080),
+                        Integer.parseInt(System.getProperty("http.port")),
+                        System.getProperty("http.address", "0.0.0.0"),
                         result -> {
                             if (result.succeeded()) {
                                 fut.complete();

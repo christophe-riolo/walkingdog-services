@@ -1,5 +1,6 @@
 package com.hubesco.software.walkingdog.services.map;
 
+import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
 import com.hubesco.software.walkingdog.services.common.EndpointHealth;
 import com.hubesco.software.walkingdog.services.common.EndpointStatus;
 import io.vertx.core.Vertx;
@@ -18,7 +19,7 @@ import org.junit.runner.RunWith;
  * @author paoesco
  */
 @RunWith(VertxUnitRunner.class)
-public class MapVerticleTest {
+public class MapVerticleTest extends AbstractVerticleTest {
 
     private Vertx vertx;
 
@@ -37,7 +38,7 @@ public class MapVerticleTest {
     @Test
     public void testMyApplication(TestContext context) {
         final Async async = context.async();
-        vertx.createHttpClient().getNow(8080, "localhost", "/api/map/health",
+        vertx.createHttpClient().getNow(port, "localhost", "/api/map/health",
                 response -> {
                     response.handler(body -> {
                         EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
@@ -50,7 +51,7 @@ public class MapVerticleTest {
     @Test
     public void testDogsAround(TestContext context) {
         final Async async = context.async();
-        vertx.createHttpClient().getNow(8080, "localhost", "/api/map/dogsAround",
+        vertx.createHttpClient().getNow(port, "localhost", "/api/map/dogsAround",
                 response -> {
                     response.handler(body -> {
                         List<DogLocation> dogs = body.toJsonArray().getList();

@@ -1,7 +1,7 @@
 package com.hubesco.software.walkingdog.services;
 
-import com.hubesco.software.walkingdog.services.map.MapVerticle;
 import io.vertx.core.Vertx;
+import java.io.IOException;
 
 /**
  *
@@ -9,9 +9,12 @@ import io.vertx.core.Vertx;
  */
 public class Runner {
 
-    public static void main(String[] args) {
-        Vertx.vertx().deployVerticle(MapVerticle.class.getName(), (result) -> {
-            System.out.println("MapVerticle deployment : " + result.succeeded());
+    public static void main(String[] args) throws IOException {
+
+        System.setProperty("http.port", "8080");
+
+        Vertx.vertx().deployVerticle(MainVerticle.class.getName(), (result) -> {
+            System.out.println("MainVerticle deployment : " + result.succeeded());
         });
     }
 

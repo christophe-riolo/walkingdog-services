@@ -42,11 +42,11 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.4.0</version>
                 </plugin>
-                <plugin>
+<!--                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>1.4.1.RELEASE</version>
-                </plugin>
+                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>
