@@ -44,7 +44,7 @@ export class MapTab {
         this.currentUserMarker.setMap(null);
       }
       // Creates and stores a new marker with the current position.
-      this.currentUserMarker = this.addMarker(this.locationTracker.lat, this.locationTracker.lng);
+      this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng);
     }, 10000);
   }
 
@@ -71,17 +71,17 @@ export class MapTab {
     // Centering the map on the user current position.
     let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
     this.map.setCenter(currentPosition);
-    this.currentUserMarker = this.addMarker(this.locationTracker.lat, this.locationTracker.lng);
+    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng);
   }
 
-  addMarker(lat: number, lng : number): any {
+  addMarker(dogId: string, dogName: string, lat: number, lng : number): any {
     let currentPosition = {lat: lat, lng: lng};
     let marker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: currentPosition
     });
-    let content = "<h4>You</h4>";          
+    let content = `<h4>${dogName}</h4>`;          
     this.addInfoWindow(marker, content);
     return marker;
   }

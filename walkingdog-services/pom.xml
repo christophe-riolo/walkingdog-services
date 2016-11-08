@@ -16,8 +16,27 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <!-- Tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-unit</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     
@@ -26,15 +45,29 @@
             <id>release-profile</id>
             <build>
                 <plugins>
-                    <!-- Builds executable jar -->
                     <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>2.4.3</version>
                         <executions>
                             <execution>
+                                <phase>package</phase>
                                 <goals>
-                                    <goal>repackage</goal>
+                                    <goal>shade</goal>
                                 </goals>
+                                <configuration>
+                                    <transformers>
+                                        <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <manifestEntries>
+                                                <Main-Class>io.vertx.core.Starter</Main-Class>
+                                                <Main-Verticle>com.hubesco.software.walkingdog.services.MainVerticle</Main-Verticle>
+                                            </manifestEntries>
+                                        </transformer>
+                                    </transformers>
+                                    <artifactSet/>
+                                    <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
