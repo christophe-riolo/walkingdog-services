@@ -51,15 +51,29 @@ public class MapVerticleTest extends AbstractVerticleTest {
     @Test
     public void testDogsAround(TestContext context) {
         final Async async = context.async();
-        vertx.createHttpClient().getNow(port, "localhost", "/api/map/dogsAround",
+        String url = "/api/map/dogsAround?" + paramsDogsAround();
+        vertx.createHttpClient().getNow(port, "localhost", url,
                 response -> {
                     response.handler(body -> {
                         List<DogLocation> dogs = body.toJsonArray().getList();
                         context.assertTrue(Objects.nonNull(dogs));
-                        context.assertTrue(dogs.size() == 2);
+                        context.assertTrue(dogs.size() == 5);
                         async.complete();
                     });
                 });
+    }
+
+    private String paramsDogsAround() {
+        StringBuilder params = new StringBuilder();
+        params.append("tl-lat=51.602885");
+        params.append("&tl-lon=-0.198018");
+        params.append("&tr-lat=51.603176");
+        params.append("&tr-lon=-0.187197");
+        params.append("&br-lat=51.599307");
+        params.append("&br-lon=-0.187047");
+        params.append("&bl-lat=51.599313");
+        params.append("&bl-lon=-0.199326");
+        return params.toString();
     }
 
 }

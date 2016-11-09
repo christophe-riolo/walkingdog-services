@@ -7,8 +7,14 @@ import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * @author paoesco
@@ -53,17 +59,78 @@ public class MapVerticle extends AbstractVerticle {
     }
 
     private void dogsAround(RoutingContext routingContext) {
-        // Creates some dogs
-        List<DogLocation> dogs = new ArrayList<>();
-        DogLocation dog1 = new DogLocation("dog1", "Dog 1", 0, 0);
-        dogs.add(dog1);
-        DogLocation dog2 = new DogLocation("dog2", "Dog 2", 0, 1);
-        dogs.add(dog2);
-
+        // Creates the representation of the displayed map.
+        Map displayedMap = createMap(routingContext);
+        // Find dogs located inside the map
+        List<DogLocation> dogsAround = findDogs(displayedMap);
+        // Send response
         routingContext
                 .response()
                 .putHeader("content-type", CONTENT_TYPE)
-                .end(Json.encodePrettily(dogs));
+                .end(Json.encodePrettily(dogsAround));
+    }
+
+    private Map createMap(RoutingContext routingContext) {
+        double topLeftY = Double.valueOf(routingContext.request().getParam("tl-lat"));
+        double topLeftX = Double.valueOf(routingContext.request().getParam("tl-lon"));
+        Point2D topLeft = new Point2D.Double(topLeftX, topLeftY);
+        double topRightY = Double.valueOf(routingContext.request().getParam("tr-lat"));
+        double topRightX = Double.valueOf(routingContext.request().getParam("tr-lon"));
+        Point2D topRight = new Point2D.Double(topRightX, topRightY);
+        double bottomRightY = Double.valueOf(routingContext.request().getParam("br-lat"));
+        double bottomRightX = Double.valueOf(routingContext.request().getParam("br-lon"));
+        Point2D bottomRight = new Point2D.Double(bottomRightX, bottomRightY);
+        double bottomLeftY = Double.valueOf(routingContext.request().getParam("bl-lat"));
+        double bottomLeftX = Double.valueOf(routingContext.request().getParam("bl-lon"));
+        Point2D bottomLeft = new Point2D.Double(bottomLeftX, bottomLeftY);
+        return new Map(topLeft, topRight, bottomRight, bottomLeft);
+    }
+
+    /**
+     * Find dogs located inside the boundaries of the map.
+     *
+     * @param map : boundaries
+     * @return list if DogLocation
+     */
+    private List<DogLocation> findDogs(Map map) {
+        // Get all locations
+        List<DogLocation> allDogs = getAllDogs(map);
+        // Filter them to find dogs located inside the bounds of the map.
+        List<DogLocation> dogsAround = allDogs.stream()
+                .filter(dogLocation -> {
+                    return map.contains(new Point2D.Double(dogLocation.getLongitude(), dogLocation.getLatitude()));
+                })
+                .collect(Collectors.toList());
+        return dogsAround;
+    }
+
+    /**
+     * To replace with real implementation.
+     *
+     * @param map
+     * @return
+     */
+    private List<DogLocation> getAllDogs(Map map) {
+        List<DogLocation> allDogs = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Point2D randomPoint = getRandomPointInsideMap(map);
+            DogLocation dogLocation = new DogLocation("dog" + i, "Dog " + i, randomPoint.getY(), randomPoint.getX());
+            allDogs.add(dogLocation);
+        }
+        return allDogs;
+    }
+
+    private Point2D getRandomPointInsideMap(Map map) {
+        double x1 = map.getTopLeft().getX();
+        double x2 = map.getTopRight().getX();
+
+        double x = ThreadLocalRandom.current().nextDouble(x1 < x2 ? x1 : x2, x1 > x2 ? x1 : x2);
+
+        double y1 = map.getTopLeft().getY();
+        double y2 = map.getBottomLeft().getY();
+        double y = ThreadLocalRandom.current().nextDouble(y1 < y2 ? y1 : y2, y1 > y2 ? y1 : y2);
+
+        return new Point2D.Double(x, y);
     }
 
 }
