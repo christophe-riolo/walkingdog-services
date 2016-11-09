@@ -1,0 +1,1 @@
+web: java $JAVA_OPTS -Dhttp.port=$PORT -jar walkingdog-services/target/walkingdog-services-*-fat.jar
