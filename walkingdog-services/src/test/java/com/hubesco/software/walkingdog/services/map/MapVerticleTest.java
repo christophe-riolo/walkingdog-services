@@ -65,14 +65,10 @@ public class MapVerticleTest extends AbstractVerticleTest {
 
     private String paramsDogsAround() {
         StringBuilder params = new StringBuilder();
-        params.append("tl-lat=51.602885");
-        params.append("&tl-lon=-0.198018");
-        params.append("&tr-lat=51.603176");
-        params.append("&tr-lon=-0.187197");
-        params.append("&br-lat=51.599307");
-        params.append("&br-lon=-0.187047");
-        params.append("&bl-lat=51.599313");
-        params.append("&bl-lon=-0.199326");
+        params.append("&ne-lat=51.603176");
+        params.append("&ne-lon=-0.187197");
+        params.append("&sw-lat=51.599313");
+        params.append("&sw-lon=-0.199326");
         return params.toString();
     }
 

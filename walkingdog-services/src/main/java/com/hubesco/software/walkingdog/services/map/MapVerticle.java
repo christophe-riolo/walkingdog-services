@@ -4,13 +4,12 @@ import com.hubesco.software.walkingdog.services.common.EndpointHealth;
 import com.hubesco.software.walkingdog.services.common.EndpointStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import java.awt.Point;
+import io.vertx.ext.web.handler.CorsHandler;
 import java.awt.geom.Point2D;
-import static java.lang.Integer.max;
-import static java.lang.Integer.min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,6 +28,8 @@ public class MapVerticle extends AbstractVerticle {
         // Create a router object.
         Router router = Router.router(vertx);
 
+        CorsHandler cors = CorsHandler.create("*").allowedMethod(HttpMethod.GET);
+        router.route().handler(cors);
         router.get(API_PREFIX + "/health").handler(this::health);
         router.get(API_PREFIX + "/dogsAround").handler(this::dogsAround);
 
@@ -71,17 +72,17 @@ public class MapVerticle extends AbstractVerticle {
     }
 
     private Map createMap(RoutingContext routingContext) {
-        double topLeftY = Double.valueOf(routingContext.request().getParam("tl-lat"));
-        double topLeftX = Double.valueOf(routingContext.request().getParam("tl-lon"));
+        double topLeftY = Double.valueOf(routingContext.request().getParam("ne-lat"));
+        double topLeftX = Double.valueOf(routingContext.request().getParam("sw-lon"));
         Point2D topLeft = new Point2D.Double(topLeftX, topLeftY);
-        double topRightY = Double.valueOf(routingContext.request().getParam("tr-lat"));
-        double topRightX = Double.valueOf(routingContext.request().getParam("tr-lon"));
+        double topRightY = Double.valueOf(routingContext.request().getParam("ne-lat"));
+        double topRightX = Double.valueOf(routingContext.request().getParam("ne-lon"));
         Point2D topRight = new Point2D.Double(topRightX, topRightY);
-        double bottomRightY = Double.valueOf(routingContext.request().getParam("br-lat"));
-        double bottomRightX = Double.valueOf(routingContext.request().getParam("br-lon"));
+        double bottomRightY = Double.valueOf(routingContext.request().getParam("sw-lat"));
+        double bottomRightX = Double.valueOf(routingContext.request().getParam("ne-lon"));
         Point2D bottomRight = new Point2D.Double(bottomRightX, bottomRightY);
-        double bottomLeftY = Double.valueOf(routingContext.request().getParam("bl-lat"));
-        double bottomLeftX = Double.valueOf(routingContext.request().getParam("bl-lon"));
+        double bottomLeftY = Double.valueOf(routingContext.request().getParam("sw-lat"));
+        double bottomLeftX = Double.valueOf(routingContext.request().getParam("sw-lon"));
         Point2D bottomLeft = new Point2D.Double(bottomLeftX, bottomLeftY);
         return new Map(topLeft, topRight, bottomRight, bottomLeft);
     }

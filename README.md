@@ -4,4 +4,4 @@ Walking Dog
 
 ## API
 
-- Dogs around URL : `/api/map/dogsAround?tl-lat=51.602885&tl-lon=-0.198018&tr-lat=51.603176&tr-lon=-0.187197&br-lat=51.599307&br-lon=-0.187047&bl-lat=51.599313&bl-lon=-0.199326`
+- Dogs around URL : `/api/map/dogsAround?ne-lat=51.603176&ne-lon=-0.187197&sw-lat=51.599313&sw-lon=-0.199326`
