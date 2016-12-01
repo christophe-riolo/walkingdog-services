@@ -113,7 +113,7 @@ public class MapVerticle extends AbstractVerticle {
      */
     private List<DogLocation> getAllDogs(Map map) {
         List<DogLocation> allDogs = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 10; i++) {
             Point2D randomPoint = getRandomPointInsideMap(map);
             DogLocation dogLocation = new DogLocation("dog" + i, "Dog " + i, randomPoint.getY(), randomPoint.getX());
             allDogs.add(dogLocation);

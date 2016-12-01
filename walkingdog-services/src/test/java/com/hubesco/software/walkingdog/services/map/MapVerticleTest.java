@@ -36,7 +36,7 @@ public class MapVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    public void testMyApplication(TestContext context) {
+    public void testHealth(TestContext context) {
         final Async async = context.async();
         vertx.createHttpClient().getNow(port, "localhost", "/api/map/health",
                 response -> {
@@ -54,10 +54,10 @@ public class MapVerticleTest extends AbstractVerticleTest {
         String url = "/api/map/dogsAround?" + paramsDogsAround();
         vertx.createHttpClient().getNow(port, "localhost", url,
                 response -> {
-                    response.handler(body -> {
+                    response.bodyHandler(body -> {
                         List<DogLocation> dogs = body.toJsonArray().getList();
                         context.assertTrue(Objects.nonNull(dogs));
-                        context.assertTrue(dogs.size() == 5);
+                        context.assertTrue(dogs.size() == 10);
                         async.complete();
                     });
                 });
