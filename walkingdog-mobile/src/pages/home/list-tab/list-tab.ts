@@ -14,6 +14,7 @@ export class ListTab {
 
   dogs: Array<Dog>;
   loader: any;
+  geoError: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -25,6 +26,8 @@ export class ListTab {
   }
 
   ionViewDidLoad() {
+    this.geoError = false;
+
     this.loader = this.loadingCtrl.create({
       content: "Loading current position..."
     });
@@ -41,7 +44,7 @@ export class ListTab {
       // Removes the loader
       this.loader.dismiss();
     }, (err) => {
-      alert("Impossible to retrieve current position. The app won't work properly");
+      this.geoError = true;
       this.loader.dismiss();
     });
   }

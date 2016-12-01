@@ -14,4 +14,10 @@
   <ion-list>
     <dog-item [dog]="dog" *ngFor="let dog of dogs"></dog-item>
   </ion-list>
+
+  <div *ngIf="geoError">
+    <p>Unfortunately, we can't locate you :'(.</p>
+    <p>Try to enable geo location or find network</p>
+  </div>
+
 </ion-content>
