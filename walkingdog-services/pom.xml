@@ -9,6 +9,10 @@
     <artifactId>walkingdog-services</artifactId>
     <packaging>jar</packaging>
     
+    <properties>
+        <vertx.version>3.3.2</vertx.version>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>com.hubesco.software</groupId>
@@ -18,12 +22,12 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.3.3</version>
+            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>3.3.3</version>
+            <version>${vertx.version}</version>
         </dependency>
         <!-- Tests -->
         <dependency>
@@ -35,7 +39,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
-            <version>3.3.3</version>
+            <version>${vertx.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

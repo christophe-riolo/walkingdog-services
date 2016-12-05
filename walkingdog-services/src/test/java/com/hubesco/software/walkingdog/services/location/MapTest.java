@@ -1,5 +1,6 @@
-package com.hubesco.software.walkingdog.services.map;
+package com.hubesco.software.walkingdog.services.location;
 
+import com.hubesco.software.walkingdog.services.location.Map;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import org.junit.Assert;

@@ -28,7 +28,8 @@ export class MapTab {
     public navCtrl: NavController, 
     public locationTracker: LocationTracker,
     private http: Http) {
-    this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/map/dogsAround';
+    this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
+    //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
   }
   
@@ -38,7 +39,9 @@ export class MapTab {
   // https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/map/map.ts
 
   ionViewDidLoad() {
+    // Loads Google 
     this.loadMap();
+    // Starts tracking of the user
     this.track();
     
   }
@@ -50,15 +53,10 @@ export class MapTab {
   track() {
     // Refresh map every n secondes
     setInterval(() => {
-      // Deletes previous marker
-      if (this.currentUserMarker) {
-        this.currentUserMarker.setMap(null);
-      }
-      // Creates and stores a new marker with the current position.
-      this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
-
+      // Deals with current user location
+      this.registerMyLocation();
       // Find dogs around
-      this.showNearestPets();
+      this.showPetsInMap();
 
     }, 10000);
   }
@@ -89,29 +87,30 @@ export class MapTab {
     this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
   }
 
-  private addMarker(dogId: string, dogName: string, lat: number, lng : number, icon: string): any {
-    let currentPosition = {lat: lat, lng: lng};
-    let marker = new google.maps.Marker({
-      map: this.map,
-      animation: google.maps.Animation.DROP,
-      position: currentPosition,
-      icon: icon
-    });
-    let content = `<h4>${dogName}</h4>`;          
-    this.addInfoWindow(marker, content);
-    return marker;
+  private registerMyLocation() {
+    // Sends location of current user to server, to be used by others
+    this.http.post(
+      `${this.apiUrl}/register`,
+      JSON.stringify({
+        // TODO : current user id
+        id: 'azertyuiop', 
+        latitude: this.locationTracker.lat,
+        longitude: this.locationTracker.lng,
+      }))
+      .subscribe((res: Response) => {
+        console.log(res);
+      });
+
+    // Removes previous user location
+    if (this.currentUserMarker) {
+      this.currentUserMarker.setMap(null);
+    }
+
+    // Creates and stores a new marker with the current position.
+    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
   }
 
-  addInfoWindow(marker, content){
-    let infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
-    });
-  }
-
-  private showNearestPets() {
+  private showPetsInMap() {
     // Prepares the request
     let params: string = [
       `ne-lat=${this.map.getBounds().getNorthEast().lat()}`,
@@ -120,7 +119,7 @@ export class MapTab {
       `sw-lon=${this.map.getBounds().getSouthWest().lng()}`
     ].join('&');
     // Sends request to backend
-    this.http.request(`${this.apiUrl}?${params}`)
+    this.http.request(`${this.apiUrl}/dogsAround?${params}`)
       .subscribe((res: Response) => {
         console.log(res.json());
         // Removes previous markers
@@ -137,6 +136,28 @@ export class MapTab {
           this.petsAroundMarkers.push(marker);
         }
       });
+  }
+
+  private addMarker(dogId: string, dogName: string, lat: number, lng : number, icon: string): any {
+    let currentPosition = {lat: lat, lng: lng};
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: currentPosition,
+      icon: icon
+    });
+    let content = `<h4>${dogName}</h4>`;          
+    this.addInfoWindow(marker, content);
+    return marker;
+  }
+
+  private addInfoWindow(marker, content){
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
   }
 
 }

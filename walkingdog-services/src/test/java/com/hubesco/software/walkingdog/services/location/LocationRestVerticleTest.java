@@ -1,5 +1,7 @@
-package com.hubesco.software.walkingdog.services.map;
+package com.hubesco.software.walkingdog.services.location;
 
+import com.hubesco.software.walkingdog.api.location.DogLocation;
+import com.hubesco.software.walkingdog.api.location.UserLocation;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
 import com.hubesco.software.walkingdog.services.common.EndpointHealth;
 import com.hubesco.software.walkingdog.services.common.EndpointStatus;
@@ -19,14 +21,16 @@ import org.junit.runner.RunWith;
  * @author paoesco
  */
 @RunWith(VertxUnitRunner.class)
-public class MapVerticleTest extends AbstractVerticleTest {
+public class LocationRestVerticleTest extends AbstractVerticleTest {
 
     private Vertx vertx;
 
     @Before
     public void setUp(TestContext context) {
         vertx = Vertx.vertx();
-        vertx.deployVerticle(MapVerticle.class.getName(),
+        vertx.deployVerticle(LocationRestVerticle.class.getName(),
+                context.asyncAssertSuccess());
+        vertx.deployVerticle(LocationDbVerticle.class.getName(),
                 context.asyncAssertSuccess());
     }
 
@@ -38,7 +42,9 @@ public class MapVerticleTest extends AbstractVerticleTest {
     @Test
     public void testHealth(TestContext context) {
         final Async async = context.async();
-        vertx.createHttpClient().getNow(port, "localhost", "/api/map/health",
+
+        // WHEN
+        vertx.createHttpClient().getNow(port, "localhost", "/api/location/health",
                 response -> {
                     response.handler(body -> {
                         EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
@@ -51,7 +57,12 @@ public class MapVerticleTest extends AbstractVerticleTest {
     @Test
     public void testDogsAround(TestContext context) {
         final Async async = context.async();
-        String url = "/api/map/dogsAround?" + paramsDogsAround();
+
+        // GIVEN
+        String params = paramsDogsAround();
+
+        // WHEN
+        String url = "/api/location/dogsAround?" + params;
         vertx.createHttpClient().getNow(port, "localhost", url,
                 response -> {
                     response.bodyHandler(body -> {
@@ -61,6 +72,23 @@ public class MapVerticleTest extends AbstractVerticleTest {
                         async.complete();
                     });
                 });
+    }
+
+    @Test
+    public void testRegister(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        UserLocation userLocation = new UserLocation("azertyuiop", 0.0, 0.0);
+        String jsonUserLocation = Json.encodePrettily(userLocation);
+
+        // WHEN
+        String url = "/api/location/register";
+        vertx.createHttpClient().post(port, "localhost", url,
+                response -> {
+                    context.assertTrue(response.statusCode() == 200);
+                    async.complete();
+                }).end(jsonUserLocation);
     }
 
     private String paramsDogsAround() {

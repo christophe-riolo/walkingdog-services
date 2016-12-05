@@ -1,13 +1,18 @@
-package com.hubesco.software.walkingdog.services.map;
+package com.hubesco.software.walkingdog.services.location;
 
+import com.hubesco.software.walkingdog.api.location.DogLocation;
 import com.hubesco.software.walkingdog.services.common.EndpointHealth;
 import com.hubesco.software.walkingdog.services.common.EndpointStatus;
+import com.hubesco.software.walkingdog.services.common.eventbus.Addresses;
+import com.hubesco.software.walkingdog.services.common.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -16,22 +21,26 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
+ * Handles all REST call to Location API.
+ *
  * @author paoesco
  */
-public class MapVerticle extends AbstractVerticle {
+public class LocationRestVerticle extends AbstractVerticle {
 
-    private static final String API_PREFIX = "/api/map";
+    private static final String API_PREFIX = "/api/location";
     private static final String CONTENT_TYPE = "application/json; charset=utf-8";
 
     @Override
     public void start(Future<Void> fut) {
         // Create a router object.
         Router router = Router.router(vertx);
-
+        
         CorsHandler cors = CorsHandler.create("*").allowedMethod(HttpMethod.GET);
         router.route().handler(cors);
+        router.route().handler(BodyHandler.create());
         router.get(API_PREFIX + "/health").handler(this::health);
         router.get(API_PREFIX + "/dogsAround").handler(this::dogsAround);
+        router.post(API_PREFIX + "/register").handler(this::register);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
@@ -52,6 +61,11 @@ public class MapVerticle extends AbstractVerticle {
                 );
     }
 
+    /**
+     * Endpoint : /api/location/health
+     *
+     * @param routingContext
+     */
     private void health(RoutingContext routingContext) {
         routingContext
                 .response()
@@ -59,6 +73,11 @@ public class MapVerticle extends AbstractVerticle {
                 .end(Json.encodePrettily(new EndpointHealth(EndpointStatus.OK)));
     }
 
+    /**
+     * Endpoint : /api/location/dogs
+     *
+     * @param routingContext
+     */
     private void dogsAround(RoutingContext routingContext) {
         // Creates the representation of the displayed map.
         Map displayedMap = createMap(routingContext);
@@ -69,6 +88,21 @@ public class MapVerticle extends AbstractVerticle {
                 .response()
                 .putHeader("content-type", CONTENT_TYPE)
                 .end(Json.encodePrettily(dogsAround));
+    }
+
+    /**
+     * Endpoint : /api/location/register
+     *
+     * @param routingContext
+     */
+    private void register(RoutingContext routingContext) {
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "register");
+        vertx.eventBus().send(Addresses.LOCATION_DB.address(), routingContext.getBodyAsString(), options);
+        routingContext
+                .response()
+                .putHeader("content-type", CONTENT_TYPE)
+                .end();
     }
 
     private Map createMap(RoutingContext routingContext) {

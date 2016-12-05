@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.services.map;
+package com.hubesco.software.walkingdog.services.location;
 
 import java.awt.Point;
 import java.awt.Polygon;

@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.services.map;
+package com.hubesco.software.walkingdog.api.location;
 
 /**
  * @author paoesco
