@@ -94,6 +94,8 @@ export class MapTab {
       JSON.stringify({
         // TODO : current user id
         id: 'azertyuiop', 
+        // TODO : current user dog
+        name: 'My Dog',
         latitude: this.locationTracker.lat,
         longitude: this.locationTracker.lng,
       }))

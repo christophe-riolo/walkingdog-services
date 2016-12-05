@@ -1,17 +1,19 @@
 package com.hubesco.software.walkingdog.services.location;
 
 import com.hubesco.software.walkingdog.api.location.DogLocation;
-import com.hubesco.software.walkingdog.api.location.UserLocation;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
 import com.hubesco.software.walkingdog.services.common.EndpointHealth;
 import com.hubesco.software.walkingdog.services.common.EndpointStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
+import io.vertx.core.shareddata.LocalMap;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +62,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
 
         // GIVEN
         String params = paramsDogsAround();
+        addDogsAroundData();
 
         // WHEN
         String url = "/api/location/dogsAround?" + params;
@@ -79,7 +82,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // GIVEN
-        UserLocation userLocation = new UserLocation("azertyuiop", 0.0, 0.0);
+        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0);
         String jsonUserLocation = Json.encodePrettily(userLocation);
 
         // WHEN
@@ -98,6 +101,42 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         params.append("&sw-lat=51.599313");
         params.append("&sw-lon=-0.199326");
         return params.toString();
+    }
+
+    private void addDogsAroundData() {
+        LocalMap dogLocations = vertx.sharedData().getLocalMap("dogLocations");
+        for (int i = 1; i <= 10; i++) {
+            dogLocations.put(i, Json.encode(getRandomDogLocation(i)));
+        }
+
+    }
+
+    private static DogLocation getRandomDogLocation(int index) {
+        Map map = createMap();
+        Point2D randomPoint = getRandomPointInsideMap(map);
+        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX());
+        return dogLocation;
+    }
+
+    private static Map createMap() {
+        Point2D topLeft = new Point2D.Double(-0.199326, 51.603176);
+        Point2D topRight = new Point2D.Double(-0.187197, 51.603176);
+        Point2D bottomRight = new Point2D.Double(-0.187197, 51.599313);
+        Point2D bottomLeft = new Point2D.Double(-0.199326, 51.599313);
+        return new Map(topLeft, topRight, bottomRight, bottomLeft);
+    }
+
+    private static Point2D getRandomPointInsideMap(Map map) {
+        double x1 = map.getTopLeft().getX();
+        double x2 = map.getTopRight().getX();
+
+        double x = ThreadLocalRandom.current().nextDouble(x1 < x2 ? x1 : x2, x1 > x2 ? x1 : x2);
+
+        double y1 = map.getTopLeft().getY();
+        double y2 = map.getBottomLeft().getY();
+        double y = ThreadLocalRandom.current().nextDouble(y1 < y2 ? y1 : y2, y1 > y2 ? y1 : y2);
+
+        return new Point2D.Double(x, y);
     }
 
 }

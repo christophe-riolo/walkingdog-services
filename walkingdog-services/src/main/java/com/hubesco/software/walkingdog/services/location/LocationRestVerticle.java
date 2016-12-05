@@ -10,14 +10,13 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +33,7 @@ public class LocationRestVerticle extends AbstractVerticle {
     public void start(Future<Void> fut) {
         // Create a router object.
         Router router = Router.router(vertx);
-        
+
         CorsHandler cors = CorsHandler.create("*").allowedMethod(HttpMethod.GET);
         router.route().handler(cors);
         router.route().handler(BodyHandler.create());
@@ -80,14 +79,34 @@ public class LocationRestVerticle extends AbstractVerticle {
      */
     private void dogsAround(RoutingContext routingContext) {
         // Creates the representation of the displayed map.
-        Map displayedMap = createMap(routingContext);
-        // Find dogs located inside the map
-        List<DogLocation> dogsAround = findDogs(displayedMap);
-        // Send response
-        routingContext
-                .response()
-                .putHeader("content-type", CONTENT_TYPE)
-                .end(Json.encodePrettily(dogsAround));
+        Map map = createMap(routingContext);
+
+        // Gets all locations, filters the locations using the map, sends response.
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "dogs");
+        vertx
+                .eventBus()
+                .send(Addresses.LOCATION_DB.address(), null, options, ebHandler -> {
+                    // All locations
+                    String jsonAllDogs = (String) ebHandler.result().body();
+                    List<String> allDogs = new JsonArray(jsonAllDogs).getList();
+
+                    // Filters them to find dogs located inside the bounds of the map.
+                    List<DogLocation> dogsAround = allDogs.stream()
+                            .map(json -> {
+                                return Json.decodeValue(json, DogLocation.class);
+                            })
+                            .filter(dogLocation -> {
+                                return map.contains(new Point2D.Double(dogLocation.getLongitude(), dogLocation.getLatitude()));
+                            })
+                            .collect(Collectors.toList());
+
+                    // Sends response
+                    routingContext
+                            .response()
+                            .putHeader("content-type", CONTENT_TYPE)
+                            .end(Json.encodePrettily(dogsAround));
+                });
     }
 
     /**
@@ -119,53 +138,6 @@ public class LocationRestVerticle extends AbstractVerticle {
         double bottomLeftX = Double.valueOf(routingContext.request().getParam("sw-lon"));
         Point2D bottomLeft = new Point2D.Double(bottomLeftX, bottomLeftY);
         return new Map(topLeft, topRight, bottomRight, bottomLeft);
-    }
-
-    /**
-     * Find dogs located inside the boundaries of the map.
-     *
-     * @param map : boundaries
-     * @return list if DogLocation
-     */
-    private List<DogLocation> findDogs(Map map) {
-        // Get all locations
-        List<DogLocation> allDogs = getAllDogs(map);
-        // Filter them to find dogs located inside the bounds of the map.
-        List<DogLocation> dogsAround = allDogs.stream()
-                .filter(dogLocation -> {
-                    return map.contains(new Point2D.Double(dogLocation.getLongitude(), dogLocation.getLatitude()));
-                })
-                .collect(Collectors.toList());
-        return dogsAround;
-    }
-
-    /**
-     * To replace with real implementation.
-     *
-     * @param map
-     * @return
-     */
-    private List<DogLocation> getAllDogs(Map map) {
-        List<DogLocation> allDogs = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            Point2D randomPoint = getRandomPointInsideMap(map);
-            DogLocation dogLocation = new DogLocation("dog" + i, "Dog " + i, randomPoint.getY(), randomPoint.getX());
-            allDogs.add(dogLocation);
-        }
-        return allDogs;
-    }
-
-    private Point2D getRandomPointInsideMap(Map map) {
-        double x1 = map.getTopLeft().getX();
-        double x2 = map.getTopRight().getX();
-
-        double x = ThreadLocalRandom.current().nextDouble(x1 < x2 ? x1 : x2, x1 > x2 ? x1 : x2);
-
-        double y1 = map.getTopLeft().getY();
-        double y2 = map.getBottomLeft().getY();
-        double y = ThreadLocalRandom.current().nextDouble(y1 < y2 ? y1 : y2, y1 > y2 ? y1 : y2);
-
-        return new Point2D.Double(x, y);
     }
 
 }
