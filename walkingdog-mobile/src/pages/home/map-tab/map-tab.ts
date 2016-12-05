@@ -132,10 +132,12 @@ export class MapTab {
         this.petsAroundMarkers = []; 
         // Creates new markers
         for (let pet of res.json()) {
-          // Adds new marker
-          let marker = this.addMarker(pet.id, pet.name, pet.latitude, pet.longitude, 'assets/icon/pets.png');
-          // Keeps reference of created marker
-          this.petsAroundMarkers.push(marker);
+          if (pet.id !== 'azertyuiop') { // Filters the marker of the user
+            // Adds new marker
+            let marker = this.addMarker(pet.id, pet.name, pet.latitude, pet.longitude, 'assets/icon/pets.png');
+            // Keeps reference of created marker
+            this.petsAroundMarkers.push(marker);
+          }
         }
       });
   }
