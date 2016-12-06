@@ -5,7 +5,7 @@ import { StatusBar } from 'ionic-native';
 import { LoginPage } from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
+import { ProfilePage } from '../pages/profile/profile';
 
 import { Auth } from '@ionic/cloud-angular';
 
@@ -13,19 +13,27 @@ import { Auth } from '@ionic/cloud-angular';
 @Component({
   template: `
   <ion-menu [content]="content" *ngIf="auth.isAuthenticated()">
-  <ion-content>
-  <ion-list>
-  <button menuClose ion-item (click)="openPage(homePage)">
-  Home
-  </button>
-  <button menuClose ion-item (click)="openPage(aboutPage)">
-  About
-  </button>
-  <button menuClose ion-item (click)="openPage(contactPage)">
-  Contact
-  </button>
-  </ion-list>
-  </ion-content>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <button menuClose ion-item icon-left (click)="openPage(homePage)">
+          <ion-icon name="paw"></ion-icon>
+          Dogs around
+        </button>
+        <button menuClose ion-item icon-left (click)="openPage(profilePage)">
+          <ion-icon name="person"></ion-icon>
+          My profile
+        </button>
+        <button menuClose ion-item icon-left (click)="openPage(aboutPage)">
+          <ion-icon name="information-circle"></ion-icon>
+          About
+        </button>
+      </ion-list>
+    </ion-content>
   </ion-menu>
 
   <ion-nav #rootNavController #content [root]="rootPage" swipeBackEnabled="false"></ion-nav>
@@ -36,7 +44,7 @@ export class MyApp {
   rootPage: any;
   homePage: any;
   aboutPage: any;
-  contactPage: any;
+  profilePage: any;
 
   constructor(platform: Platform, public auth: Auth) {
     platform.ready().then(() => {
@@ -46,7 +54,7 @@ export class MyApp {
       this.rootPage = LoginPage;
       this.homePage = HomePage;
       this.aboutPage = AboutPage;
-      this.contactPage = ContactPage;
+      this.profilePage = ProfilePage;
     });
   }
 
