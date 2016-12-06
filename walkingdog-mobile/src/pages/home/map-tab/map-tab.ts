@@ -1,7 +1,9 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
+import { LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
+import { Geolocation } from 'ionic-native';
 import { LocationTracker } from '../../../components/location/location-tracker';
-import {Http, Response} from '@angular/http';
+import { Http, Response } from '@angular/http';
 
 
 // Comes from Google Maps JavaScript API. See index.html
@@ -14,7 +16,7 @@ declare var google;
 export class MapTab {
 
   // Stores Google map
-  map: any;
+  private map: any;
   // Html element map to display Google map
   @ViewChild('map') mapElement: ElementRef;
   // Stores the marker of the current user
@@ -23,11 +25,14 @@ export class MapTab {
   petsAroundMarkers: Array<any>;
 
   private apiUrl: String;
+  private geoError: boolean;
+  private loader: any;
 
   constructor(
-    public navCtrl: NavController, 
-    public locationTracker: LocationTracker,
-    private http: Http) {
+    private navCtrl: NavController, 
+    private locationTracker: LocationTracker,
+    private http: Http,
+    private loadingCtrl: LoadingController) {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
     //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
@@ -39,30 +44,53 @@ export class MapTab {
   // https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/map/map.ts
 
   ionViewDidLoad() {
-    // Loads Google 
+    // Loads Google Map
     this.loadMap();
     // Starts tracking of the user
-    this.track();
-    
+    this.track();    
   }
 
-  ionViewDidEnter() {
-    
-  }
+  private track() {
+    this.geoError = false;
 
-  track() {
-    // Refresh map every n secondes
-    setInterval(() => {
+    this.loader = this.loadingCtrl.create({
+      content: "Loading current position..."
+    });
+    this.loader.present();
+
+    // Init user location
+    Geolocation.getCurrentPosition().then((position) => {
+      // Stores position
+      this.locationTracker.lat = position.coords.latitude;
+      this.locationTracker.lng = position.coords.longitude;
+      // Centers the map on the user current position.
+      let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
+      this.map.setCenter(currentPosition);
+      // Adds marker on current user position
+      this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
       // Deals with current user location
       this.registerMyLocation();
       // Find dogs around
       this.showPetsInMap();
+      // Removes the loader
+      this.loader.dismiss();
 
-    }, 10000);
+      // Refresh map every 10 seconds
+      setInterval(() => {
+        // Deals with current user location
+        this.registerMyLocation();
+        // Find dogs around
+        this.showPetsInMap();
+
+      }, 10000);
+    }, (err) => {
+      this.geoError = true;
+      this.loader.dismiss();
+    });
+
   }
 
   loadMap() {
- 
     // Loading a map with default position.
     let latLng = new google.maps.LatLng(51.528308, -0.3817765,10);
     let mapOptions = {
@@ -80,11 +108,6 @@ export class MapTab {
     google.maps.event.addListenerOnce(this.map, 'idle', () => { 
       this.mapElement.nativeElement.classList.add('show-map'); 
     });
-
-    // Centering the map on the user current position.
-    let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
-    this.map.setCenter(currentPosition);
-    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
   }
 
   private registerMyLocation() {
@@ -146,7 +169,7 @@ export class MapTab {
     let currentPosition = {lat: lat, lng: lng};
     let marker = new google.maps.Marker({
       map: this.map,
-      animation: google.maps.Animation.DROP,
+      //animation: google.maps.Animation.DROP,
       position: currentPosition,
       icon: icon
     });
