@@ -50,6 +50,13 @@ export class MapTab {
     this.track();    
   }
 
+  // Called by locate me button to center the map on user location
+  center() {
+    // Centers the map on the user current position.
+    let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
+    this.map.setCenter(currentPosition);
+  }
+
   private track() {
     this.geoError = false;
 
@@ -90,7 +97,7 @@ export class MapTab {
 
   }
 
-  loadMap() {
+  private loadMap() {
     // Loading a map with default position.
     let latLng = new google.maps.LatLng(51.528308, -0.3817765,10);
     let mapOptions = {

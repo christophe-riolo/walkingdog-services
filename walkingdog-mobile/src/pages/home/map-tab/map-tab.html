@@ -7,8 +7,13 @@
   </ion-navbar>
 </ion-header>
 
+<ion-content>
+  <div #map id="map"></div>
 
+  <ion-fab right bottom>
+    <button ion-fab color="light" (click)="center()">
+    	<ion-icon name="locate"></ion-icon>
+    </button>
+  </ion-fab>
 
-<ion-content padding>
-  <div #map id="map"></div>  
 </ion-content>
