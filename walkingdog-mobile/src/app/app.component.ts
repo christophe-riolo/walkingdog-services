@@ -28,9 +28,13 @@ import { Auth } from '@ionic/cloud-angular';
           <ion-icon name="person"></ion-icon>
           My profile
         </button>
+        <a href="mailto:?subject=Checkout Walking Dog app&body=to change" ion-item icon-left>
+          <ion-icon name="share"></ion-icon>
+          Share app
+        </a>
         <button menuClose ion-item icon-left (click)="openPage(aboutPage)">
           <ion-icon name="information-circle"></ion-icon>
-          About
+          About & Feedback
         </button>
       </ion-list>
     </ion-content>
