@@ -15,3 +15,16 @@ Walking Dog
 ## Environment
 
 - Integration : https://walkingdog-services.herokuapp.com/
+
+## Contribute
+
+- Install nodejs
+- npm install -g ionic
+- npm install -g cordova
+- git clone https://github.com/paoesco/walkingdog.git
+- cd walkingdog
+- git config user.name "xxx"
+- git config user.email "xxx@xxx.com"
+- npm install
+- ionic platform add android
+- Install Android Studio
