@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
-import { Auth, User, UserDetails, IDetailedError } from '@ionic/cloud-angular';
+import { Auth as IonicAuth, User as IonicUser, UserDetails, IDetailedError } from '@ionic/cloud-angular';
+import { GoogleAuth, User as GoogleUser } from '@ionic/cloud-angular';
 
 import { FormBuilder,FormGroup } from '@angular/forms';
 
@@ -26,13 +27,15 @@ import { HomePage } from '../home/home';
     signupForm: FormGroup;
 
     constructor(
-      public auth: Auth, 
-      public user: User, 
+      public ionicAuth: IonicAuth, 
+      public ionicUser: IonicUser, 
+      public googleAuth: GoogleAuth,
+      public googleUser: GoogleUser,
       public loadingCtrl: LoadingController,
       public navCtrl: NavController,
       fb: FormBuilder) {
 
-      if (this.auth.isAuthenticated()) {
+      if (this.ionicAuth.isAuthenticated()) {
         this.navCtrl.setRoot(HomePage);
       }
 
@@ -58,7 +61,7 @@ import { HomePage } from '../home/home';
     signup(value: any) {
       this.loader.present();
       let details: UserDetails = {'email': value.email, 'password': value.password};
-      this.auth.signup(details).then(() => {
+      this.ionicAuth.signup(details).then(() => {
         alert('Signed up')
         this.segments = 'login';
         this.loader.dismiss();
@@ -77,7 +80,7 @@ import { HomePage } from '../home/home';
     login(value: any) {
       this.loader.present();
       let details: UserDetails = {'email': value.email, 'password': value.password};
-      this.auth.login('basic', details).then( () =>{
+      this.ionicAuth.login('basic', details).then( () =>{
         this.loader.dismiss();
         this.navCtrl.setRoot(HomePage);
       }, (err) => {
@@ -88,8 +91,15 @@ import { HomePage } from '../home/home';
     }
 
     loginWithGoogle() {
-      this.auth.login('google').then( () =>{
+      this.googleAuth.login().then( () =>{
         alert('Logged in with Google');
+        this.navCtrl.setRoot(HomePage);
+      });
+    }
+
+    loginWithFacebook() {
+      this.ionicAuth.login('facebook').then( () =>{
+        alert('Logged in with Facebook');
         this.navCtrl.setRoot(HomePage);
       });
     }

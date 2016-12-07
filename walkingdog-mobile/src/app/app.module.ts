@@ -7,7 +7,6 @@ import { HomePage } from '../pages/home/home';
 import { DogComponent } from '../components/dog/dog.component';
 import { LocationTracker } from '../components/location/location-tracker';
 import { TimerComponent } from '../components/timer/timer';
-import { ListTab } from '../pages/home/list-tab/list-tab';
 import { MapTab } from '../pages/home/map-tab/map-tab';
 import { LoginPage } from '../pages/login/login';
 
@@ -16,6 +15,12 @@ import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 const cloudSettings: CloudSettings = {
   'core': {
     'app_id': '66a0a8f6'
+  },
+  'auth': {
+    'google': {
+      'webClientId': '112751394957-bji8or17opkmn66ukqsm00q7312p1ml8.apps.googleusercontent.com ',
+      'scope': ['email', 'public_profile']
+    }
   }
 };
 
@@ -28,7 +33,6 @@ const cloudSettings: CloudSettings = {
     LoginPage,
     DogComponent,
     TimerComponent,
-    ListTab,
     MapTab
   ],
   imports: [
@@ -42,7 +46,6 @@ const cloudSettings: CloudSettings = {
     ProfilePage,
     HomePage,
     LoginPage,
-    ListTab,
     MapTab
   ],
   providers: [

@@ -23,12 +23,21 @@
           <ion-input type="password" placeholder="Password" [formControl]="loginForm.controls['password']"></ion-input>
         </ion-item>
 
-        <button ion-button block type="submit">
+        <button ion-button block color="primary" type="submit">
           Sign in
         </button>
       </form>
-      <button ion-button block color="danger" (click)="loginWithGoogle()">
-        Sign in with Google+
+
+      <ion-item-divider></ion-item-divider>
+
+      <button ion-button block icon-left color="danger" (click)="loginWithGoogle()">
+        <ion-icon name="logo-googleplus"></ion-icon>
+        Sign in with Google
+      </button>
+
+      <button ion-button block icon-left color="primary" (click)="loginWithFacebook()">
+        <ion-icon name="logo-facebook"></ion-icon>
+        Sign in with Facebook
       </button>
     </ion-list>
 
@@ -42,7 +51,9 @@
           <ion-input type="password" placeholder="Password" [formControl]="signupForm.controls['password']"></ion-input>
         </ion-item>
 
-        <button ion-button block type="submit">Create account</button>
+        <button ion-button icon-left block type="submit">
+          Create account
+        </button>
       </form>
     </ion-list>
   </div>
