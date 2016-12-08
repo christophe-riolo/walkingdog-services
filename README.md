@@ -18,13 +18,46 @@ Walking Dog
 
 ## Contribute
 
+### Installation
+
 - Install nodejs
-- npm install -g ionic
-- npm install -g cordova
-- git clone https://github.com/paoesco/walkingdog.git
-- cd walkingdog
-- git config user.name "xxx"
-- git config user.email "xxx@xxx.com"
-- npm install
-- ionic platform add android
-- Install Android Studio
+- `npm install -g ionic`
+- `npm install -g cordova`
+- `git clone https://github.com/paoesco/walkingdog.git`
+- `cd walkingdog`
+- `git config user.name "xxx"`
+- `git config user.email "xxx@xxx.com"`
+- `npm install`
+
+
+#### Android platform
+
+
+- `ionic platform add android` (inside walkingdog-mobile folder)
+- Install Java 8 (JDK)
+- Add JAVA_HOME variable (path/to/jdk)
+- Add $JAVA_HOME/bin to $PATH
+- Install Android Studio (SDK and AVD)
+- Add ANDROID_HOME variable (path/to/sdk)
+- Add $ANDROID_HOME/tools to $PATH
+- Add $ANDROID_HOME/platform-tools to $PATH
+- Install SDK API 19 (SDK Platform, Google APIs Intel X86 Atom System Image, Sources for Android SDK)
+- Install Intel HAXM (if not installed by Android Studio or Android SDK)
+
+#### iOS platform
+
+// TBC
+
+
+### Build
+
+- `ionic serve`
+
+#### Android
+
+- `ionic build android`
+- `ionic emulate android` (needs AVD up and running)
+
+#### iOS
+
+// TBC
