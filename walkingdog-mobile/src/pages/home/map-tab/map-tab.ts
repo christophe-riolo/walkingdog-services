@@ -23,6 +23,8 @@ export class MapTab {
   currentUserMarker: any;
   // Stores the markers of pets around
   petsAroundMarkers: Array<any>;
+  // Tells if user is walking
+  walking: boolean;
 
   private apiUrl: String;
   private geoError: boolean;
@@ -36,6 +38,8 @@ export class MapTab {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
     //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
+    //
+    this.walking = false;
   }
   
   // http://www.joshmorony.com/ionic-2-how-to-use-google-maps-geolocation-video-tutorial/
@@ -55,6 +59,14 @@ export class MapTab {
     // Centers the map on the user current position.
     let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
     this.map.setCenter(currentPosition);
+  }
+
+  startWalk() {
+    this.walking = true;
+  }
+
+  stopWalk() {
+    this.walking = false;
   }
 
   private track() {

@@ -10,6 +10,15 @@
 <ion-content>
   <div #map id="map"></div>
 
+  <ion-fab center bottom>
+    <button ion-fab color="secondary" (click)="startWalk()" *ngIf="!walking">
+      <ion-icon name="walk"></ion-icon>
+    </button>
+    <button ion-fab color="danger" (click)="stopWalk()" *ngIf="walking">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </ion-fab>
+
   <ion-fab right bottom>
     <button ion-fab color="light" (click)="center()">
     	<ion-icon name="locate"></ion-icon>
