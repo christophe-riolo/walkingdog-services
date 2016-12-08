@@ -14,7 +14,7 @@ import { Auth } from '@ionic/cloud-angular';
   template: `
   <ion-menu [content]="content" *ngIf="auth.isAuthenticated()">
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="primary">
         <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -34,7 +34,7 @@ import { Auth } from '@ionic/cloud-angular';
         </a>
         <button menuClose ion-item icon-left (click)="openPage(aboutPage)">
           <ion-icon name="information-circle"></ion-icon>
-          About & Feedback
+          About & feedback
         </button>
       </ion-list>
     </ion-content>
