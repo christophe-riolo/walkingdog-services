@@ -18,7 +18,7 @@ const cloudSettings: CloudSettings = {
   },
   'auth': {
     'google': {
-      'webClientId': '112751394957-bji8or17opkmn66ukqsm00q7312p1ml8.apps.googleusercontent.com ',
+      'webClientId': '112751394957-bji8or17opkmn66ukqsm00q7312p1ml8.apps.googleusercontent.com',
       'scope': ['email', 'public_profile']
     }
   }
