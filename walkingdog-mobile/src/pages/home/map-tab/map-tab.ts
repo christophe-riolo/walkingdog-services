@@ -1,7 +1,6 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
-import { Geolocation } from 'ionic-native';
 import { LocationTracker } from '../../../components/location/location-tracker';
 import { Http, Response } from '@angular/http';
 
@@ -27,7 +26,6 @@ export class MapTab {
   walking: boolean;
 
   private apiUrl: String;
-  private geoError: boolean;
   private loader: any;
 
   constructor(
@@ -38,7 +36,6 @@ export class MapTab {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
     //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
-    //
     this.walking = false;
   }
   
@@ -48,66 +45,55 @@ export class MapTab {
   // https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/map/map.ts
 
   ionViewDidLoad() {
-    // Loads Google Map
-    this.loadMap();
-    // Starts tracking of the user
-    this.locationTracker.startTracking();
-    // Init map
-    this.init();    
-  }
-
-  // Called by locate me button to center the map on user location
-  center() {
-    // Centers the map on the user current position.
-    let currentPosition = new google.maps.LatLng(this.locationTracker.getLat(), this.locationTracker.getLng());
-    this.map.setCenter(currentPosition);
-  }
-
-  startWalk() {
-    this.walking = true;
-  }
-
-  stopWalk() {
-    this.walking = false;
-  }
-
-  private init() {
-    this.geoError = false;
-
     this.loader = this.loadingCtrl.create({
       content: "Loading current position..."
     });
     this.loader.present();
 
-    // Init user location
-    Geolocation.getCurrentPosition().then((position) => {
-      // Stores position
-      let currentLat = position.coords.latitude;
-      let currentLng = position.coords.longitude;
-      // Centers the map on the user current position.
-      let currentPosition = new google.maps.LatLng(currentLat, currentLng);
-      this.map.setCenter(currentPosition);
-      // Adds marker on current user position
-      this.currentUserMarker = this.addMarker("you", "You", currentLat, currentLng, null);
+    // Loads Google Map
+    this.loadMap();
+    // Starts tracking of the user
+    this.locationTracker.startTracking().then(() => {
+      this.init();
+      this.loader.dismiss();
+    });
+  }
+
+  // Called by locate me button to center the map on user location
+  buttonLocateMe() {
+    // Centers the map on the user current position.
+    let currentPosition = new google.maps.LatLng(this.locationTracker.getLat(), this.locationTracker.getLng());
+    this.map.setCenter(currentPosition);
+  }
+
+  buttonStartWalk() {
+    this.walking = true;
+    this.updateMyLocation();
+  }
+
+  buttonStopWalk() {
+    this.walking = false;
+    this.updateMyLocation();
+  }
+
+  private init() {
+    // Centers the map on the user current position.
+    let currentPosition = new google.maps.LatLng(this.locationTracker.getLat(), this.locationTracker.getLng());
+    this.map.setCenter(currentPosition);
+    // Adds marker on current user position
+    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), null);
+    // Deals with current user location
+    this.updateMyLocation();
+    // Find dogs around
+    this.showPetsInMap();
+     // Refresh map every 10 seconds
+    setInterval(() => {
       // Deals with current user location
       this.updateMyLocation();
       // Find dogs around
       this.showPetsInMap();
-      // Removes the loader
-      this.loader.dismiss();
+    }, 10000);
 
-      // Refresh map every 10 seconds
-      setInterval(() => {
-        // Deals with current user location
-        this.updateMyLocation();
-        // Find dogs around
-        this.showPetsInMap();
-
-      }, 10000);
-    }, (err) => {
-      this.geoError = true;
-      this.loader.dismiss();
-    });
 
   }
 
@@ -137,7 +123,11 @@ export class MapTab {
       this.currentUserMarker.setMap(null);
     }
     // Creates and stores a new marker with the current position.
-    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), null);
+    let icon = null;
+    if (!this.walking) {
+      icon = 'assets/icon/marker-notwalking.png';
+    }
+    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), icon);
   }
 
   private showPetsInMap() {
@@ -161,7 +151,7 @@ export class MapTab {
         for (let pet of res.json()) {
           if (pet.id !== 'azertyuiop') { // Filters the marker of the user
             // Adds new marker
-            let marker = this.addMarker(pet.id, pet.name, pet.latitude, pet.longitude, 'assets/icon/pets.png');
+            let marker = this.addMarker(pet.id, pet.name, pet.latitude, pet.longitude, 'assets/icon/marker-pets.png');
             // Keeps reference of created marker
             this.petsAroundMarkers.push(marker);
           }
@@ -169,13 +159,18 @@ export class MapTab {
       });
   }
 
-  private addMarker(dogId: string, dogName: string, lat: number, lng : number, icon: string): any {
+  private addMarker(dogId: string, dogName: string, lat: number, lng : number, iconUrl: string): any {
     let currentPosition = {lat: lat, lng: lng};
+    //let icon = {
+      //scaledSize: new google.maps.Size(32, 32), // scaled size
+    //  url: iconUrl // url
+    //}
+
     let marker = new google.maps.Marker({
       map: this.map,
       //animation: google.maps.Animation.DROP,
       position: currentPosition,
-      icon: icon
+      icon: iconUrl
     });
     let content = `<h4>${dogName}</h4>`;          
     this.addInfoWindow(marker, content);

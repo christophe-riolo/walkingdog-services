@@ -120,6 +120,7 @@ public class LocationRestVerticle extends AbstractVerticle {
         vertx.eventBus().send(Addresses.LOCATION_DB.address(), routingContext.getBodyAsString(), options);
         routingContext
                 .response()
+                .setStatusCode(204)
                 .putHeader("content-type", CONTENT_TYPE)
                 .end();
     }

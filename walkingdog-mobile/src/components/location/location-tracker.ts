@@ -10,23 +10,31 @@ export class LocationTracker {
   private lat: number = 0;
   private lng: number = 0;
   private apiUrl: String;
+  private tracking: boolean;
 
   constructor(
     private zone: NgZone,
     private http: Http) {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
+    this.tracking = false;
   }
 
   startTracking() {
-    // Every 15 seconds
-    this.backgroundTracking();
-    // Every 15 seconds
-    this.foregroundTracking();
+    if (!this.tracking) {
+      this.backgroundTracking();
+      let promise = this.foregroundTracking();
+      this.tracking = true;
+      return promise;
+    } else {
+      return new Promise(((resolve, reject) => {resolve()}));
+    }
+
   }
 
   stopTracking() {
     BackgroundGeolocation.finish();
     this.watch.unsubscribe();
+    this.tracking = false;
   }
 
   hasPosition(): boolean {
@@ -50,7 +58,6 @@ export class LocationTracker {
       });
     }, (err) => {
       console.log(err);
-      alert('Unable to get current position.');
     }, config);
 
     // Turn ON the background-geolocation system.
@@ -59,22 +66,26 @@ export class LocationTracker {
 
   // Deals with foreground tracking, when app is running and active.
   private foregroundTracking() {
-    // Foreground Tracking options
-    let options = {
-   //   enableHighAccuracy: true,
-      timeout: 10000
-    };
 
-    this.watch = Geolocation
-                    .watchPosition(options)
-                    //.filter((p: any) => p.code === undefined)
-                    .subscribe((position: Geoposition) => {
-      // Run update inside of Angular's zone
-      this.zone.run(() => {
-        console.log(position);
-        this.processPosition(position);
+    let promise = new Promise((resolve, reject) => {
+      // Foreground Tracking options
+      let options = {
+        enableHighAccuracy: true,
+        timeout: 10000
+      };
+
+      this.watch = Geolocation
+      .watchPosition(options)
+      .filter((p: any) => p.code === undefined)
+      .subscribe((position) => {
+        // Runs update inside of Angular's zone
+        this.zone.run(() => {
+          this.processPosition(<Geoposition> position);
+          resolve();
+        });
       });
     });
+    return promise;
   }
 
   private processPosition(position: Geoposition) {
@@ -96,9 +107,9 @@ export class LocationTracker {
         latitude: this.lat,
         longitude: this.lng,
       }))
-      .subscribe((res: Response) => {
-        console.log(res);
-      });
+    .subscribe((res: Response) => {
+      console.log(res);
+    });
   }
 
   public getLat(): number {
