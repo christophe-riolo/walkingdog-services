@@ -51,13 +51,15 @@ export class MapTab {
     // Loads Google Map
     this.loadMap();
     // Starts tracking of the user
-    this.track();    
+    this.locationTracker.startTracking();
+    // Init map
+    this.init();    
   }
 
   // Called by locate me button to center the map on user location
   center() {
     // Centers the map on the user current position.
-    let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
+    let currentPosition = new google.maps.LatLng(this.locationTracker.getLat(), this.locationTracker.getLng());
     this.map.setCenter(currentPosition);
   }
 
@@ -69,7 +71,7 @@ export class MapTab {
     this.walking = false;
   }
 
-  private track() {
+  private init() {
     this.geoError = false;
 
     this.loader = this.loadingCtrl.create({
@@ -80,15 +82,15 @@ export class MapTab {
     // Init user location
     Geolocation.getCurrentPosition().then((position) => {
       // Stores position
-      this.locationTracker.lat = position.coords.latitude;
-      this.locationTracker.lng = position.coords.longitude;
+      let currentLat = position.coords.latitude;
+      let currentLng = position.coords.longitude;
       // Centers the map on the user current position.
-      let currentPosition = new google.maps.LatLng(this.locationTracker.lat, this.locationTracker.lng);
+      let currentPosition = new google.maps.LatLng(currentLat, currentLng);
       this.map.setCenter(currentPosition);
       // Adds marker on current user position
-      this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
+      this.currentUserMarker = this.addMarker("you", "You", currentLat, currentLng, null);
       // Deals with current user location
-      this.registerMyLocation();
+      this.updateMyLocation();
       // Find dogs around
       this.showPetsInMap();
       // Removes the loader
@@ -97,7 +99,7 @@ export class MapTab {
       // Refresh map every 10 seconds
       setInterval(() => {
         // Deals with current user location
-        this.registerMyLocation();
+        this.updateMyLocation();
         // Find dogs around
         this.showPetsInMap();
 
@@ -129,29 +131,13 @@ export class MapTab {
     });
   }
 
-  private registerMyLocation() {
-    // Sends location of current user to server, to be used by others
-    this.http.post(
-      `${this.apiUrl}/register`,
-      JSON.stringify({
-        // TODO : current user id
-        id: 'azertyuiop', 
-        // TODO : current user dog
-        name: 'My Dog',
-        latitude: this.locationTracker.lat,
-        longitude: this.locationTracker.lng,
-      }))
-      .subscribe((res: Response) => {
-        console.log(res);
-      });
-
+  private updateMyLocation() {
     // Removes previous user location
     if (this.currentUserMarker) {
       this.currentUserMarker.setMap(null);
     }
-
     // Creates and stores a new marker with the current position.
-    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.lat, this.locationTracker.lng, null);
+    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), null);
   }
 
   private showPetsInMap() {
@@ -165,7 +151,6 @@ export class MapTab {
     // Sends request to backend
     this.http.request(`${this.apiUrl}/dogsAround?${params}`)
       .subscribe((res: Response) => {
-        console.log(res.json());
         // Removes previous markers
         for (let marker of this.petsAroundMarkers) {
           marker.setMap(null);

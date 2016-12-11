@@ -27,6 +27,7 @@ Walking Dog
 - `cd walkingdog`
 - `git config user.name "xxx"`
 - `git config user.email "xxx@xxx.com"`
+- `cd walkingdog-mobile`
 - `npm install`
 
 
@@ -46,7 +47,12 @@ Walking Dog
 
 #### iOS platform
 
-// TBC
+- Install Xcode
+- `xcode-select --install` (after Xcode installation finished)
+- `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`
+- `npm install -g ios-sim`
+- `sudo npm install -g ios-deploy --unsafe-perm=true --allow-root`
+- `ionic platform add ios` (inside walkingdog-mobile folder)
 
 
 ### Build
