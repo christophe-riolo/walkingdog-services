@@ -89,7 +89,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         String url = "/api/location/register";
         vertx.createHttpClient().post(port, "localhost", url,
                 response -> {
-                    context.assertTrue(response.statusCode() == 200);
+                    context.assertTrue(response.statusCode() == 204);
                     async.complete();
                 }).end(jsonUserLocation);
     }
