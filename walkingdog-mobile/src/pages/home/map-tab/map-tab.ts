@@ -124,9 +124,9 @@ export class MapTab {
     }
     // Creates and stores a new marker with the current position.
     let icon = null;
-    if (!this.walking) {
-      icon = 'assets/icon/marker-notwalking.png';
-    }
+    //if (!this.walking) {
+    //  icon = 'assets/icon/marker-notwalking.png';
+    //}
     this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), icon);
   }
 
