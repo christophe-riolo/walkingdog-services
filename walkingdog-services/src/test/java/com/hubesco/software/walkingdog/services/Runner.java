@@ -6,8 +6,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import java.awt.geom.Point2D;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -20,6 +18,7 @@ public class Runner {
 
         int defaultPort = 8080;
         System.setProperty("http.port", String.valueOf(defaultPort));
+        System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:5432/walkingdog");
 
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(MainVerticle.class.getName(), (result) -> {

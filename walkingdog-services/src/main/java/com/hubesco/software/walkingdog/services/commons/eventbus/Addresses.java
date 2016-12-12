@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.services.common.eventbus;
+package com.hubesco.software.walkingdog.services.commons.eventbus;
 
 /**
  *
@@ -6,7 +6,8 @@ package com.hubesco.software.walkingdog.services.common.eventbus;
  */
 public enum Addresses {
 
-    LOCATION_DB("locationDb");
+    LOCATION_DB("locationDb"),
+    USER_DB("usersDb");
 
     private final String address;
 

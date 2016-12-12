@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.services.common;
+package com.hubesco.software.walkingdog.services.commons;
 
 /**
  * @author paoesco

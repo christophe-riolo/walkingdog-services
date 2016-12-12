@@ -17,6 +17,7 @@ public abstract class AbstractVerticleTest {
     protected int port;
 
     public AbstractVerticleTest() {
+        System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@192.168.99.100:5432/postgres");
         try (ServerSocket socket = new ServerSocket(0)) {
             port = socket.getLocalPort();
             System.setProperty("http.port", String.valueOf(port));

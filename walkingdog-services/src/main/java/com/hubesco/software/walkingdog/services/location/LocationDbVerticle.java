@@ -1,8 +1,8 @@
 package com.hubesco.software.walkingdog.services.location;
 
 import com.hubesco.software.walkingdog.api.location.DogLocation;
-import com.hubesco.software.walkingdog.services.common.eventbus.Addresses;
-import com.hubesco.software.walkingdog.services.common.eventbus.Headers;
+import com.hubesco.software.walkingdog.services.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.services.commons.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;

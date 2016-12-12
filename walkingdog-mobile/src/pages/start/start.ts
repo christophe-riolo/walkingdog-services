@@ -6,8 +6,10 @@ import { GoogleAuth, User as GoogleUser } from '@ionic/cloud-angular';
 
 import { FormBuilder,FormGroup } from '@angular/forms';
 
-import { HomePage } from '../home/home';
 import { LoginPage } from '../login/login'
+import { SignupPage } from '../signup/signup'
+import { HomePage } from '../home/home';
+
 
 
 /*
@@ -67,6 +69,6 @@ import { LoginPage } from '../login/login'
     }
 
     buttonSignup() {
-      alert('to signup page');
+      this.navCtrl.push(SignupPage);
     }
   }

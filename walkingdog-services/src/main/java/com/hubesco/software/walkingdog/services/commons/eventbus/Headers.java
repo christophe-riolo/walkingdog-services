@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.services.common.eventbus;
+package com.hubesco.software.walkingdog.services.commons.eventbus;
 
 /**
  *

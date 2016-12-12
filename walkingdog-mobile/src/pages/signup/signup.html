@@ -1,0 +1,253 @@
+
+<ion-header>
+	<ion-navbar color="secondary">
+		<ion-title>Sign Up with Email</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+	<form [formGroup]="signupForm" (ngSubmit)="signup(signupForm)">
+
+		<ion-list>
+
+			<h4>About you</h4>
+			<ion-item>
+				<ion-input type="email" placeholder="Email" [formControl]="signupForm.controls['email']"></ion-input>
+			</ion-item>
+
+			<ion-item>
+				<ion-input type="password" placeholder="Password" [formControl]="signupForm.controls['password']"></ion-input>
+			</ion-item>
+
+			<h4>About your dog</h4>
+			<ion-item>
+				<ion-input type="text" placeholder="Name" [formControl]="signupForm.controls['dogName']"></ion-input>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Gender</ion-label>
+				<ion-select [formControl]="signupForm.controls['dogGender']">
+					<ion-option value="FEMALE">Female</ion-option>
+					<ion-option value="MALE">Male</ion-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Breed</ion-label>
+				<ion-select [formControl]="signupForm.controls['dogBreed']">
+					<ion-option value="AFFENPINSCHER">Affenpinscher</ion-option>
+					<ion-option value="AFGHAN_HOUND">Afghan Hound</ion-option>
+					<ion-option value="AIREDALE_TERRIER">Airedale Terrier</ion-option>
+					<ion-option value="AKITA">Akita</ion-option>
+					<ion-option value="ALASKAN_MALAMUTE">Alaskan Malamute</ion-option>
+					<ion-option value="AMERICAN_ENGLISH_COONHOUND">American English Coonhound</ion-option>
+					<ion-option value="AMERICAN_ESKIMO_DOG">American Eskimo Dog</ion-option>
+					<ion-option value="AMERICAN_FOXHOUND">American Foxhound</ion-option>
+					<ion-option value="AMERICAN_PIT_BULL_TERRIER">American Pit Bull Terrier</ion-option>
+					<ion-option value="AMERICAN_WATER_SPANIEL">American Water Spaniel</ion-option>
+					<ion-option value="ANATOLIAN_SHEPHERD_DOG">Anatolian Shepherd Dog</ion-option>
+					<ion-option value="APPENZELLER_SENNENHUNDE">Appenzeller Sennenhunde</ion-option>
+					<ion-option value="AUSTRALIAN_CATTLE_DOG">Australian Cattle Dog</ion-option>
+					<ion-option value="AUSTRALIAN_SHEPHERD">Australian Shepherd</ion-option>
+					<ion-option value="AUSTRALIAN_TERRIER">Australian Terrier</ion-option>
+					<ion-option value="AZAWAKH">Azawakh</ion-option>
+					<ion-option value="BARBET">Barbet</ion-option>
+					<ion-option value="BASENJI">Basenji</ion-option>
+					<ion-option value="BASSET_HOUND">Basset Hound</ion-option>
+					<ion-option value="BEAGLE">Beagle</ion-option>
+					<ion-option value="BEARDED_COLLIE">Bearded Collie</ion-option>
+					<ion-option value="BEDLINGTON_TERRIER">Bedlington Terrier</ion-option>
+					<ion-option value="BELGIAN_MALINOIS">Belgian Malinois</ion-option>
+					<ion-option value="BELGIAN_SHEEPDOG">Belgian Sheepdog</ion-option>
+					<ion-option value="BELGIAN_TERVUREN">Belgian Tervuren</ion-option>
+					<ion-option value="BERGER_PICARD">Berger Picard</ion-option>
+					<ion-option value="BERNESE_MOUNTAIN_DOG">Bernese Mountain Dog</ion-option>
+					<ion-option value="BICHON_FRISE">Bichon Frise</ion-option>
+					<ion-option value="BLACK_AND_TAN_COONHOUND">Black and Tan Coonhound</ion-option>
+					<ion-option value="BLACK_RUSSIAN_TERRIER">Black Russian Terrier</ion-option>
+					<ion-option value="BLOODHOUND">Bloodhound</ion-option>
+					<ion-option value="BLUETICK_COONHOUND">Bluetick Coonhound</ion-option>
+					<ion-option value="BOLOGNESE">Bolognese</ion-option>
+					<ion-option value="BORDER_COLLIE">Border Collie</ion-option>
+					<ion-option value="BORDER_TERRIER">Border Terrier</ion-option>
+					<ion-option value="BORZOI">Borzoi</ion-option>
+					<ion-option value="BOSTON_TERRIER">Boston Terrier</ion-option>
+					<ion-option value="BOUVIER_DES_FLANDRES">Bouvier des Flandres</ion-option>
+					<ion-option value="BOXER">Boxer</ion-option>
+					<ion-option value="BOYKIN_SPANIEL">Boykin Spaniel</ion-option>
+					<ion-option value="BRACCO_ITALIANO">Bracco Italiano</ion-option>
+					<ion-option value="BRIARD">Briard</ion-option>
+					<ion-option value="BRITTANY">Brittany</ion-option>
+					<ion-option value="BRUSEELS_GRIFFON">Brussels Griffon</ion-option>
+					<ion-option value="BULL_TERRIER">Bull Terrier</ion-option>
+					<ion-option value="BULLDOG">Bulldog</ion-option>
+					<ion-option value="BULLMASTIFF">Bullmastiff</ion-option>
+					<ion-option value="CAIRN_TERRIER">Cairn Terrier</ion-option>
+					<ion-option value="CANAAN_DOG">Canaan Dog</ion-option>
+					<ion-option value="CANE_CORSO">Cane Corso</ion-option>
+					<ion-option value="CARDIGAN_WELSH_CORGI">Cardigan Welsh Corgi</ion-option>
+					<ion-option value="CATAHOULA_LEOPARD_DOG">Catahoula Leopard Dog</ion-option>
+					<ion-option value="CAVALIER_KING_CHARLES_SPANIEL">Cavalier King Charles Spaniel</ion-option>
+					<ion-option value="CESKY_TERRIER">Cesky Terrier</ion-option>
+					<ion-option value="CHESAPEAKE_BAY_RETRIEVER">Chesapeake Bay Retrieve</ion-option>
+					<ion-option value="CHIHUAHUA">Chihuahua</ion-option>
+					<ion-option value="CHINESE_CRESTED">Chinese Crested</ion-option>
+					<ion-option value="CHINESE_SHAR_PEI">Chinese Shar-Pei</ion-option>
+					<ion-option value="CHINOOK">Chinook</ion-option>
+					<ion-option value="CHOW_CHOW">Chow Chow</ion-option>
+					<ion-option value="CLUMBER_SPANIEL">Clumber Spaniel</ion-option>
+					<ion-option value="COCKAPOO">Cockapoo</ion-option>
+					<ion-option value="COCKER_SPANIEL">Cocker Spaniel</ion-option>
+					<ion-option value="COLLIE">Collie</ion-option>
+					<ion-option value="COTON_DE_TULEAR">Coton de Tulear</ion-option>
+					<ion-option value="CURLY_COATED_RETRIEVE">Curly-Coated Retriever</ion-option>
+					<ion-option value="DACHSHUN">Dachshun</ion-option>
+					<ion-option value="DALMATIAN">Dalmatian</ion-option>
+					<ion-option value="DANDIE_DINMONT_TERRIER">Dandie Dinmont Terrier</ion-option>
+					<ion-option value="DOBERMAN_PINSCHER">Doberman Pinscher</ion-option>
+					<ion-option value="DOGUE_DE_BORDEAUX">Dogue de Bordeaux</ion-option>
+					<ion-option value="ENGLISH_COCKER_SPANIEL">English Cocker Spaniel</ion-option>
+					<ion-option value="ENGLISH_FOXHOUND">English Foxhound</ion-option>
+					<ion-option value="ENGLISH_SETTER">English Setter</ion-option>
+					<ion-option value="ENGLISH_SPRINGER_SPANIEL">English Springer Spaniel</ion-option>
+					<ion-option value="ENGLISH_TOY_SPANIEL">English Toy Spaniel</ion-option>
+					<ion-option value="ENTLEBUCHER_MOUNTAIN_DOG">Entlebucher Mountain Dog</ion-option>
+					<ion-option value="FIELD_SPANIEL">Field Spaniel</ion-option>
+					<ion-option value="FINNISH_LAPPHUND">Finnish Lapphund</ion-option>
+					<ion-option value="FINNISH_SPITZ">Finnish Spitz</ion-option>
+					<ion-option value="FLAT_COATED_RETRIEVER">Flat-Coated Retriever</ion-option>
+					<ion-option value="FOX_TERRIER">Fox Terrier</ion-option>
+					<ion-option value="FRENCH_BULLDOG">French Bulldog</ion-option>
+					<ion-option value="GERMAN_PINSCHER">German Pinscher</ion-option>
+					<ion-option value="GERMAN_SHEPHERD_DOG">German Shepherd Dog</ion-option>
+					<ion-option value="GERMAN_SHORTHAIRED_POINTER">German Shorthaired Pointer</ion-option>
+					<ion-option value="GERMAN_WIREHAIRED_POINTER">German Wirehaired Pointer</ion-option>
+					<ion-option value="GIANT_SCHNAUZER">Giant Schnauzer</ion-option>
+					<ion-option value="GLEN_OF_IMAAL_TERRIER">Glen of Imaal Terrier</ion-option>
+					<ion-option value="GOLDADOR">Goldador</ion-option>
+					<ion-option value="GOLDEN_RETRIEVER">Golden Retriever</ion-option>
+					<ion-option value="GOLDENDOODLE">Goldendoodle</ion-option>
+					<ion-option value="GORDON_SETTER">Gordon Setter</ion-option>
+					<ion-option value="GREAT_DANE">Great Dane</ion-option>
+					<ion-option value="GREAT_PYRENEES">Great Pyrenees</ion-option>
+					<ion-option value="GREATER_SWISS_MOUNTAIN_DOG">Greater Swiss Mountain Dog</ion-option>
+					<ion-option value="GREYHOUND">Greyhound</ion-option>
+					<ion-option value="HARRIER">Harrier</ion-option>
+					<ion-option value="HAVANESE">Havanese</ion-option>
+					<ion-option value="IBIZAN_HOUND">Ibizan Hound</ion-option>
+					<ion-option value="ICELANDIC_SHEEPDOG">Icelandic Sheepdog</ion-option>
+					<ion-option value="IRISH_RED_AND_WHITE_SETTER">Irish Red and White Setter</ion-option>
+					<ion-option value="IRISH_SETTER">Irish Setter</ion-option>
+					<ion-option value="IRISH_TERRIER">Irish Terrier</ion-option>
+					<ion-option value="IRISH_WATER_SPANIEL">Irish Water Spaniel</ion-option>
+					<ion-option value="IRISH_WOLFHOUND">Irish Wolfhound</ion-option>
+					<ion-option value="ITALIAN_GREYHOUND">Italian Greyhound</ion-option>
+					<ion-option value="JACK_RUSSELL_TERRIER">Jack Russell Terrier</ion-option>
+					<ion-option value="JAPANESE_CHIN">Japanese Chin</ion-option>
+					<ion-option value="KOREAN_JINDO_DOG">Korean Jindo Dog</ion-option>
+					<ion-option value="KEESHOND">Keeshond</ion-option>
+					<ion-option value="KERRY_BLUE_TERRIER">Kerry Blue Terrier</ion-option>
+					<ion-option value="KOMONDOR">Komondor</ion-option>
+					<ion-option value="KOOIKERHONDJE">Kooikerhondje</ion-option>
+					<ion-option value="KUVASZ">Kuvasz</ion-option>
+					<ion-option value="LABRADOODLE">Labradoodle</ion-option>
+					<ion-option value="LABRADOR_RETRIEVER">Labrador Retriever</ion-option>
+					<ion-option value="LAKELAND_TERRIER">Lakeland Terrier</ion-option>
+					<ion-option value="LANCASHIRE_HEELER">Lancashire Heeler</ion-option>
+					<ion-option value="LEONBERGER">Leonberger</ion-option>
+					<ion-option value="LHASA_APSO">Lhasa Apso</ion-option>
+					<ion-option value="LOWCHEN">Lowchen</ion-option>
+					<ion-option value="MALTESE">Maltese</ion-option>
+					<ion-option value="MALTESE_SHIS_TZU">Maltese Shih Tzu</ion-option>
+					<ion-option value="MALTIPOO">Maltipoo</ion-option>
+					<ion-option value="MANCHESTER_TERRIER">Manchester Terrier</ion-option>
+					<ion-option value="MASTIFF">Mastiff</ion-option>
+					<ion-option value="MINIATURE_PINSCHER">Miniature Pinscher</ion-option>
+					<ion-option value="MINIATURE_SCHNAUZER">Miniature Schnauzer</ion-option>
+					<ion-option value="MUTT">Mutt</ion-option>
+					<ion-option value="NEAPOLITAN_MASTIFF">Neapolitan Mastiff</ion-option>
+					<ion-option value="NEWFOUNDLAND">Newfoundland</ion-option>
+					<ion-option value="NORFOLK_TERRIER">Norfolk Terrier</ion-option>
+					<ion-option value="NORWEGIAN_BUHUND">Norwegian Buhund</ion-option>
+					<ion-option value="NORWEGIAN_ELKHOUND">Norwegian Elkhound</ion-option>
+					<ion-option value="NORWEGIAN_LUNDEHUND">Norwegian Lundehund</ion-option>
+					<ion-option value="NORWICH_TERRIER">Norwich Terrier</ion-option>
+					<ion-option value="NOVA_SCOTIA_DUCK_TOLLING_RETRIEVER">Nova Scotia Duck Tolling Retriever</ion-option>
+					<ion-option value="OLD_ENGLISH_SHEEPDOG">OLD_ENGLISH_SHEEPDOG</ion-option>
+					<ion-option value="OTTERHOUND">Otterhound</ion-option>
+					<ion-option value="PAPILLON">Papillon</ion-option>
+					<ion-option value="PEEKAPOO">Peekapoo</ion-option>
+					<ion-option value="PEKINGESE">Pekingese</ion-option>
+					<ion-option value="PEMBROKE_WELSH_CORGI">Pembroke Welsh Corgi</ion-option>
+					<ion-option value="PETIT_BASSET_GRIFFON_VENDEEN">Petit Basset Griffon Vendeen</ion-option>
+					<ion-option value="PHARAOH_HOUND">Pharaoh Hound</ion-option>
+					<ion-option value="PLOTT">Plott</ion-option>
+					<ion-option value="POCKET_BEAGLE">Pocket Beagle</ion-option>
+					<ion-option value="POINTER">Pointer</ion-option>
+					<ion-option value="POLISH_LOWLAND_SHEEPDOG">Polish Lowland Sheepdog</ion-option>
+					<ion-option value="POMERANIAN">Pomeranian</ion-option>
+					<ion-option value="POODLE">Poodle</ion-option>
+					<ion-option value="PORTUGUESE_WATER_DOG">Portuguese Water Dog</ion-option>
+					<ion-option value="PUG">Pug</ion-option>
+					<ion-option value="PUGGLE">Puggle</ion-option>
+					<ion-option value="PULI">Puli</ion-option>
+					<ion-option value="PYRENEAN_SHEPHERD">Pyrenean Shepherd</ion-option>
+					<ion-option value="RAT_TERRIER">Rat Terrier</ion-option>
+					<ion-option value="REDBONE_COONHOUND">Redbone Coonhound</ion-option>
+					<ion-option value="RHODESIAN_RIDGEBACK">Rhodesian Ridgeback</ion-option>
+					<ion-option value="ROTTWEILER">Rottweiler</ion-option>
+					<ion-option value="SAINT_BERNARD">Saint Bernard</ion-option>
+					<ion-option value="SALUKI">Saluki</ion-option>
+					<ion-option value="SAMOYED">Samoyed</ion-option>
+					<ion-option value="SCHIPPERKE">Schipperke</ion-option>
+					<ion-option value="SCHNOODLE">Schnoodle</ion-option>
+					<ion-option value="SCOTTISH_DEERHOUND">Scottish Deerhound</ion-option>
+					<ion-option value="SCOTTISH_TERRIER">Scottish Terrier</ion-option>
+					<ion-option value="SEALYHAM_TERRIER">Sealyham Terrier</ion-option>
+					<ion-option value="SHETLAND_SHEEPDOG">Shetland Sheepdog</ion-option>
+					<ion-option value="SHIBA_INU">Shiba Inu</ion-option>
+					<ion-option value="SHIH_TZU">Shih Tzu</ion-option>
+					<ion-option value="SIBERIAN_HUSKY">Siberian Husky</ion-option>
+					<ion-option value="SILKY_TERRIER">Silky Terrier</ion-option>
+					<ion-option value="SKYE_TERRIER">Skye Terrier</ion-option>
+					<ion-option value="SLOUGHI">Sloughi</ion-option>
+					<ion-option value="SMALL_MUNSTERLANDER_POINTER">Small Munsterlander Pointer</ion-option>
+					<ion-option value="SOFT_COATED_WHEATEN_TERRIER">Soft coated Wheaten Terrier</ion-option>
+					<ion-option value="STABYHOUN">Stabyhoun</ion-option>
+					<ion-option value="STAFFORDSHIRE_BULL_TERRIER">Staffordshire Bull Terrier</ion-option>
+					<ion-option value="STANDARD_SCHNAUZER">Standard Schnauzer</ion-option>
+					<ion-option value="SUSSEX_SPANIEL">Sussex Spaniel</ion-option>
+					<ion-option value="SWEDISH_VALLHUND">Swedish Vallhund</ion-option>
+					<ion-option value="TIBETAN_MASTIFF">Tibetan Mastiff</ion-option>
+					<ion-option value="TIBETAN_SPANIEL">Tibetan Spaniel</ion-option>
+					<ion-option value="TIBETAN_TERRIER">Tibetan Terrier</ion-option>
+					<ion-option value="TOY_FOX_TERRIER">Toy Fox Terrier</ion-option>
+					<ion-option value="TREEING_TENNESSEE_BRINDLE">Treeing Tennessee Brindle</ion-option>
+					<ion-option value="TREEING_WALKER_COONHOUND">Treeing Walker Coonhound</ion-option>
+					<ion-option value="VIZSLA">Vizsla</ion-option>
+					<ion-option value="WEIMARANER">Weimaraner</ion-option>
+					<ion-option value="WELSH_SPRINGER_SPANIEL">Welsh Springer Spaniel</ion-option>
+					<ion-option value="WEST_HIGHLAND_WHITE_TERRIER">West Highland White Terrier</ion-option>
+					<ion-option value="WHIPPET">Whippet</ion-option>
+					<ion-option value="WIREHAIRED_POINTING_GRIFFON">Wirehaired Pointing Griffon</ion-option>
+					<ion-option value="XOLOITZCUINTLI">Xoloitzcuintli</ion-option>
+					<ion-option value="YORKIPOO">Yorkipoo</ion-option>
+					<ion-option value="YORKSHIRE_TERRIER">Yorkshire Terrier</ion-option>
+					<ion-option value="OTHER">Other...</ion-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item>
+				<ion-label>Birthdate</ion-label>
+				<ion-datetime displayFormat="dd MM yyyy" pickerFormat="dd MM yyyy" [formControl]="signupForm.controls['dogBirthdate']"></ion-datetime>
+			</ion-item>
+
+			<button ion-button block color="dark" type="submit">
+				Sign Up
+			</button>
+
+		</ion-list>
+	</form>
+
+</ion-content>

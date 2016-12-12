@@ -1,17 +1,20 @@
+// Core
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
+// Pages
+import { StartPage } from '../pages/start/start';
+import { LoginPage } from '../pages/login/login';
+import { SignupPage } from '../pages/signup/signup';
+import { HomePage } from '../pages/home/home';
+import { MapTab } from '../pages/home/map-tab/map-tab';
 import { AboutPage } from '../pages/about/about';
 import { ProfilePage } from '../pages/profile/profile';
-import { HomePage } from '../pages/home/home';
-import { DogComponent } from '../components/dog/dog.component';
+// Components
 import { LocationTracker } from '../components/location/location-tracker';
 import { TimerComponent } from '../components/timer/timer';
-import { MapTab } from '../pages/home/map-tab/map-tab';
-import { LoginPage } from '../pages/login/login';
-import { StartPage } from '../pages/start/start';
-
-
+import { DogComponent } from '../components/dog/dog.component';
+// Third parties
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
 const cloudSettings: CloudSettings = {
@@ -30,13 +33,14 @@ const cloudSettings: CloudSettings = {
   declarations: [
     MyApp,
     StartPage,
+    LoginPage,
+    SignupPage,
+    HomePage,
+    MapTab,
     AboutPage,
     ProfilePage,
-    HomePage,
-    LoginPage,
     DogComponent,
-    TimerComponent,
-    MapTab
+    TimerComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -46,11 +50,12 @@ const cloudSettings: CloudSettings = {
   entryComponents: [
     MyApp,
     StartPage,
-    AboutPage,
-    ProfilePage,
-    HomePage,
     LoginPage,
-    MapTab
+    SignupPage,
+    HomePage,
+    MapTab,
+    AboutPage,
+    ProfilePage
   ],
   providers: [
     LocationTracker
