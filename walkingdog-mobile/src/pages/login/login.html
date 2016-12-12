@@ -1,61 +1,24 @@
 
+<ion-header>
+  <ion-navbar color="secondary">
+  <ion-title>Log In with Email</ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
 
-  <div padding>
-    <ion-segment [(ngModel)]="segments">
-      <ion-segment-button value="login">
+    <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+      <ion-item>
+        <ion-input type="email" placeholder="Email" [formControl]="loginForm.controls['email']"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="password" placeholder="Password" [formControl]="loginForm.controls['password']"></ion-input>
+      </ion-item>
+
+      <button ion-button block color="dark" type="submit">
         Sign in
-      </ion-segment-button>
-      <ion-segment-button value="signup">
-        Create account
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
-  <div [ngSwitch]="segments">
-    <ion-list *ngSwitchCase="'login'">
-      <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
-        <ion-item>
-          <ion-input type="email" placeholder="Email" [formControl]="loginForm.controls['email']"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input type="password" placeholder="Password" [formControl]="loginForm.controls['password']"></ion-input>
-        </ion-item>
-
-        <button ion-button block color="primary" type="submit">
-          Sign in
-        </button>
-      </form>
-
-      <ion-item-divider></ion-item-divider>
-
-      <button ion-button block icon-left color="danger" (click)="loginWithGoogle()">
-        <ion-icon name="logo-googleplus"></ion-icon>
-        Sign in with Google
       </button>
+    </form>
 
-      <button ion-button block icon-left color="primary" (click)="loginWithFacebook()">
-        <ion-icon name="logo-facebook"></ion-icon>
-        Sign in with Facebook
-      </button>
-    </ion-list>
-
-    <ion-list *ngSwitchCase="'signup'">
-      <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
-        <ion-item>
-          <ion-input type="email" placeholder="Email" [formControl]="signupForm.controls['email']"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input type="password" placeholder="Password" [formControl]="signupForm.controls['password']"></ion-input>
-        </ion-item>
-
-        <button ion-button icon-left block type="submit">
-          Create account
-        </button>
-      </form>
-    </ion-list>
-  </div>
-
-</ion-content>
+  </ion-content>

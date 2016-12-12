@@ -2,7 +2,7 @@ import { Component,ViewChild } from '@angular/core';
 import { NavController,Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 
-import { LoginPage } from '../pages/login/login';
+import { StartPage } from '../pages/start/start';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ProfilePage } from '../pages/profile/profile';
@@ -14,7 +14,7 @@ import { Auth } from '@ionic/cloud-angular';
   template: `
   <ion-menu [content]="content" *ngIf="auth.isAuthenticated()">
     <ion-header>
-      <ion-toolbar color="primary">
+      <ion-toolbar color="secondary">
         <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -55,7 +55,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
-      this.rootPage = LoginPage;
+      this.rootPage = StartPage;
       this.homePage = HomePage;
       this.aboutPage = AboutPage;
       this.profilePage = ProfilePage;

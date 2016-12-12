@@ -1,0 +1,83 @@
+
+<ion-content padding>
+
+
+
+
+  <ion-grid>
+
+    <ion-row class="title">
+      <ion-col><h1>Walking Dog</h1></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <button ion-button block icon-left color="danger" (click)="buttonLoginWithGoogle()">
+          <ion-icon name="logo-googleplus"></ion-icon>
+          Log in with Google
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <button ion-button block icon-left color="primary" (click)="buttonLoginWithFacebook()">
+          <ion-icon name="logo-facebook"></ion-icon>
+          Log in with Facebook
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col with-50>
+      <button ion-button block class="buttonTransparent" (click)="buttonSignup()">
+          Sign Up
+        </button>
+      </ion-col>
+      <ion-col with-50>
+        <button ion-button block class="buttonTransparent" (click)="buttonLogin()">
+          Log In
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+
+  
+
+
+      <!--<form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+        <ion-item>
+          <ion-input type="email" placeholder="Email" [formControl]="loginForm.controls['email']"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="password" placeholder="Password" [formControl]="loginForm.controls['password']"></ion-input>
+        </ion-item>
+
+        <button ion-button block color="primary" type="submit">
+          Sign in
+        </button>
+      </form>-->
+
+<!--
+    <ion-list *ngSwitchCase="'signup'">
+      <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)">
+        <ion-item>
+          <ion-input type="email" placeholder="Email" [formControl]="signupForm.controls['email']"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="password" placeholder="Password" [formControl]="signupForm.controls['password']"></ion-input>
+        </ion-item>
+
+        <button ion-button icon-left block type="submit">
+          Create account
+        </button>
+      </form>
+    </ion-list>
+  -->
+
+</ion-content>

@@ -9,6 +9,8 @@ import { LocationTracker } from '../components/location/location-tracker';
 import { TimerComponent } from '../components/timer/timer';
 import { MapTab } from '../pages/home/map-tab/map-tab';
 import { LoginPage } from '../pages/login/login';
+import { StartPage } from '../pages/start/start';
+
 
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -27,6 +29,7 @@ const cloudSettings: CloudSettings = {
 @NgModule({
   declarations: [
     MyApp,
+    StartPage,
     AboutPage,
     ProfilePage,
     HomePage,
@@ -42,6 +45,7 @@ const cloudSettings: CloudSettings = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    StartPage,
     AboutPage,
     ProfilePage,
     HomePage,

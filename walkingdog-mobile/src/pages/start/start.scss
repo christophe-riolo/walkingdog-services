@@ -1,4 +1,14 @@
-page-login {
+page-start {
+
+	h1 {
+		text-align: center;
+		color: black;
+	}
+
+	.title {
+		height: 300px;
+		padding-top: 100px;
+	}
 
 	ion-content:after {
 		content: "";
