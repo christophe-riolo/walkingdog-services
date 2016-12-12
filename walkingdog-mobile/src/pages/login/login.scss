@@ -13,14 +13,4 @@ page-login {
 		background-repeat: no-repeat;
 	}
 
-	.buttonTransparent {
-		background-color: transparent;
-		border: 1px black solid;
-		color: black;
-	}
-
-	.buttonTransparent:hover, .buttonTransparent.activated {
-		background-color: black !important;
-		color: white;
-	}
 }
