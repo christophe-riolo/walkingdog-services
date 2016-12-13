@@ -29,7 +29,6 @@ public class UsersDbVerticle extends AbstractVerticle {
     public void start(Future<Void> fut) {
         vertx.eventBus().consumer(Addresses.USER_DB.address(), this::handler);
         postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
-
         fut.complete();
     }
 
@@ -66,12 +65,12 @@ public class UsersDbVerticle extends AbstractVerticle {
                                 newUser.put("password", "");
                                 handler.reply(newUser);
                             } else {
-                                handler.fail(500, "Internal Error");
+                                handler.fail(500, "Internal Error : " + insertResult.cause().getLocalizedMessage());
                             }
 
                         });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!");
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
                 handler.fail(500, "Cannot connect to database !!!");
             }
         });
@@ -86,6 +85,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             if (result.succeeded()) {
                 promise.complete(result.result().getNumRows() == 1);
             } else {
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL FROM T_USER WHERE EMAIL = ?", result.cause());
                 promise.fail("Cannot execute query");
             }
         });
@@ -102,7 +102,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             if (result.succeeded()) {
                 promise.complete(Boolean.TRUE);
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)");
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
                 promise.fail("Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)");
             }
         });
@@ -128,7 +128,6 @@ public class UsersDbVerticle extends AbstractVerticle {
         } catch (URISyntaxException ex) {
             Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(config);
         return config;
 
     }

@@ -46,7 +46,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // WHEN
-        vertx.createHttpClient().getNow(port, "localhost", "/api/location/health",
+        vertx.createHttpClient().getNow(httpPort, "localhost", "/api/location/health",
                 response -> {
                     response.handler(body -> {
                         EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
@@ -66,7 +66,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
 
         // WHEN
         String url = "/api/location/dogsAround?" + params;
-        vertx.createHttpClient().getNow(port, "localhost", url,
+        vertx.createHttpClient().getNow(httpPort, "localhost", url,
                 response -> {
                     response.bodyHandler(body -> {
                         List<DogLocation> dogs = body.toJsonArray().getList();
@@ -87,7 +87,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
 
         // WHEN
         String url = "/api/location/register";
-        vertx.createHttpClient().post(port, "localhost", url,
+        vertx.createHttpClient().post(httpPort, "localhost", url,
                 response -> {
                     context.assertTrue(response.statusCode() == 204);
                     async.complete();

@@ -30,7 +30,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         vertx = Vertx.vertx();
         vertx.deployVerticle(AuthenticationRestVerticle.class.getName(),
                 context.asyncAssertSuccess());
-        vertx.deployVerticle(UsersDbVerticleMock.class.getName(),
+        vertx.deployVerticle(UsersDbVerticle.class.getName(),
                 context.asyncAssertSuccess());
     }
 
@@ -44,7 +44,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // WHEN
-        vertx.createHttpClient().getNow(port, "localhost", "/api/authentication/health",
+        vertx.createHttpClient().getNow(httpPort, "localhost", "/api/authentication/health",
                 response -> {
                     response.handler(body -> {
                         EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
@@ -70,15 +70,16 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 
         // WHEN
         String url = "/api/authentication/signup";
-        vertx.createHttpClient().post(port, "localhost", url,
+        vertx.createHttpClient().post(httpPort, "localhost", url,
                 response -> {
+                    // THEN
                     context.assertTrue(response.statusCode() == 201);
                     async.complete();
                 }).end(jsonData);
     }
-    
+
     @Test
-    @Ignore("Not working in chain : java.util.concurrent.RejectedExecutionException: event executor terminated")
+    @Ignore
     public void testSignupUserExists(TestContext context) {
         final Async async = context.async();
 
@@ -91,13 +92,19 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("01/01/2015");
         String jsonData = Json.encodePrettily(data);
+        String url = "/api/authentication/signup";
 
         // WHEN
-        String url = "/api/authentication/signup";
-        vertx.createHttpClient().post(port, "localhost", url,
+        vertx.createHttpClient().post(httpPort, "localhost", url,
                 response -> {
-                    context.assertTrue(response.statusCode() == 400);
-                    async.complete();
+                    context.assertTrue(response.statusCode() == 201);
+                    vertx.createHttpClient().post(httpPort, "localhost", url,
+                            response2 -> {
+                                // THEN
+                                context.assertTrue(response2.statusCode() == 400);
+                                async.complete();
+                            }).end(jsonData);
                 }).end(jsonData);
+
     }
 }
