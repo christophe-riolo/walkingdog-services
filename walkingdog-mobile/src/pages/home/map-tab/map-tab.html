@@ -3,11 +3,20 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Dogs around you</ion-title>
+    <ion-title>Dogs around me</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
+  
+
+  <div class="visibleInfo" *ngIf="!walking">
+    <ion-icon name="eye-off"></ion-icon> You are <font color="red">NOT visible</font> to other dogs
+  </div>
+  <div class="visibleInfo" *ngIf="walking">
+    <ion-icon name="eye"></ion-icon> You are <font color="green">VISIBLE</font> to other dogs
+  </div>
+
   <div #map id="map"></div>
 
   <ion-fab center bottom *ngIf="!walking">
@@ -18,15 +27,6 @@
   <ion-fab center bottom *ngIf="walking">
     <button ion-fab color="danger" (click)="buttonStopWalk()">
       <ion-icon name="close"></ion-icon>
-    </button>
-  </ion-fab>
-
-  <ion-fab right top>
-    <button ion-fab color="secondary" *ngIf="walking">
-      <ion-icon name="eye"></ion-icon>
-    </button>
-    <button ion-fab color="light" *ngIf="!walking">
-      <ion-icon name="eye-off"></ion-icon>
     </button>
   </ion-fab>
 

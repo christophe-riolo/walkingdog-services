@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
-import { Auth as IonicAuth, User as IonicUser, UserDetails, IDetailedError } from '@ionic/cloud-angular';
+import { Auth as IonicAuth, User as IonicUser } from '@ionic/cloud-angular';
 import { GoogleAuth, User as GoogleUser } from '@ionic/cloud-angular';
 
 import { FormBuilder,FormGroup } from '@angular/forms';
