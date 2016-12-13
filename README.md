@@ -12,6 +12,9 @@ Walking Dog
 - Register location
 `POST /api/location/register  { "id":"dog1", "name":"Dog 1", "latitude":51.600000, "longitude":-0.190000 }`
 
+- Sign Up
+`POST /api/authentication/signup { "email":"xxx@xxx.com", "password":"xxx", "dogName":"Dog xxx", "dogGender":"FEMALE|MALE", "dogBreed":"SHIBA_INU", "dogBirthdate":"01/01/2015" }`
+
 ## Environment
 
 - Integration : https://walkingdog-services.herokuapp.com/

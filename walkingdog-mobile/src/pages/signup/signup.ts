@@ -4,6 +4,8 @@ import { LoadingController } from 'ionic-angular';
 import { Auth as IonicAuth, User as IonicUser, UserDetails, IDetailedError } from '@ionic/cloud-angular';
 import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 import { StartPage } from '../start/start';
+import { Http, Response } from '@angular/http';
+
 
 @Component({
 	selector: 'page-signup',
@@ -13,12 +15,14 @@ export class SignupPage {
 
 	loader: any;
 	signupForm: FormGroup;
+	private apiUrl: String;
 
 	constructor(
 		private ionicAuth: IonicAuth, 
 		private ionicUser: IonicUser, 
 		private loadingCtrl: LoadingController,
 		private navCtrl: NavController,
+		private http: Http,
 		fb: FormBuilder) {
 
 		this.loader = this.loadingCtrl.create({
@@ -34,6 +38,9 @@ export class SignupPage {
 			'dogBirthdate': ['']
 		});
 
+		this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/authentication';
+
+
 	}
 
 	ionViewDidLoad() {
@@ -43,24 +50,22 @@ export class SignupPage {
 		this.loader.present();
 		if (form.valid) {
 			let value = form.value;
-			console.log(value);
-			let details: UserDetails = {'email': value.email, 'password': value.password};
-			this.ionicAuth.signup(details).then(() => {
-        this.loader.dismiss();
-				alert('A confirmation e-mail has been sent !');
-        this.navCtrl.setRoot(StartPage);
-			}, (err: IDetailedError<string[]>) => {
-				for (let e of err.details) {
-					if (e === 'conflict_email') {
-						alert('Email already exists.');
-					} else {
-						alert('Sorry, an unexpected error occured. Please contact the developer.');
-					}
+			// Sends location of current user to server, to be used by others
+			this.http.post(
+				`${this.apiUrl}/signup`,
+				value)
+			.subscribe((res: Response) => {
+				if (res.status == 201) {
+					alert('You are now signed up ! You will be redirect to login page');
+					this.navCtrl.setRoot(StartPage);
+				}
+				else {
+					alert('Sorry, an error occured. Please come back later');
 				}
 				this.loader.dismiss();
 			});
 		} else {
-      this.loader.dismiss();
+			this.loader.dismiss();
 			alert('Required fields : email, password, dog name, dog gender, dog breed');
 		}
 
