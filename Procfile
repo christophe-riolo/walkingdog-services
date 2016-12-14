@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dhttp.port=$PORT -jar walkingdog-services/target/walkingdog-services-*-fat.jar
+web: java $JAVA_OPTS -javaagent:walkingdog-services/target/unpack/newrelic/newrelic.jar -Dhttp.port=$PORT -jar walkingdog-services/target/walkingdog-services-*-fat.jar
