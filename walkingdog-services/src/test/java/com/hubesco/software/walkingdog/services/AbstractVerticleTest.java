@@ -33,14 +33,14 @@ public abstract class AbstractVerticleTest {
         httpPort = randomPort();
         postgresPort = randomPort();
         System.setProperty("http.port", String.valueOf(httpPort));
-//        System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:" + postgresPort + "/postgres");
-        System.setProperty("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/postgres");
-//        startPostgres();
+        System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:" + postgresPort + "/postgres");
+//        System.setProperty("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/postgres");
+        startPostgres();
     }
 
     @AfterClass
     public static void afterClass() {
-//        process.stop();
+        process.stop();
     }
 
     private static void startPostgres() {
