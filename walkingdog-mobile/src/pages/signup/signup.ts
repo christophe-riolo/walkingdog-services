@@ -33,7 +33,7 @@ export class SignupPage {
 			'dogName': ['', Validators.required],
 			'dogGender': ['', Validators.required],
 			'dogBreed': ['', Validators.required],
-			'dogBirthdate': ['']
+			'dogBirthdate': ['', Validators.required]
 		});
 
 		this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/authentication';
@@ -71,7 +71,7 @@ export class SignupPage {
 			});
 		} else {
 			this.loader.dismiss();
-			alert('Required fields : email, password, dog name, dog gender, dog breed');
+			alert('Required fields : email, password, dog name, dog gender, dog breed, dog birthdate');
 			return false;
 		}
 
