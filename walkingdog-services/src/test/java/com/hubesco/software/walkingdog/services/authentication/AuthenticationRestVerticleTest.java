@@ -65,7 +65,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setDogName("Dog 1");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
-        data.setDogBirthdate("01/01/2015");
+        data.setDogBirthdate("2015-01-01");
         String jsonData = Json.encodePrettily(data);
 
         // WHEN

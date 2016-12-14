@@ -74,6 +74,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                         })
                         .setHandler(insertResult -> {
                             if (insertResult.succeeded()) {
+                                System.out.println("aaaaaaaaaaaaaaaaaaa");
                                 newUser.put("password", "");
                                 handler.reply(newUser);
                             } else {
@@ -118,12 +119,11 @@ public class UsersDbVerticle extends AbstractVerticle {
         insertDogParams.add(user.getString("dogName"));
         insertDogParams.add(user.getString("dogGender"));
         insertDogParams.add(user.getString("dogBreed"));
-        insertDogParams.add(convert(user.getString("dogBirthdate")));
+        insertDogParams.add(user.getString("dogBirthdate"));
         insertDogParams.add(userUuid);
-
         connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD,TOKEN) values (?,?,?,?)", insertUserParams, result -> {
             if (result.succeeded()) {
-                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,USER_UUID) values (?,?,?,?,?)", insertDogParams, result2 -> {
+                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result2 -> {
                     if (result2.succeeded()) {
                         promise.complete(Boolean.TRUE);
                     } else {
@@ -168,15 +168,6 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     private String generateUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
-    }
-
-    private Date convert(String date) {
-        try {
-            return new SimpleDateFormat("dd/MM/yyyy").parse(date);
-        } catch (ParseException ex) {
-            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 
 }
