@@ -125,8 +125,12 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     private JsonObject getPostgreSQLClientConfig() {
         JsonObject config = new JsonObject();
+        String databaseUrl = System.getenv("DATABASE_URL");
+        if (databaseUrl == null) {
+            databaseUrl = System.getProperty("DATABASE_URL");
+        }
         try {
-            URI dbUri = new URI(System.getProperty("DATABASE_URL"));
+            URI dbUri = new URI(databaseUrl);
             String username = dbUri.getUserInfo().split(":")[0];
             System.out.println(username);
             config.put("username", username);
