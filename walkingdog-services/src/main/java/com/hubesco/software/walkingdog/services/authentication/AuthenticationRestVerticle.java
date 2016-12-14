@@ -51,7 +51,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
     }
 
     /**
-     * Endpoint : /api/location/health
+     * Endpoint : /api/authentication/health
      *
      * @param routingContext
      */
@@ -62,6 +62,11 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                 .end(Json.encodePrettily(new EndpointHealth(EndpointStatus.OK)));
     }
 
+    /**
+     * Endpoint : /api/authentication/signup
+     *
+     * @param routingContext
+     */
     private void signup(RoutingContext routingContext) {
         JsonObject body = routingContext.getBodyAsJson();
         DeliveryOptions options = new DeliveryOptions();

@@ -6,7 +6,8 @@ CREATE TABLE T_USER (
     UUID varchar(255) PRIMARY KEY,
     EMAIL varchar(255) NOT NULL UNIQUE,
     PASSWORD varchar(255) NOT NULL,
-    PHONE_UUID varchar(255)
+    PHONE_UUID varchar(255),
+    ENABLED boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE T_DOG (

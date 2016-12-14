@@ -12,6 +12,9 @@ import io.vertx.ext.asyncsql.PostgreSQLClient;
 import io.vertx.ext.sql.SQLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -103,16 +106,31 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     private Future<Boolean> insert(SQLConnection connection, JsonObject user) {
         Future<Boolean> promise = Future.future();
-        JsonArray params = new JsonArray();
-        params.add(UUID.randomUUID().toString().replaceAll("-", ""));
-        params.add(user.getString("email"));
-        params.add(encrypt(user.getString("password")));
-        connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", params, result -> {
+        JsonArray insertUserParams = new JsonArray();
+        String userUuid = generateUUID();
+        insertUserParams.add(userUuid);
+        insertUserParams.add(user.getString("email"));
+        insertUserParams.add(encrypt(user.getString("password")));
+
+        JsonArray insertDogParams = new JsonArray();
+        insertDogParams.add(generateUUID());
+        insertDogParams.add(user.getString("dogName"));
+        insertDogParams.add(user.getString("dogGender"));
+        insertDogParams.add(user.getString("dogBreed"));
+        insertDogParams.add(convert(user.getString("dogBirthdate")));
+        insertDogParams.add(userUuid);
+
+        connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", insertUserParams, result -> {
+            if (result.failed()) {
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
+                promise.fail("Cannot execute query !");
+            }
+        }).updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result -> {
             if (result.succeeded()) {
                 promise.complete(Boolean.TRUE);
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
-                promise.fail("Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)");
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
+                promise.fail("Cannot execute query !");
             }
         });
         return promise;
@@ -132,21 +150,30 @@ public class UsersDbVerticle extends AbstractVerticle {
         try {
             URI dbUri = new URI(databaseUrl);
             String username = dbUri.getUserInfo().split(":")[0];
-            System.out.println(username);
             config.put("username", username);
             String password = dbUri.getUserInfo().split(":")[1];
             config.put("password", password);
             config.put("host", dbUri.getHost());
-            System.out.println(dbUri.getHost());
             config.put("port", dbUri.getPort());
-            System.out.println(dbUri.getPort());
             config.put("database", dbUri.getPath().replaceAll("/", ""));
-            System.out.println(dbUri.getPath().replaceAll("/", ""));
         } catch (URISyntaxException ex) {
             Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
         return config;
 
+    }
+
+    private String generateUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    private Date convert(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }
