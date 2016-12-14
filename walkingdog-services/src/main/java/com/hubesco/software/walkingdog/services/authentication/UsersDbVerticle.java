@@ -123,7 +123,7 @@ public class UsersDbVerticle extends AbstractVerticle {
 
         connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD,TOKEN) values (?,?,?,?)", insertUserParams, result -> {
             if (result.succeeded()) {
-                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result2 -> {
+                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,USER_UUID) values (?,?,?,?,?)", insertDogParams, result2 -> {
                     if (result2.succeeded()) {
                         promise.complete(Boolean.TRUE);
                     } else {
