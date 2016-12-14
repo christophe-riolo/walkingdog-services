@@ -28,7 +28,11 @@ public class UsersDbVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> fut) {
         vertx.eventBus().consumer(Addresses.USER_DB.address(), this::handler);
-        postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
+        try {
+            postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
+        } catch (Exception ex) {
+            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        }
         fut.complete();
     }
 
@@ -38,11 +42,16 @@ public class UsersDbVerticle extends AbstractVerticle {
     }
 
     private void handler(Message<JsonObject> handler) {
-        switch (handler.headers().get(Headers.COMMAND.header())) {
-            case "signup":
-                signup(handler);
-                break;
-            default:
+        try {
+            switch (handler.headers().get(Headers.COMMAND.header())) {
+                case "signup":
+                    signup(handler);
+                    break;
+                default:
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            handler.fail(500, ex.getLocalizedMessage());
         }
     }
 
@@ -119,12 +128,16 @@ public class UsersDbVerticle extends AbstractVerticle {
         try {
             URI dbUri = new URI(System.getProperty("DATABASE_URL"));
             String username = dbUri.getUserInfo().split(":")[0];
+            System.out.println(username);
             config.put("username", username);
             String password = dbUri.getUserInfo().split(":")[1];
             config.put("password", password);
             config.put("host", dbUri.getHost());
+            System.out.println(dbUri.getHost());
             config.put("port", dbUri.getPort());
+            System.out.println(dbUri.getPort());
             config.put("database", dbUri.getPath().replaceAll("/", ""));
+            System.out.println(dbUri.getPath().replaceAll("/", ""));
         } catch (URISyntaxException ex) {
             Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
