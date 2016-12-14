@@ -1,5 +1,6 @@
 package com.hubesco.software.walkingdog.services.authentication;
 
+import com.hubesco.software.walkingdog.api.authentication.LoginData;
 import com.hubesco.software.walkingdog.api.authentication.SignupData;
 import com.hubesco.software.walkingdog.api.commons.DogBreed;
 import com.hubesco.software.walkingdog.api.commons.DogGender;
@@ -60,8 +61,8 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 
         // GIVEN
         SignupData data = new SignupData();
-        data.setEmail("userdoesnotexist@walkingdog.com");
-        data.setPassword("userdoesnotexist");
+        data.setEmail("testSignupUserDoesNotExist@walkingdog.com");
+        data.setPassword("testSignupUserDoesNotExist");
         data.setDogName("Dog 1");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
@@ -85,12 +86,12 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 
         // GIVEN
         SignupData data = new SignupData();
-        data.setEmail("userexists@walkingdog.com");
-        data.setPassword("userexists");
+        data.setEmail("testSignupUserExists@walkingdog.com");
+        data.setPassword("testSignupUserExists");
         data.setDogName("Dog 1");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
-        data.setDogBirthdate("01/01/2015");
+        data.setDogBirthdate("2015-01-01");
         String jsonData = Json.encodePrettily(data);
         String url = "/api/authentication/signup";
 
@@ -107,4 +108,96 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                 }).end(jsonData);
 
     }
+
+    @Test
+    @Ignore
+    public void testLoginUserDoesNotExist(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        LoginData data = new LoginData();
+        data.setEmail("testLoginUserDoesNotExist@walkingdog.com");
+        data.setPassword("testLoginUserDoesNotExist");
+        String jsonData = Json.encodePrettily(data);
+
+        // WHEN
+        String url = "/api/authentication/login";
+        vertx.createHttpClient().post(httpPort, "localhost", url,
+                response -> {
+                    // THEN
+                    context.assertTrue(response.statusCode() == 404);
+                    context.assertTrue("user_does_not_exist".equals(response.statusMessage()));
+                    async.complete();
+                }).end(jsonData);
+    }
+
+    @Test
+    public void testLoginUserExistsNotEnabled(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        SignupData data = new SignupData();
+        data.setEmail("testLoginUserExistsNotEnabled@walkingdog.com");
+        data.setPassword("testLoginUserExistsNotEnabled");
+        data.setDogName("Dog 1");
+        data.setDogGender(DogGender.FEMALE);
+        data.setDogBreed(DogBreed.SHIBA_INU);
+        data.setDogBirthdate("2015-01-01");
+        String jsonData = Json.encodePrettily(data);
+        String signupUrl = "/api/authentication/signup";
+        
+        LoginData loginData = new LoginData();
+        loginData.setEmail("testLoginUserExistsNotEnabled@walkingdog.com");
+        loginData.setPassword("testLoginUserExistsNotEnabled");
+        String loginUrl = "/api/authentication/signup";
+
+        // WHEN
+        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+                response -> {
+                    context.assertTrue(response.statusCode() == 201);
+                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
+                            response2 -> {
+                                // THEN
+                                context.assertTrue(response2.statusCode() == 400);
+                                context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
+                                async.complete();
+                            }).end(jsonData);
+                }).end(jsonData);
+
+    }
+    
+//    @Test
+//    public void testLoginUserExistsEnabledWrongPassword(TestContext context) {
+//        final Async async = context.async();
+//
+//        // GIVEN
+//        SignupData data = new SignupData();
+//        data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+//        data.setPassword("testLoginUserExistsEnabledWrongPassword");
+//        data.setDogName("Dog 1");
+//        data.setDogGender(DogGender.FEMALE);
+//        data.setDogBreed(DogBreed.SHIBA_INU);
+//        data.setDogBirthdate("2015-01-01");
+//        String jsonData = Json.encodePrettily(data);
+//        String signupUrl = "/api/authentication/signup";
+//        
+//        LoginData loginData = new LoginData();
+//        loginData.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+//        loginData.setPassword("testLoginUserExistsEnabledWrongPassword");
+//        String loginUrl = "/api/authentication/signup";
+//
+//        // WHEN
+//        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+//                response -> {
+//                    context.assertTrue(response.statusCode() == 201);
+//                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
+//                            response2 -> {
+//                                // THEN
+//                                context.assertTrue(response2.statusCode() == 400);
+//                                context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
+//                                async.complete();
+//                            }).end(jsonData);
+//                }).end(jsonData);
+//
+//    }
 }

@@ -30,6 +30,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
 
         router.get(API_PREFIX + "/health").handler(this::health);
         router.post(API_PREFIX + "/signup").handler(this::signup);
+        router.post(API_PREFIX + "/login").handler(this::login);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
@@ -85,6 +86,39 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                             .setStatusCode(statusCode)
                             .putHeader("content-type", CONTENT_TYPE)
                             .end(body.encode());
+                });
+
+    }
+
+    /**
+     * Endpoint : /api/authentication/login
+     *
+     * @param routingContext
+     */
+    private void login(RoutingContext routingContext) {
+        JsonObject body = routingContext.getBodyAsJson();
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "login");
+        vertx
+                .eventBus()
+                .send(Addresses.USER_DB.address(), body, options, handler -> {
+                    int statusCode = 200;
+                    String responseBody = "";
+                    String statusMessage = "OK";
+                    if (handler.failed()) {
+                        ReplyException cause = (ReplyException) handler.cause();
+                        statusCode = cause.failureCode();
+                        statusMessage = cause.getLocalizedMessage();
+                    } else {
+                        // Get token
+                        responseBody = handler.result().body();
+                    }
+                    routingContext
+                            .response()
+                            .setStatusCode(statusCode)
+                            .setStatusMessage(statusMessage)
+                            .putHeader("content-type", CONTENT_TYPE)
+                            .end(responseBody);
                 });
 
     }
