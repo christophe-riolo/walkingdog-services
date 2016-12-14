@@ -19,7 +19,7 @@ Walking Dog
 `POST /api/authentication/login { "email":"xxx@xxx.com", "password":"xxx"}`
 
 - Activate
-`POST /api/authentication/token { "token":"xxx" }`
+`GET /api/authentication/activate?token=xxx`
 
 
 ## Environment
