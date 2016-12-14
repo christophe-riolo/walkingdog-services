@@ -13,16 +13,19 @@
 
 			<h4>About you</h4>
 			<ion-item>
-				<ion-input type="email" placeholder="Email" [formControl]="signupForm.controls['email']"></ion-input>
+				<ion-label fixed>Email</ion-label>
+				<ion-input type="email" [formControl]="signupForm.controls['email']"></ion-input>
 			</ion-item>
 
 			<ion-item>
-				<ion-input type="password" placeholder="Password" [formControl]="signupForm.controls['password']"></ion-input>
+				<ion-label fixed>Password</ion-label>
+				<ion-input type="password" [formControl]="signupForm.controls['password']"></ion-input>
 			</ion-item>
 
 			<h4>About your dog</h4>
 			<ion-item>
-				<ion-input type="text" placeholder="Name" [formControl]="signupForm.controls['dogName']"></ion-input>
+				<ion-label fixed>Name</ion-label>
+				<ion-input type="text" [formControl]="signupForm.controls['dogName']"></ion-input>
 			</ion-item>
 
 			<ion-item>
@@ -240,10 +243,10 @@
 
 			<ion-item>
 				<ion-label>Birthdate</ion-label>
-				<ion-datetime displayFormat="dd MM yyyy" pickerFormat="dd MM yyyy" [formControl]="signupForm.controls['dogBirthdate']"></ion-datetime>
+				<ion-datetime displayFormat="YYYY-MM-DD" pickerFormat="DD MM YYYY" [formControl]="signupForm.controls['dogBirthdate']"></ion-datetime>
 			</ion-item>
 
-			<button ion-button block color="dark" type="submit">
+			<button ion-button block color="dark" type="submit" [disabled]="!signupForm.valid">
 				Sign Up
 			</button>
 
