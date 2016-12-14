@@ -7,7 +7,7 @@ CREATE TABLE T_USER (
     EMAIL varchar(255) NOT NULL UNIQUE,
     PASSWORD varchar(255) NOT NULL,
     PHONE_UUID varchar(255),
-    ENABLED boolean DEFAULT false NOT NULL
+    ENABLED boolean DEFAULT false NOT NULL,
     TOKEN varchar(255) NOT NULL
 );
 
