@@ -80,8 +80,10 @@ public class UsersDbVerticle extends AbstractVerticle {
                             if (insertResult.succeeded()) {
                                 newUser.put("password", "");
                                 handler.reply(insertResult.result());
+                                connection.close();
                             } else {
                                 handler.fail(500, "Internal Error : " + insertResult.cause().getLocalizedMessage());
+                                connection.close();
                             }
                         });
             } else {
@@ -102,16 +104,20 @@ public class UsersDbVerticle extends AbstractVerticle {
                                 JsonArray resultUser = result.result();
                                 if (!resultUser.getBoolean(2)) {
                                     handler.fail(400, "user_not_enabled");
+                                    connection.close();
                                     return;
                                 }
                                 String encryptedPassword = resultUser.getString(1);
                                 if (checkPassword(user.getString("password"), encryptedPassword)) {
                                     handler.reply(resultUser.getString(3));
+                                    connection.close();
                                 } else {
                                     handler.fail(400, "wrong_password");
+                                    connection.close();
                                 }
                             } else {
                                 handler.fail(404, "user_does_not_exist");
+                                connection.close();
                             }
                         });
             } else {
@@ -130,8 +136,10 @@ public class UsersDbVerticle extends AbstractVerticle {
                         .setHandler(result -> {
                             if (result.succeeded()) {
                                 handler.reply("user_enabled");
+                                connection.close();
                             } else {
                                 handler.fail(404, "user_does_not_exist");
+                                connection.close();
                             }
                         });
             } else {
