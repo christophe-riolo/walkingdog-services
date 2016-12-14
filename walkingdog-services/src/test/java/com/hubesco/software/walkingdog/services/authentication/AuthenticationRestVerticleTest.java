@@ -172,74 +172,98 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 
     }
 
-//    @Test
-//    public void testLoginUserExistsEnabledWrongPassword(TestContext context) {
-//        final Async async = context.async();
-//
-//        // GIVEN
-//        SignupData data = new SignupData();
-//        data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
-//        data.setPassword("testLoginUserExistsEnabledWrongPassword");
-//        data.setDogName("Dog 1");
-//        data.setDogGender(DogGender.FEMALE);
-//        data.setDogBreed(DogBreed.SHIBA_INU);
-//        data.setDogBirthdate("2015-01-01");
-//        String jsonData = Json.encodePrettily(data);
-//        String signupUrl = "/api/authentication/signup";
-//        
-//        LoginData loginData = new LoginData();
-//        loginData.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
-//        loginData.setPassword("testLoginUserExistsEnabledWrongPassword");
-//        String loginUrl = "/api/authentication/signup";
-//
-//        // WHEN
-//        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
-//                response -> {
-//                    context.assertTrue(response.statusCode() == 201);
-//                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
-//                            response2 -> {
-//                                // THEN
-//                                context.assertTrue(response2.statusCode() == 400);
-//                                context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
-//                                async.complete();
-//                            }).end(jsonData);
-//                }).end(jsonData);
-//
-//    }
-//    @Test
-//    public void testLoginUserExistsEnabledOK(TestContext context) {
-//        final Async async = context.async();
-//
-//        // GIVEN
-//        SignupData data = new SignupData();
-//        data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
-//        data.setPassword("testLoginUserExistsEnabledWrongPassword");
-//        data.setDogName("Dog 1");
-//        data.setDogGender(DogGender.FEMALE);
-//        data.setDogBreed(DogBreed.SHIBA_INU);
-//        data.setDogBirthdate("2015-01-01");
-//        String jsonData = Json.encodePrettily(data);
-//        String signupUrl = "/api/authentication/signup";
-//        
-//        LoginData loginData = new LoginData();
-//        loginData.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
-//        loginData.setPassword("testLoginUserExistsEnabledWrongPassword");
-//        String loginUrl = "/api/authentication/signup";
-//
-//        // WHEN
-//        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
-//                response -> {
-//                    context.assertTrue(response.statusCode() == 201);
-//                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
-//                            response2 -> {
-//                                // THEN
-//                                context.assertTrue(response2.statusCode() == 400);
-//                                context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
-//                                async.complete();
-//                            }).end(jsonData);
-//                }).end(jsonData);
-//
-//    }
+    @Test
+    @Ignore
+    public void testLoginUserExistsEnabledWrongPassword(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        SignupData data = new SignupData();
+        data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+        data.setPassword("testLoginUserExistsEnabledWrongPassword");
+        data.setDogName("Dog 1");
+        data.setDogGender(DogGender.FEMALE);
+        data.setDogBreed(DogBreed.SHIBA_INU);
+        data.setDogBirthdate("2015-01-01");
+        String jsonSignupData = Json.encodePrettily(data);
+        String signupUrl = "/api/authentication/signup";
+
+        LoginData loginData = new LoginData();
+        loginData.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+        loginData.setPassword("XXXXXX");
+        String jsonLoginData = Json.encodePrettily(loginData);
+        String loginUrl = "/api/authentication/login";
+
+        // WHEN
+        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+                response -> {
+                    context.assertTrue(response.statusCode() == 201);
+                    response.bodyHandler(bodyHandler -> {
+                        JsonObject token = new JsonObject(bodyHandler.toString());
+                        String activateUrl = "/api/authentication/activate?token=" + token.getString("token");
+                        vertx.createHttpClient().get(httpPort, "localhost", activateUrl,
+                                activateResponse -> {
+                                    context.assertTrue(activateResponse.statusCode() == 200);
+                                    context.assertTrue("OK".equals(activateResponse.statusMessage()));
+                                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
+                                            response2 -> {
+                                                // THEN
+                                                context.assertTrue(response2.statusCode() == 400);
+                                                context.assertTrue("wrong_password".equals(response2.statusMessage()));
+                                                async.complete();
+                                            }).end(jsonLoginData);
+                                }).end();
+                    });
+                }).end(jsonSignupData);
+
+    }
+
+    @Test
+    @Ignore
+    public void testLoginOK(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        SignupData data = new SignupData();
+        data.setEmail("testLoginOK@walkingdog.com");
+        data.setPassword("testLoginOK");
+        data.setDogName("Dog 1");
+        data.setDogGender(DogGender.FEMALE);
+        data.setDogBreed(DogBreed.SHIBA_INU);
+        data.setDogBirthdate("2015-01-01");
+        String jsonSignupData = Json.encodePrettily(data);
+        String signupUrl = "/api/authentication/signup";
+
+        LoginData loginData = new LoginData();
+        loginData.setEmail("testLoginOK@walkingdog.com");
+        loginData.setPassword("testLoginOK");
+        String jsonLoginData = Json.encodePrettily(loginData);
+        String loginUrl = "/api/authentication/login";
+
+        // WHEN
+        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+                response -> {
+                    context.assertTrue(response.statusCode() == 201);
+                    response.bodyHandler(bodyHandler -> {
+                        JsonObject token = new JsonObject(bodyHandler.toString());
+                        String activateUrl = "/api/authentication/activate?token=" + token.getString("token");
+                        vertx.createHttpClient().get(httpPort, "localhost", activateUrl,
+                                activateResponse -> {
+                                    context.assertTrue(activateResponse.statusCode() == 200);
+                                    context.assertTrue("OK".equals(activateResponse.statusMessage()));
+                                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
+                                            response2 -> {
+                                                // THEN
+                                                context.assertTrue(response2.statusCode() == 200);
+                                                context.assertTrue("OK".equals(response2.statusMessage()));
+                                                async.complete();
+                                            }).end(jsonLoginData);
+                                }).end();
+                    });
+                }).end(jsonSignupData);
+
+    }
+
     @Test
     @Ignore
     public void testActivateUserDoesNotExist(TestContext context) {
@@ -258,6 +282,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
+    @Ignore
     public void testActivateUserExists(TestContext context) {
         final Async async = context.async();
 

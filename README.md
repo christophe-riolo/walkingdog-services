@@ -13,7 +13,14 @@ Walking Dog
 `POST /api/location/register  { "id":"dog1", "name":"Dog 1", "latitude":51.600000, "longitude":-0.190000 }`
 
 - Sign Up
-`POST /api/authentication/signup { "email":"xxx@xxx.com", "password":"xxx", "dogName":"Dog xxx", "dogGender":"FEMALE|MALE", "dogBreed":"SHIBA_INU", "dogBirthdate":"01/01/2015" }`
+`POST /api/authentication/signup { "email":"xxx@xxx.com", "password":"xxx", "dogName":"Dog xxx", "dogGender":"FEMALE|MALE", "dogBreed":"SHIBA_INU", "dogBirthdate":"2015-01-01" }`
+
+- Log In
+`POST /api/authentication/login { "email":"xxx@xxx.com", "password":"xxx"}`
+
+- Activate
+`POST /api/authentication/token { "token":"xxx" }`
+
 
 ## Environment
 
