@@ -121,15 +121,17 @@ public class UsersDbVerticle extends AbstractVerticle {
         insertDogParams.add(userUuid);
 
         connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", insertUserParams, result -> {
-            if (result.failed()) {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
-                promise.fail("Cannot execute query !");
-            }
-        }).updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result -> {
             if (result.succeeded()) {
-                promise.complete(Boolean.TRUE);
+                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result2 -> {
+                    if (result2.succeeded()) {
+                        promise.complete(Boolean.TRUE);
+                    } else {
+                        Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
+                        promise.fail("Cannot execute query !");
+                    }
+                });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
+                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
                 promise.fail("Cannot execute query !");
             }
         });
