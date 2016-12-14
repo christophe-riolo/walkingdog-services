@@ -169,7 +169,7 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     private Date convert(String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return new SimpleDateFormat("dd/MM/yyyy").parse(date);
         } catch (ParseException ex) {
             Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
