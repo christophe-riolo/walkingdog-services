@@ -9,6 +9,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -31,6 +32,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         router.get(API_PREFIX + "/health").handler(this::health);
         router.post(API_PREFIX + "/signup").handler(this::signup);
         router.post(API_PREFIX + "/login").handler(this::login);
+        router.get(API_PREFIX + "/activate").handler(this::activate);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
@@ -75,17 +77,21 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         vertx
                 .eventBus()
                 .send(Addresses.USER_DB.address(), body, options, handler -> {
-                    int statusCode = 201;
-                    if (handler.failed()) {
-                        ReplyException cause = (ReplyException) handler.cause();
-                        statusCode = cause.failureCode();
-                    }
-                    body.put("password", "");
-                    routingContext
+                    HttpServerResponse response = routingContext
                             .response()
-                            .setStatusCode(statusCode)
-                            .putHeader("content-type", CONTENT_TYPE)
-                            .end(body.encode());
+                            .setStatusCode(201)
+                            .putHeader("content-type", CONTENT_TYPE);
+                    if (handler.succeeded()) {
+                        JsonObject jsonToken = (JsonObject) handler.result().body();
+                        response.end(jsonToken.encode());
+                    } else {
+                        ReplyException cause = (ReplyException) handler.cause();
+                        response
+                                .setStatusCode(cause.failureCode())
+                                .setStatusMessage(cause.getLocalizedMessage())
+                                .end();
+                    }
+
                 });
 
     }
@@ -111,13 +117,45 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                         statusMessage = cause.getLocalizedMessage();
                     } else {
                         // Get token
-                        responseBody = handler.result().body();
+                        responseBody = String.valueOf(handler.result().body());
                     }
                     routingContext
                             .response()
                             .setStatusCode(statusCode)
                             .setStatusMessage(statusMessage)
                             .putHeader("content-type", CONTENT_TYPE)
+                            .end(responseBody);
+                });
+
+    }
+
+    /**
+     * Endpoint : /api/authentication/activate
+     *
+     * @param routingContext
+     */
+    private void activate(RoutingContext routingContext) {
+        JsonObject data = new JsonObject();
+        data.put("token", routingContext.request().getParam("token"));
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "activate");
+        vertx
+                .eventBus()
+                .send(Addresses.USER_DB.address(), data, options, handler -> {
+                    int statusCode = 200;
+                    String responseBody = "<html><body><h1>Account successfully activated !</h1></body></html>";
+                    String statusMessage = "OK";
+                    if (handler.failed()) {
+                        ReplyException cause = (ReplyException) handler.cause();
+                        statusCode = cause.failureCode();
+                        statusMessage = cause.getLocalizedMessage();
+                        responseBody = "<html><body><h1>An error occured during activation...</h1></body></html>";
+                    }
+                    routingContext
+                            .response()
+                            .setStatusCode(statusCode)
+                            .setStatusMessage(statusMessage)
+                            .putHeader("content-type", "text/html; charset=utf-8")
                             .end(responseBody);
                 });
 

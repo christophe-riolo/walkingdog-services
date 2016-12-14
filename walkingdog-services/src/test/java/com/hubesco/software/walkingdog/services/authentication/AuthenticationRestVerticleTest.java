@@ -9,6 +9,7 @@ import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
 import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -75,7 +76,10 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                 response -> {
                     // THEN
                     context.assertTrue(response.statusCode() == 201);
-                    async.complete();
+                    response.bodyHandler(bodyHandler -> {
+                        context.assertNotNull(bodyHandler);
+                        async.complete();
+                    });
                 }).end(jsonData);
     }
 
@@ -132,6 +136,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
+    @Ignore
     public void testLoginUserExistsNotEnabled(TestContext context) {
         final Async async = context.async();
 
@@ -143,13 +148,14 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
-        String jsonData = Json.encodePrettily(data);
+        String signupJsonData = Json.encodePrettily(data);
         String signupUrl = "/api/authentication/signup";
-        
+
         LoginData loginData = new LoginData();
         loginData.setEmail("testLoginUserExistsNotEnabled@walkingdog.com");
         loginData.setPassword("testLoginUserExistsNotEnabled");
-        String loginUrl = "/api/authentication/signup";
+        String jsonLoginData = Json.encodePrettily(loginData);
+        String loginUrl = "/api/authentication/login";
 
         // WHEN
         vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
@@ -161,11 +167,11 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                                 context.assertTrue(response2.statusCode() == 400);
                                 context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
                                 async.complete();
-                            }).end(jsonData);
-                }).end(jsonData);
+                            }).end(jsonLoginData);
+                }).end(signupJsonData);
 
     }
-    
+
 //    @Test
 //    public void testLoginUserExistsEnabledWrongPassword(TestContext context) {
 //        final Async async = context.async();
@@ -200,4 +206,87 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 //                }).end(jsonData);
 //
 //    }
+//    @Test
+//    public void testLoginUserExistsEnabledOK(TestContext context) {
+//        final Async async = context.async();
+//
+//        // GIVEN
+//        SignupData data = new SignupData();
+//        data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+//        data.setPassword("testLoginUserExistsEnabledWrongPassword");
+//        data.setDogName("Dog 1");
+//        data.setDogGender(DogGender.FEMALE);
+//        data.setDogBreed(DogBreed.SHIBA_INU);
+//        data.setDogBirthdate("2015-01-01");
+//        String jsonData = Json.encodePrettily(data);
+//        String signupUrl = "/api/authentication/signup";
+//        
+//        LoginData loginData = new LoginData();
+//        loginData.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
+//        loginData.setPassword("testLoginUserExistsEnabledWrongPassword");
+//        String loginUrl = "/api/authentication/signup";
+//
+//        // WHEN
+//        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+//                response -> {
+//                    context.assertTrue(response.statusCode() == 201);
+//                    vertx.createHttpClient().post(httpPort, "localhost", loginUrl,
+//                            response2 -> {
+//                                // THEN
+//                                context.assertTrue(response2.statusCode() == 400);
+//                                context.assertTrue("user_not_enabled".equals(response2.statusMessage()));
+//                                async.complete();
+//                            }).end(jsonData);
+//                }).end(jsonData);
+//
+//    }
+    @Test
+    @Ignore
+    public void testActivateUserDoesNotExist(TestContext context) {
+        final Async async = context.async();
+
+        String activateUrl = "/api/authentication/activate?token=testActivateDoesNotExist";
+
+        // WHEN
+        vertx.createHttpClient().get(httpPort, "localhost", activateUrl,
+                response -> {
+                    context.assertTrue(response.statusCode() == 404);
+                    context.assertTrue("user_does_not_exist".equals(response.statusMessage()));
+                    async.complete();
+                }).end();
+
+    }
+
+    @Test
+    public void testActivateUserExists(TestContext context) {
+        final Async async = context.async();
+
+        // GIVEN
+        SignupData data = new SignupData();
+        data.setEmail("testActivateUserExists@walkingdog.com");
+        data.setPassword("testActivateUserExists");
+        data.setDogName("Dog 1");
+        data.setDogGender(DogGender.FEMALE);
+        data.setDogBreed(DogBreed.SHIBA_INU);
+        data.setDogBirthdate("2015-01-01");
+        String signupJsonData = Json.encodePrettily(data);
+        String signupUrl = "/api/authentication/signup";
+
+        // WHEN
+        vertx.createHttpClient().post(httpPort, "localhost", signupUrl,
+                response -> {
+                    context.assertTrue(response.statusCode() == 201);
+                    response.bodyHandler(bodyHandler -> {
+                        JsonObject token = new JsonObject(bodyHandler.toString());
+                        String activateUrl = "/api/authentication/activate?token=" + token.getString("token");
+                        vertx.createHttpClient().get(httpPort, "localhost", activateUrl,
+                                activateResponse -> {
+                                    context.assertTrue(activateResponse.statusCode() == 200);
+                                    context.assertTrue("OK".equals(activateResponse.statusMessage()));
+                                    async.complete();
+                                }).end();
+                    });
+                }).end(signupJsonData);
+
+    }
 }

@@ -40,7 +40,7 @@ public abstract class AbstractVerticleTest {
 
     @AfterClass
     public static void afterClass() {
-        process.stop();
+//        process.stop();
     }
 
     private static void startPostgres() {
