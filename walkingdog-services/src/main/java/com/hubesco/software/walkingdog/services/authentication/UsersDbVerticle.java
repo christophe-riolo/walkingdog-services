@@ -111,6 +111,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         insertUserParams.add(userUuid);
         insertUserParams.add(user.getString("email"));
         insertUserParams.add(encrypt(user.getString("password")));
+        insertUserParams.add(generateUUID());
 
         JsonArray insertDogParams = new JsonArray();
         insertDogParams.add(generateUUID());
@@ -120,7 +121,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         insertDogParams.add(convert(user.getString("dogBirthdate")));
         insertDogParams.add(userUuid);
 
-        connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", insertUserParams, result -> {
+        connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD,TOKEN) values (?,?,?,?)", insertUserParams, result -> {
             if (result.succeeded()) {
                 connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result2 -> {
                     if (result2.succeeded()) {

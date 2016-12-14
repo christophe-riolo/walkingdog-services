@@ -8,6 +8,7 @@ CREATE TABLE T_USER (
     PASSWORD varchar(255) NOT NULL,
     PHONE_UUID varchar(255),
     ENABLED boolean DEFAULT false NOT NULL
+    TOKEN varchar(255) NOT NULL
 );
 
 CREATE TABLE T_DOG (
