@@ -5,6 +5,7 @@ import com.hubesco.software.walkingdog.services.authentication.UsersDbVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationDbVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationRestVerticle;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.DeploymentOptions;
 
 /**
  * @author paoesco
@@ -22,7 +23,9 @@ public class MainVerticle extends AbstractVerticle {
         vertx.deployVerticle(AuthenticationRestVerticle.class.getName(), (result) -> {
             System.out.println("AuthenticationRestVerticle deployment : " + result.succeeded());
         });
-        vertx.deployVerticle(UsersDbVerticle.class.getName(), (result) -> {
+        DeploymentOptions optionsUsersDbVerticle = new DeploymentOptions();
+        optionsUsersDbVerticle.setInstances(2);
+        vertx.deployVerticle(UsersDbVerticle.class.getName(), optionsUsersDbVerticle, (result) -> {
             System.out.println("UsersDbVerticle deployment : " + result.succeeded());
         });
     }
