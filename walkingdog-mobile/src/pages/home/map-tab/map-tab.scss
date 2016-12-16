@@ -4,7 +4,7 @@ map-tab ion-content {
 
 map-tab #map {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 30px);
   opacity: 0;
   transition: opacity 150ms ease-in
 }
@@ -16,8 +16,8 @@ map-tab #map.show-map {
 .visibleInfo {
 	background: black;
 	color: white;
-	height: 40px;
+	height: 30px;
 	text-align: center;
-	padding-top: 9px;
+	padding-top: 4px;
 }
 
