@@ -9,6 +9,7 @@ public class DogLocation {
     private String dogName;
     private double longitude;
     private double latitude;
+    private boolean walking;
 
     /**
      * vertx json.
@@ -18,11 +19,12 @@ public class DogLocation {
 
     // create and initialize a point with given name and
     // (latitude, longitude) specified in degrees
-    public DogLocation(String userUuid, String name, double latitude, double longitude) {
+    public DogLocation(String userUuid, String name, double latitude, double longitude, boolean walking) {
         this.userUuid = userUuid;
         this.dogName = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.walking = walking;
     }
 
     // return distance between this location and that location

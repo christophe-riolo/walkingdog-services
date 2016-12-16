@@ -43,7 +43,7 @@ public class Runner {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX());
+        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true);
         return dogLocation;
     }
 

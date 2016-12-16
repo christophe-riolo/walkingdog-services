@@ -10,7 +10,7 @@ Walking Dog
 `GET /api/location/dogsAround?ne-lat=51.603176&ne-lon=-0.187197&sw-lat=51.599313&sw-lon=-0.199326`
 
 - Register location
-`POST /api/location/register  { "id":"dog1", "name":"Dog 1", "latitude":51.600000, "longitude":-0.190000 }`
+`POST /api/location/register  { "userUuid":"dog1", "dogName":"Dog 1", "latitude":51.600000, "longitude":-0.190000, "walking": "true|false" }`
 
 - Sign Up
 `POST /api/authentication/signup { "email":"xxx@xxx.com", "password":"xxx", "dogName":"Dog xxx", "dogGender":"FEMALE|MALE", "dogBreed":"SHIBA_INU", "dogBirthdate":"2015-01-01" }`

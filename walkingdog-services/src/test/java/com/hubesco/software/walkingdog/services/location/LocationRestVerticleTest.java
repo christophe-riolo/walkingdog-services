@@ -82,7 +82,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // GIVEN
-        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0);
+        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0, true);
         String jsonUserLocation = Json.encodePrettily(userLocation);
 
         // WHEN
@@ -114,7 +114,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX());
+        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true);
         return dogLocation;
     }
 
