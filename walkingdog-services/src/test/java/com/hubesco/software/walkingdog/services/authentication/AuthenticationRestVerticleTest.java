@@ -256,7 +256,20 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                                                 // THEN
                                                 context.assertTrue(response2.statusCode() == 200);
                                                 context.assertTrue("OK".equals(response2.statusMessage()));
-                                                async.complete();
+                                                response2.bodyHandler(loginHandler -> {
+                                                    JsonObject loggedUser = loginHandler.toJsonObject();
+                                                    context.assertNotNull(loggedUser.getString("uuid"));
+                                                    context.assertTrue(data.getEmail().equals(loggedUser.getString("email")));
+                                                    context.assertNull(loggedUser.getString("password"));
+                                                    context.assertTrue(loggedUser.getBoolean("enabled"));
+                                                    context.assertNotNull(loggedUser.getString("token"));
+                                                    context.assertNotNull(loggedUser.getString("dogUuid"));
+                                                    context.assertTrue(data.getDogName().equals(loggedUser.getString("dogName")));
+                                                    context.assertTrue(data.getDogGender().equals(DogGender.valueOf(loggedUser.getString("dogGender"))));
+                                                    context.assertTrue(data.getDogBreed().equals(DogBreed.valueOf(loggedUser.getString("dogBreed"))));
+                                                    context.assertTrue(data.getDogBirthdate().equals(loggedUser.getString("dogBirthdate")));
+                                                    async.complete();
+                                                });
                                             }).end(jsonLoginData);
                                 }).end();
                     });

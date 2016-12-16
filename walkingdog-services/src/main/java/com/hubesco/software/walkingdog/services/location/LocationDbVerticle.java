@@ -40,7 +40,7 @@ public class LocationDbVerticle extends AbstractVerticle {
 
     private void register(Message<String> handler) {
         DogLocation dogLocation = Json.decodeValue(handler.body(), DogLocation.class);
-        dogLocations.put(dogLocation.getId(), handler.body());
+        dogLocations.put(dogLocation.getUserUuid(), handler.body());
     }
 
     private void dogs(Message<String> handler) {

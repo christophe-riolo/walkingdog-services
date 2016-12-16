@@ -5,8 +5,8 @@ package com.hubesco.software.walkingdog.api.location;
  */
 public class DogLocation {
 
-    private String id;
-    private String name;
+    private String userUuid;
+    private String dogName;
     private double longitude;
     private double latitude;
 
@@ -18,9 +18,9 @@ public class DogLocation {
 
     // create and initialize a point with given name and
     // (latitude, longitude) specified in degrees
-    public DogLocation(String id, String name, double latitude, double longitude) {
-        this.id = id;
-        this.name = name;
+    public DogLocation(String userUuid, String name, double latitude, double longitude) {
+        this.userUuid = userUuid;
+        this.dogName = name;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -47,15 +47,15 @@ public class DogLocation {
     // return string representation of this point
     @Override
     public String toString() {
-        return name + " (" + latitude + ", " + longitude + ")";
+        return dogName + " (" + latitude + ", " + longitude + ")";
     }
 
-    public String getId() {
-        return id;
+    public String getUserUuid() {
+        return userUuid;
     }
 
-    public String getName() {
-        return name;
+    public String getDogName() {
+        return dogName;
     }
 
     public double getLongitude() {

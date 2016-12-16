@@ -111,13 +111,14 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                     int statusCode = 200;
                     String responseBody = "";
                     String statusMessage = "OK";
-                    if (handler.failed()) {
+                    if (handler.succeeded()) {
+                        // Get token
+                        JsonObject loggedUser = (JsonObject) handler.result().body();
+                        responseBody = loggedUser.encode();
+                    } else {
                         ReplyException cause = (ReplyException) handler.cause();
                         statusCode = cause.failureCode();
                         statusMessage = cause.getLocalizedMessage();
-                    } else {
-                        // Get token
-                        responseBody = String.valueOf(handler.result().body());
                     }
                     routingContext
                             .response()

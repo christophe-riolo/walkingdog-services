@@ -23,9 +23,9 @@ import org.mindrot.jbcrypt.BCrypt;
  * @author paoesco
  */
 public class UsersDbVerticle extends AbstractVerticle {
-    
+
     private AsyncSQLClient postgreSQLClient;
-    
+
     @Override
     public void start(Future<Void> fut) {
         vertx.eventBus().consumer(Addresses.USER_DB.address(), this::handler);
@@ -36,12 +36,12 @@ public class UsersDbVerticle extends AbstractVerticle {
         }
         fut.complete();
     }
-    
+
     @Override
     public void stop() throws Exception {
         postgreSQLClient.close();
     }
-    
+
     private void handler(Message<JsonObject> handler) {
         try {
             switch (handler.headers().get(Headers.COMMAND.header())) {
@@ -61,7 +61,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             handler.fail(500, ex.getLocalizedMessage());
         }
     }
-    
+
     private void signup(Message<JsonObject> handler) {
         postgreSQLClient.getConnection(connectionHandler -> {
             if (connectionHandler.succeeded()) {
@@ -92,24 +92,37 @@ public class UsersDbVerticle extends AbstractVerticle {
             }
         });
     }
-    
+
     private void login(Message<JsonObject> handler) {
         postgreSQLClient.getConnection(connectionHandler -> {
             if (connectionHandler.succeeded()) {
                 SQLConnection connection = connectionHandler.result();
-                JsonObject user = handler.body();
-                getUserWithEmail(connection, user.getString("email"))
+                JsonObject userInput = handler.body();
+                getUserAndDogWithEmail(connection, userInput.getString("email"))
                         .setHandler(result -> {
                             if (result.succeeded()) {
                                 JsonArray resultUser = result.result();
-                                if (!resultUser.getBoolean(2)) {
+                                boolean enabled = resultUser.getBoolean(3);
+                                if (!enabled) {
                                     handler.fail(400, "user_not_enabled");
                                     connection.close();
                                     return;
                                 }
-                                String encryptedPassword = resultUser.getString(1);
-                                if (checkPassword(user.getString("password"), encryptedPassword)) {
-                                    handler.reply(resultUser.getString(3));
+                                // Convert to json object
+                                JsonObject loggedUser = new JsonObject();
+                                loggedUser.put("uuid", resultUser.getString(0));
+                                loggedUser.put("email", resultUser.getString(1));
+                                String encryptedPassword = resultUser.getString(2);
+                                loggedUser.put("enabled", enabled);
+                                loggedUser.put("token", resultUser.getString(4));
+                                loggedUser.put("dogUuid", resultUser.getString(5));
+                                loggedUser.put("dogName", resultUser.getString(6));
+                                loggedUser.put("dogGender", resultUser.getString(7));
+                                loggedUser.put("dogBreed", resultUser.getString(8));
+                                loggedUser.put("dogBirthdate", resultUser.getString(9));
+
+                                if (checkPassword(userInput.getString("password"), encryptedPassword)) {
+                                    handler.reply(loggedUser);
                                     connection.close();
                                 } else {
                                     handler.fail(400, "wrong_password");
@@ -126,7 +139,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             }
         });
     }
-    
+
     private void activate(Message<JsonObject> handler) {
         postgreSQLClient.getConnection(connectionHandler -> {
             if (connectionHandler.succeeded()) {
@@ -148,7 +161,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             }
         });
     }
-    
+
     private Future<Boolean> userExists(SQLConnection connection, JsonObject user) {
         Future<Boolean> promise = Future.future();
         String email = user.getString("email");
@@ -164,7 +177,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         });
         return promise;
     }
-    
+
     private Future<JsonObject> insert(SQLConnection connection, JsonObject user) {
         Future<JsonObject> promise = Future.future();
         JsonArray insertUserParams = new JsonArray();
@@ -174,7 +187,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         insertUserParams.add(encrypt(user.getString("password")));
         String token = generateUUID();
         insertUserParams.add(token);
-        
+
         JsonArray insertDogParams = new JsonArray();
         insertDogParams.add(generateUUID());
         insertDogParams.add(user.getString("dogName"));
@@ -201,12 +214,12 @@ public class UsersDbVerticle extends AbstractVerticle {
         });
         return promise;
     }
-    
-    private Future<JsonArray> getUserWithEmail(SQLConnection connection, String email) {
+
+    private Future<JsonArray> getUserAndDogWithEmail(SQLConnection connection, String email) {
         Future<JsonArray> promise = Future.future();
         JsonArray params = new JsonArray();
         params.add(email);
-        connection.queryWithParams("SELECT EMAIL,PASSWORD,ENABLED,TOKEN FROM T_USER WHERE EMAIL = ?", params, result -> {
+        connection.queryWithParams("SELECT u.UUID,u.EMAIL,u.PASSWORD,u.ENABLED,u.TOKEN,d.UUID,d.NAME,d.GENDER,d.BREED,d.BIRTHDATE FROM T_USER u INNER JOIN T_DOG d on d.USER_UUID = u.UUID WHERE u.EMAIL = ?", params, result -> {
             if (result.succeeded()) {
                 ResultSet resultSet = result.result();
                 if (resultSet.getResults().isEmpty()) {
@@ -221,7 +234,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         });
         return promise;
     }
-    
+
     private Future<JsonArray> enableUser(SQLConnection connection, String token) {
         Future<JsonArray> promise = Future.future();
         JsonArray params = new JsonArray();
@@ -240,12 +253,12 @@ public class UsersDbVerticle extends AbstractVerticle {
         });
         return promise;
     }
-    
+
     private String encrypt(String password) {
         // Hash a password for the first time
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-    
+
     private JsonObject getPostgreSQLClientConfig() {
         JsonObject config = new JsonObject();
         String databaseUrl = System.getenv("DATABASE_URL");
@@ -265,15 +278,15 @@ public class UsersDbVerticle extends AbstractVerticle {
             Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
         return config;
-        
+
     }
-    
+
     private String generateUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
-    
+
     private boolean checkPassword(String actualPassword, String encryptedPassword) {
         return BCrypt.checkpw(actualPassword, encryptedPassword);
     }
-    
+
 }
