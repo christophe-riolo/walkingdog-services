@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Http, Response } from '@angular/http';
-import { Auth as IonicAuth, User as IonicUser, UserDetails, IDetailedError } from '@ionic/cloud-angular';
-
 import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 
 import { HomePage } from '../home/home';
+import { SecurityContextHolder } from '../../components/authentication/security-context-holder'
 
 
 /*
@@ -26,14 +25,13 @@ import { HomePage } from '../home/home';
     private apiUrl: String;
 
     constructor(
-      private ionicAuth: IonicAuth, 
-      private ionicUser: IonicUser, 
+      private securityContextHolder: SecurityContextHolder,
       private loadingCtrl: LoadingController,
       private navCtrl: NavController,
       private http: Http,
       fb: FormBuilder) {
 
-      if (this.ionicAuth.isAuthenticated()) {
+      if (this.securityContextHolder.isAuthenticated()) {
         this.navCtrl.setRoot(HomePage);
       }
 
@@ -61,8 +59,8 @@ import { HomePage } from '../home/home';
         this.http
         .post(`${this.apiUrl}/login`, JSON.stringify(value))
         .subscribe((res: Response) => {
-          console.log('here');
           this.loader.dismiss();
+          this.securityContextHolder.setCurrentUser(res.json());
           this.navCtrl.setRoot(HomePage);
         },
         (err:Response) => {

@@ -11,9 +11,9 @@ import { MapTab } from '../pages/home/map-tab/map-tab';
 import { AboutPage } from '../pages/about/about';
 import { ProfilePage } from '../pages/profile/profile';
 // Components
+import { SecurityContextHolder } from '../components/authentication/security-context-holder';
 import { LocationTracker } from '../components/location/location-tracker';
 import { TimerComponent } from '../components/timer/timer';
-import { DogComponent } from '../components/dog/dog.component';
 // Third parties
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 
@@ -39,7 +39,6 @@ const cloudSettings: CloudSettings = {
     MapTab,
     AboutPage,
     ProfilePage,
-    DogComponent,
     TimerComponent
   ],
   imports: [
@@ -58,7 +57,8 @@ const cloudSettings: CloudSettings = {
     ProfilePage
   ],
   providers: [
-    LocationTracker
+    LocationTracker,
+    SecurityContextHolder
   ]
 })
 export class AppModule {}
