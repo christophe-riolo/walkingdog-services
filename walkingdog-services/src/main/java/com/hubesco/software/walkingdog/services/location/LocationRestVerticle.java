@@ -92,7 +92,8 @@ public class LocationRestVerticle extends AbstractVerticle {
                                 return Json.decodeValue(json, DogLocation.class);
                             })
                             .filter(dogLocation -> {
-                                return map.contains(new Point2D.Double(dogLocation.getLongitude(), dogLocation.getLatitude()));
+                                return dogLocation.isWalking()
+                                        && map.contains(new Point2D.Double(dogLocation.getLongitude(), dogLocation.getLatitude()));
                             })
                             .collect(Collectors.toList());
 

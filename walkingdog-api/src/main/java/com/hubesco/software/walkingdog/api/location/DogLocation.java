@@ -68,4 +68,8 @@ public class DogLocation {
         return latitude;
     }
 
+    public boolean isWalking() {
+        return walking;
+    }
+
 }
