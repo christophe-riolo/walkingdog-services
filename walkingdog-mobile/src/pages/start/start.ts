@@ -9,6 +9,7 @@ import { FormBuilder,FormGroup } from '@angular/forms';
 import { LoginPage } from '../login/login'
 import { SignupPage } from '../signup/signup'
 import { HomePage } from '../home/home';
+import { SecurityContextHolder } from '../../components/authentication/security-context-holder';
 
 
 
@@ -30,6 +31,7 @@ import { HomePage } from '../home/home';
     //signupForm: FormGroup;
 
     constructor(
+      private securityContext: SecurityContextHolder,
       private ionicAuth: IonicAuth, 
       private googleAuth: GoogleAuth,
       private googleUser: GoogleUser,
@@ -37,7 +39,7 @@ import { HomePage } from '../home/home';
       private navCtrl: NavController,
       fb: FormBuilder) {
 
-      if (this.ionicAuth.isAuthenticated()) {
+      if (this.securityContext.isAuthenticated()) {
         this.navCtrl.setRoot(HomePage);
       }
 

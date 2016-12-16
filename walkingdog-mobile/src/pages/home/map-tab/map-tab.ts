@@ -1,8 +1,9 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
-import { LocationTracker } from '../../../components/location/location-tracker';
 import { Http, Response } from '@angular/http';
+import { LocationTracker } from '../../../components/location/location-tracker';
+import { SecurityContextHolder } from '../../../components/authentication/security-context-holder';
 
 
 // Comes from Google Maps JavaScript API. See index.html
@@ -22,21 +23,23 @@ export class MapTab {
   currentUserMarker: any;
   // Stores the markers of pets around
   petsAroundMarkers: Array<any>;
-  // Tells if user is walking
-  walking: boolean;
 
   private apiUrl: String;
   private loader: any;
 
+  walking: boolean;
+
   constructor(
     private navCtrl: NavController, 
-    private locationTracker: LocationTracker,
     private http: Http,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private locationTracker: LocationTracker,
+    private securityContext: SecurityContextHolder
+    ) {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
     //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
-    this.walking = false;
+    this.walking = this.securityContext.getCurrentUser().isWalking();
   }
   
   // http://www.joshmorony.com/ionic-2-how-to-use-google-maps-geolocation-video-tutorial/
@@ -67,12 +70,12 @@ export class MapTab {
   }
 
   buttonStartWalk() {
-    this.walking = true;
+    this.walking = this.securityContext.getCurrentUser().walk();
     this.updateMyLocation();
   }
 
   buttonStopWalk() {
-    this.walking = false;
+    this.walking = this.securityContext.getCurrentUser().stop();
     this.updateMyLocation();
   }
 
@@ -86,7 +89,7 @@ export class MapTab {
     this.updateMyLocation();
     // Find dogs around
     this.showPetsInMap();
-     // Refresh map every 10 seconds
+    // Refresh map every 10 seconds
     setInterval(() => {
       // Deals with current user location
       this.updateMyLocation();
@@ -125,21 +128,21 @@ export class MapTab {
     // Creates and stores a new marker with the current position.
     let icon = null;
     //if (!this.walking) {
-    //  icon = 'assets/icon/marker-notwalking.png';
-    //}
-    this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), icon);
-  }
+      //  icon = 'assets/icon/marker-notwalking.png';
+      //}
+      this.currentUserMarker = this.addMarker("you", "You", this.locationTracker.getLat(), this.locationTracker.getLng(), icon);
+    }
 
-  private showPetsInMap() {
-    // Prepares the request
-    let params: string = [
+    private showPetsInMap() {
+      // Prepares the request
+      let params: string = [
       `ne-lat=${this.map.getBounds().getNorthEast().lat()}`,
       `ne-lon=${this.map.getBounds().getNorthEast().lng()}`,
       `sw-lat=${this.map.getBounds().getSouthWest().lat()}`,
       `sw-lon=${this.map.getBounds().getSouthWest().lng()}`
-    ].join('&');
-    // Sends request to backend
-    this.http.request(`${this.apiUrl}/dogsAround?${params}`)
+      ].join('&');
+      // Sends request to backend
+      this.http.request(`${this.apiUrl}/dogsAround?${params}`)
       .subscribe((res: Response) => {
         // Removes previous markers
         for (let marker of this.petsAroundMarkers) {
@@ -149,41 +152,45 @@ export class MapTab {
         this.petsAroundMarkers = []; 
         // Creates new markers
         for (let pet of res.json()) {
-          if (pet.id !== 'azertyuiop') { // Filters the marker of the user
+          if (pet.userUuid !== this.securityContext.getCurrentUser().getUuid()) { // Filters the marker of the user
             // Adds new marker
-            let marker = this.addMarker(pet.id, pet.name, pet.latitude, pet.longitude, 'assets/icon/marker-pets.png');
+            let marker = this.addMarker(
+              pet.userUuid, 
+              pet.name, 
+              pet.latitude, 
+              pet.longitude, 'assets/icon/marker-pets.png');
             // Keeps reference of created marker
             this.petsAroundMarkers.push(marker);
           }
         }
       });
-  }
+    }
 
-  private addMarker(dogId: string, dogName: string, lat: number, lng : number, iconUrl: string): any {
-    let currentPosition = {lat: lat, lng: lng};
-    //let icon = {
-      //scaledSize: new google.maps.Size(32, 32), // scaled size
-    //  url: iconUrl // url
-    //}
+    private addMarker(dogId: string, dogName: string, lat: number, lng : number, iconUrl: string): any {
+      let currentPosition = {lat: lat, lng: lng};
+      //let icon = {
+        //scaledSize: new google.maps.Size(32, 32), // scaled size
+        //  url: iconUrl // url
+        //}
 
-    let marker = new google.maps.Marker({
-      map: this.map,
-      //animation: google.maps.Animation.DROP,
-      position: currentPosition,
-      icon: iconUrl
-    });
-    let content = `<h4>${dogName}</h4>`;          
-    this.addInfoWindow(marker, content);
-    return marker;
-  }
+        let marker = new google.maps.Marker({
+          map: this.map,
+          //animation: google.maps.Animation.DROP,
+          position: currentPosition,
+          icon: iconUrl
+        });
+        let content = `<h4>${dogName}</h4>`;          
+        this.addInfoWindow(marker, content);
+        return marker;
+      }
 
-  private addInfoWindow(marker, content){
-    let infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
-    });
-  }
+      private addInfoWindow(marker, content){
+        let infoWindow = new google.maps.InfoWindow({
+          content: content
+        });
+        google.maps.event.addListener(marker, 'click', () => {
+          infoWindow.open(this.map, marker);
+        });
+      }
 
-}
+    }

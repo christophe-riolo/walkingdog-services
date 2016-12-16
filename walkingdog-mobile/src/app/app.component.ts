@@ -7,12 +7,14 @@ import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ProfilePage } from '../pages/profile/profile';
 
+import { SecurityContextHolder } from '../components/authentication/security-context-holder';
+
 import { Auth } from '@ionic/cloud-angular';
 
 
 @Component({
   template: `
-  <ion-menu [content]="content" *ngIf="auth.isAuthenticated()">
+  <ion-menu [content]="content" *ngIf="securityContext.isAuthenticated()">
     <ion-header>
       <ion-toolbar color="secondary">
         <ion-title>Menu</ion-title>
@@ -50,7 +52,9 @@ export class MyApp {
   aboutPage: any;
   profilePage: any;
 
-  constructor(platform: Platform, public auth: Auth) {
+  constructor(
+    platform: Platform, 
+    public securityContext: SecurityContextHolder) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
