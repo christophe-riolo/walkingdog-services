@@ -31,8 +31,8 @@ public abstract class AbstractVerticleTest {
     @BeforeClass
     public static void beforeClass() {
         httpPort = randomPort();
-        postgresPort = randomPort();
         System.setProperty("http.port", String.valueOf(httpPort));
+        configureJwt();
         configureEmbeddedPostgres();
 //        configureLocalPostgres();
     }
@@ -48,7 +48,14 @@ public abstract class AbstractVerticleTest {
         System.setProperty("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/postgres");
     }
 
+    private static void configureJwt() {
+        System.setProperty("JWT_KEYSTORE_KEYPASS", "secret");
+        System.setProperty("JWT_KEYSTORE_STOREPASS", "secret");
+        System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
+    }
+
     private static void configureEmbeddedPostgres() {
+        postgresPort = randomPort();
         System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:" + postgresPort + "/postgres");
         try {
             // starting Postgres

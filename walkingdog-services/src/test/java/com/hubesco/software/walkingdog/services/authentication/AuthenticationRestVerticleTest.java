@@ -30,10 +30,9 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     @Before
     public void setUp(TestContext context) {
         vertx = Vertx.vertx();
-        vertx.deployVerticle(AuthenticationRestVerticle.class.getName(),
-                context.asyncAssertSuccess());
-        vertx.deployVerticle(UsersDbVerticle.class.getName(),
-                context.asyncAssertSuccess());
+        vertx.deployVerticle(AuthenticationRestVerticle.class.getName(), context.asyncAssertSuccess());
+        vertx.deployVerticle(UsersDbVerticle.class.getName(), context.asyncAssertSuccess());
+        vertx.deployVerticle(TokenVerticle.class.getName(), context.asyncAssertSuccess());
     }
 
     @After

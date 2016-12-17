@@ -51,6 +51,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                             }
                         }
                 );
+
     }
 
     /**
@@ -102,32 +103,62 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
      * @param routingContext
      */
     private void login(RoutingContext routingContext) {
+        loginBackend(routingContext)
+                .compose(loggedUser -> {
+                    return generateToken(loggedUser);
+                })
+                .setHandler(handler -> {
+                    if (handler.succeeded()) {
+                        routingContext
+                                .response()
+                                .setStatusCode(200)
+                                .setStatusMessage("OK")
+                                .putHeader("content-type", CONTENT_TYPE)
+                                .end(handler.result().encode());
+                    } else {
+                        ReplyException cause = (ReplyException) handler.cause();
+                        routingContext
+                                .response()
+                                .setStatusCode(cause.failureCode())
+                                .setStatusMessage(cause.getLocalizedMessage())
+                                .putHeader("content-type", CONTENT_TYPE)
+                                .end();
+                    }
+                });
+    }
+
+    private Future<JsonObject> loginBackend(RoutingContext routingContext) {
+        Future<JsonObject> promise = Future.future();
         JsonObject body = routingContext.getBodyAsJson();
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "login");
-        vertx
-                .eventBus()
+        vertx.eventBus()
                 .send(Addresses.USER_DB.address(), body, options, handler -> {
-                    int statusCode = 200;
-                    String responseBody = "";
-                    String statusMessage = "OK";
                     if (handler.succeeded()) {
-                        // Get token
-                        JsonObject loggedUser = (JsonObject) handler.result().body();
-                        responseBody = loggedUser.encode();
+                        promise.complete((JsonObject) handler.result().body());
                     } else {
-                        ReplyException cause = (ReplyException) handler.cause();
-                        statusCode = cause.failureCode();
-                        statusMessage = cause.getLocalizedMessage();
+                        promise.fail(handler.cause());
                     }
-                    routingContext
-                            .response()
-                            .setStatusCode(statusCode)
-                            .setStatusMessage(statusMessage)
-                            .putHeader("content-type", CONTENT_TYPE)
-                            .end(responseBody);
-                });
 
+                });
+        return promise;
+    }
+
+    private Future<JsonObject> generateToken(JsonObject loggedUser) {
+        Future<JsonObject> promise = Future.future();
+        // Get token
+        DeliveryOptions options = new DeliveryOptions().addHeader(Headers.COMMAND.header(), "generate");
+        vertx.eventBus()
+                .send(Addresses.TOKEN.address(), loggedUser, options, handler -> {
+                    if (handler.succeeded()) {
+                        loggedUser.put("token", (String) handler.result().body());
+                        promise.complete(loggedUser);
+                    } else {
+                        promise.fail(handler.cause());
+                    }
+
+                });
+        return promise;
     }
 
     /**
