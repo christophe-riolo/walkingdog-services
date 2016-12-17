@@ -25,7 +25,7 @@ public class TokenVerticle extends AbstractVerticle {
             JsonObject config = new JsonObject().put("keyStore", new JsonObject()
                     .put("path", EnvironmentProperties.jwtKeystorePath())
                     .put("type", "jceks")
-                    .put("password", EnvironmentProperties.jwtKeystoreKeypass()));
+                    .put("password", EnvironmentProperties.jwtKeystoreStorepass()));
             provider = JWTAuth.create(vertx, config);
             vertx.eventBus().consumer(Addresses.TOKEN.address(), this::handler);
             startFuture.complete();
