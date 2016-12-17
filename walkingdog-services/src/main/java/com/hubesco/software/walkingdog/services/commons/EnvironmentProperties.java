@@ -9,18 +9,10 @@ public abstract class EnvironmentProperties {
 
     }
 
-    public static String jwtKeystoreKeypass() {
-        String property = System.getenv("JWT_KEYSTORE_KEYPASS");
+    public static String jwtKeystorePassword() {
+        String property = System.getenv("JWT_KEYSTORE_PASSWORD");
         if (property == null) {
-            property = System.getProperty("JWT_KEYSTORE_KEYPASS");
-        }
-        return property;
-    }
-
-    public static String jwtKeystoreStorepass() {
-        String property = System.getenv("JWT_KEYSTORE_STOREPASS");
-        if (property == null) {
-            property = System.getProperty("JWT_KEYSTORE_STOREPASS");
+            property = System.getProperty("JWT_KEYSTORE_PASSWORD");
         }
         return property;
     }
