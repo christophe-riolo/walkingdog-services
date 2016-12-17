@@ -49,8 +49,7 @@ public abstract class AbstractVerticleTest {
     }
 
     private static void configureJwt() {
-        System.setProperty("JWT_KEYSTORE_KEYPASS", "secret");
-        System.setProperty("JWT_KEYSTORE_STOREPASS", "secret");
+        System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
     }
 
