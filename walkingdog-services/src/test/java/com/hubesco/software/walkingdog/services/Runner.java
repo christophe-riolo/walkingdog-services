@@ -19,8 +19,8 @@ public class Runner {
         int defaultPort = 8080;
         System.setProperty("http.port", String.valueOf(defaultPort));
         System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:5432/walkingdog");
-        System.setProperty("JWT_KEYSTORE_KEYPASS", "secretkeypass");
-        System.setProperty("JWT_KEYSTORE_STOREPASS", "secretstorepass");
+        System.setProperty("JWT_KEYSTORE_KEYPASS", "secret");
+        System.setProperty("JWT_KEYSTORE_STOREPASS", "secret");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
 
         Vertx vertx = Vertx.vertx();
