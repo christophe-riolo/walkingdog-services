@@ -21,16 +21,19 @@ public class TokenVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
+        try {
+            JsonObject config = new JsonObject().put("keyStore", new JsonObject()
+                    .put("path", EnvironmentProperties.jwtKeystorePath())
+                    .put("type", "jceks")
+                    .put("password", EnvironmentProperties.jwtKeystoreKeypass()));
+            provider = JWTAuth.create(vertx, config);
+            vertx.eventBus().consumer(Addresses.TOKEN.address(), this::handler);
+            startFuture.complete();
+        } catch (Exception ex) {
+            Logger.getLogger(TokenVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            startFuture.fail(ex);
+        }
 
-        JsonObject config = new JsonObject().put("keyStore", new JsonObject()
-                .put("path", EnvironmentProperties.jwtKeystorePath())
-                .put("type", "jceks")
-                .put("password", EnvironmentProperties.jwtKeystoreKeypass()));
-        provider = JWTAuth.create(vertx, config);
-
-        vertx.eventBus().consumer(Addresses.TOKEN.address(), this::handler);
-
-        startFuture.complete();
     }
 
     private void handler(Message<JsonObject> handler) {
