@@ -1,6 +1,7 @@
 Walking Dog
 ====
-[![Build Status](https://travis-ci.org/paoesco/walkingdog.svg?branch=master)](https://travis-ci.org/paoesco/walkingdog)
+- TravisCI : [![Build Status](https://travis-ci.org/paoesco/walkingdog.svg?branch=master)](https://travis-ci.org/paoesco/walkingdog)
+- Codacy : [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8cbd8954b874c5eb33aa1cd0b7f32c5)](https://www.codacy.com/app/pao-esco/walkingdog?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paoesco/walkingdog&amp;utm_campaign=Badge_Grade)
 
 ## API Documentation
 
