@@ -1,5 +1,10 @@
 package com.hubesco.software.walkingdog.services;
 
+import com.hubesco.software.walkingdog.services.commons.authentication.KeystoreConfig;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -24,12 +29,16 @@ public abstract class AbstractVerticleTest {
     protected static int httpPort;
     protected static int postgresPort;
     private static PostgresProcess process;
+    private static JWTAuth provider;
+    protected static String jwtToken;
+    protected static Vertx vertx;
 
     public AbstractVerticleTest() {
     }
 
     @BeforeClass
     public static void beforeClass() {
+        vertx = Vertx.vertx();
         httpPort = randomPort();
         System.setProperty("http.port", String.valueOf(httpPort));
         configureJwt();
@@ -42,6 +51,7 @@ public abstract class AbstractVerticleTest {
         if (process != null) {
             process.stop();
         }
+        vertx.close();
     }
 
     private static void configureLocalPostgres() {
@@ -51,6 +61,8 @@ public abstract class AbstractVerticleTest {
     private static void configureJwt() {
         System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
+        provider = JWTAuth.create(Vertx.vertx(), KeystoreConfig.config());
+        jwtToken = provider.generateToken(new JsonObject().put("email", "auth@walkingdog.com"), new JWTOptions().setAlgorithm("HS512"));
     }
 
     private static void configureEmbeddedPostgres() {

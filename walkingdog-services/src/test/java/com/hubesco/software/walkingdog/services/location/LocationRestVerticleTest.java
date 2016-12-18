@@ -4,7 +4,6 @@ import com.hubesco.software.walkingdog.api.location.DogLocation;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
 import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
 import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.ext.unit.Async;
@@ -25,11 +24,8 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class LocationRestVerticleTest extends AbstractVerticleTest {
 
-    private Vertx vertx;
-
     @Before
     public void setUp(TestContext context) {
-        vertx = Vertx.vertx();
         vertx.deployVerticle(LocationRestVerticle.class.getName(),
                 context.asyncAssertSuccess());
         vertx.deployVerticle(LocationDbVerticle.class.getName(),
@@ -38,7 +34,18 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
 
     @After
     public void tearDown(TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
+    }
+
+    @Test
+    public void testHealthNotAuthorized(TestContext context) {
+        final Async async = context.async();
+        // WHEN
+        vertx.createHttpClient()
+                .get(httpPort, "localhost", "/api/location/health",
+                        response -> {
+                            context.assertTrue(401 == response.statusCode());
+                            async.complete();
+                        }).end();
     }
 
     @Test
@@ -46,14 +53,15 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // WHEN
-        vertx.createHttpClient().getNow(httpPort, "localhost", "/api/location/health",
-                response -> {
-                    response.handler(body -> {
-                        EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
-                        context.assertTrue(EndpointStatus.OK.equals(health.getStatus()));
-                        async.complete();
-                    });
-                });
+        vertx.createHttpClient()
+                .get(httpPort, "localhost", "/api/location/health",
+                        response -> {
+                            response.handler(body -> {
+                                EndpointHealth health = Json.decodeValue(body.toString(), EndpointHealth.class);
+                                context.assertTrue(EndpointStatus.OK.equals(health.getStatus()));
+                                async.complete();
+                            });
+                        }).putHeader("Authorization", "Bearer " + jwtToken).end();
     }
 
     @Test
@@ -66,7 +74,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
 
         // WHEN
         String url = "/api/location/dogsAround?" + params;
-        vertx.createHttpClient().getNow(httpPort, "localhost", url,
+        vertx.createHttpClient().get(httpPort, "localhost", url,
                 response -> {
                     response.bodyHandler(body -> {
                         List<DogLocation> dogs = body.toJsonArray().getList();
@@ -74,7 +82,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
                         context.assertTrue(dogs.size() == 10);
                         async.complete();
                     });
-                });
+                }).putHeader("Authorization", "Bearer " + jwtToken).end();
     }
 
     @Test
@@ -91,7 +99,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
                 response -> {
                     context.assertTrue(response.statusCode() == 204);
                     async.complete();
-                }).end(jsonUserLocation);
+                }).putHeader("Authorization", "Bearer " + jwtToken).end(jsonUserLocation);
     }
 
     private String paramsDogsAround() {

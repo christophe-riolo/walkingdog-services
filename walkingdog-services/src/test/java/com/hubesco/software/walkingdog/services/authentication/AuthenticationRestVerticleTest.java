@@ -7,7 +7,6 @@ import com.hubesco.software.walkingdog.api.commons.DogGender;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
 import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
 import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -25,22 +24,19 @@ import org.junit.runner.RunWith;
 @RunWith(VertxUnitRunner.class)
 public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
 
-    private Vertx vertx;
-
     @Before
     public void setUp(TestContext context) {
-        vertx = Vertx.vertx();
         vertx.deployVerticle(AuthenticationRestVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(UsersDbVerticle.class.getName(), context.asyncAssertSuccess());
-        vertx.deployVerticle(TokenVerticle.class.getName(), context.asyncAssertSuccess());
+        vertx.deployVerticle(JWTVerticle.class.getName(), context.asyncAssertSuccess());
     }
 
     @After
     public void tearDown(TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
     }
 
     @Test
+    @Ignore("Route removed becaused of spam calls")
     public void testHealth(TestContext context) {
         final Async async = context.async();
 
@@ -52,7 +48,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                         context.assertTrue(EndpointStatus.OK.equals(health.getStatus()));
                         async.complete();
                     });
-                });
+                }).close();
     }
 
     @Test
@@ -83,7 +79,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testSignupUserExists(TestContext context) {
         final Async async = context.async();
 
@@ -113,7 +108,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testLoginUserDoesNotExist(TestContext context) {
         final Async async = context.async();
 
@@ -135,7 +129,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testLoginUserExistsNotEnabled(TestContext context) {
         final Async async = context.async();
 
@@ -172,7 +165,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testLoginUserExistsEnabledWrongPassword(TestContext context) {
         final Async async = context.async();
 
@@ -218,7 +210,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testLoginOK(TestContext context) {
         final Async async = context.async();
 
@@ -277,7 +268,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testActivateUserDoesNotExist(TestContext context) {
         final Async async = context.async();
 
@@ -294,7 +284,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     }
 
     @Test
-    @Ignore
     public void testActivateUserExists(TestContext context) {
         final Async async = context.async();
 

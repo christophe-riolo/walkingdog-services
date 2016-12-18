@@ -29,7 +29,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         // Create a router object.
         Router router = RouterSingleton.router(vertx);
 
-        router.get(API_PREFIX + "/health").handler(this::health);
+//        router.get(API_PREFIX + "/health").handler(this::health);
         router.post(API_PREFIX + "/signup").handler(this::signup);
         router.post(API_PREFIX + "/login").handler(this::login);
         router.get(API_PREFIX + "/activate").handler(this::activate);
@@ -59,12 +59,12 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
      *
      * @param routingContext
      */
-    private void health(RoutingContext routingContext) {
-        routingContext
-                .response()
-                .putHeader("content-type", CONTENT_TYPE)
-                .end(Json.encodePrettily(new EndpointHealth(EndpointStatus.OK)));
-    }
+//    private void health(RoutingContext routingContext) {
+//        routingContext
+//                .response()
+//                .putHeader("content-type", CONTENT_TYPE)
+//                .end(Json.encodePrettily(new EndpointHealth(EndpointStatus.OK)));
+//    }
 
     /**
      * Endpoint : /api/authentication/signup
