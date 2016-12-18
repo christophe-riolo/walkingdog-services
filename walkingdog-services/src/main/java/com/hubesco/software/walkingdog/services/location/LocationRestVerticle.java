@@ -1,9 +1,9 @@
 package com.hubesco.software.walkingdog.services.location;
 
 import com.hubesco.software.walkingdog.api.location.DogLocation;
-import com.hubesco.software.walkingdog.services.RouterSingleton;
-import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
-import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
+import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
+import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
+import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
 import com.hubesco.software.walkingdog.services.commons.eventbus.Addresses;
 import com.hubesco.software.walkingdog.services.commons.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;

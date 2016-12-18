@@ -39,3 +39,6 @@ UserInterfaceState.xcuserstate
 /walkingdog-api/target/
 /walkingdog-services/target/
 /nbactions.xml
+/walkingdog-authentication-services/target/
+/walkingdog-commons/target/
+/walkingdog-email-services/target/

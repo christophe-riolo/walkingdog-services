@@ -1,8 +1,8 @@
 package com.hubesco.software.walkingdog.services;
 
-import com.hubesco.software.walkingdog.services.authentication.AuthenticationRestVerticle;
-import com.hubesco.software.walkingdog.services.authentication.JWTVerticle;
-import com.hubesco.software.walkingdog.services.authentication.UsersDbVerticle;
+import com.hubesco.software.walkingdog.authentication.services.AuthenticationRestVerticle;
+import com.hubesco.software.walkingdog.authentication.services.JWTVerticle;
+import com.hubesco.software.walkingdog.authentication.services.UsersDbVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationDbVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationRestVerticle;
 import io.vertx.core.AbstractVerticle;

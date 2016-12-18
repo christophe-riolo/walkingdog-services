@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <vertx.version>3.3.2</vertx.version>
     </properties>
     <!--    
     <parent>
@@ -42,7 +43,7 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.4.0</version>
                 </plugin>
-<!--                <plugin>
+                <!--                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>1.4.1.RELEASE</version>
@@ -53,5 +54,8 @@
     <modules>
         <module>walkingdog-api</module>
         <module>walkingdog-services</module>
+        <module>walkingdog-email-services</module>
+        <module>walkingdog-authentication-services</module>
+        <module>walkingdog-commons</module>
     </modules>
 </project>

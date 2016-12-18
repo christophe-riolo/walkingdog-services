@@ -1,16 +1,13 @@
-package com.hubesco.software.walkingdog.services.authentication;
+package com.hubesco.software.walkingdog.authentication.services;
 
-import com.hubesco.software.walkingdog.services.RouterSingleton;
-import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
-import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
-import com.hubesco.software.walkingdog.services.commons.eventbus.Addresses;
-import com.hubesco.software.walkingdog.services.commons.eventbus.Headers;
+import com.hubesco.software.walkingdog.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.commons.eventbus.Headers;
+import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;

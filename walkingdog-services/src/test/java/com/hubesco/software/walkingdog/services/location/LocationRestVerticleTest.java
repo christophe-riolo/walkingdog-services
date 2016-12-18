@@ -1,9 +1,9 @@
 package com.hubesco.software.walkingdog.services.location;
 
 import com.hubesco.software.walkingdog.api.location.DogLocation;
+import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
+import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
-import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
-import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
 import io.vertx.core.json.Json;
 import io.vertx.core.shareddata.LocalMap;
 import io.vertx.ext.unit.Async;

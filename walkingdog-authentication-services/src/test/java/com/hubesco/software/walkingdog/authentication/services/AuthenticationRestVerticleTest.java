@@ -1,12 +1,11 @@
-package com.hubesco.software.walkingdog.services.authentication;
+package com.hubesco.software.walkingdog.authentication.services;
 
 import com.hubesco.software.walkingdog.api.authentication.LoginData;
 import com.hubesco.software.walkingdog.api.authentication.SignupData;
 import com.hubesco.software.walkingdog.api.commons.DogBreed;
 import com.hubesco.software.walkingdog.api.commons.DogGender;
-import com.hubesco.software.walkingdog.services.AbstractVerticleTest;
-import com.hubesco.software.walkingdog.services.commons.EndpointHealth;
-import com.hubesco.software.walkingdog.services.commons.EndpointStatus;
+import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
+import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;

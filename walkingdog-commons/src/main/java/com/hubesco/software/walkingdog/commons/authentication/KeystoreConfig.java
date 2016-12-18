@@ -1,6 +1,6 @@
-package com.hubesco.software.walkingdog.services.commons.authentication;
+package com.hubesco.software.walkingdog.commons.authentication;
 
-import com.hubesco.software.walkingdog.services.commons.EnvironmentProperties;
+import com.hubesco.software.walkingdog.commons.EnvironmentProperties;
 import io.vertx.core.json.JsonObject;
 
 /**

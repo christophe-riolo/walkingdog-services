@@ -1,10 +1,8 @@
-package com.hubesco.software.walkingdog.services;
+package com.hubesco.software.walkingdog.commons.rest;
 
-import com.hubesco.software.walkingdog.services.commons.EnvironmentProperties;
-import com.hubesco.software.walkingdog.services.commons.authentication.KeystoreConfig;
+import com.hubesco.software.walkingdog.commons.authentication.KeystoreConfig;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
