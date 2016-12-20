@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.hubesco.software" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>walkingdog</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="pao.esco@outlook.com" href="https://github.com/paoesco/walkingdog">paoesco</author>
+<widget id="com.hubesco.software.walkingdog" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Walking Dog</name>
+    <description>Walking with friendly dogs around me</description>
+    <author email="walkingdog@hubesco.com" href="https://github.com/paoesco/walkingdog">paoesco</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
