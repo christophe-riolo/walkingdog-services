@@ -6,9 +6,10 @@ package com.hubesco.software.walkingdog.commons.eventbus;
  */
 public enum Addresses {
 
-    LOCATION_DB("locationDb"),
-    TOKEN("token"),
-    USER_DB("usersDb");
+    LOCATION_DB("walkingdog.location.db"),
+    AUTHENTICATION_JWT("walkingdog.authentication.jwt"),
+    AUTHENTICATION_DB("walkingdog.authentication.db"),
+    EMAIL_SERVICES("walkingdog.email");
 
     private final String address;
 

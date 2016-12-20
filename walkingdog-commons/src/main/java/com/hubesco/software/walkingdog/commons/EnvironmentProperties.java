@@ -25,4 +25,12 @@ public abstract class EnvironmentProperties {
         return property;
     }
 
+    public static String sendGridApiKey() {
+        String property = System.getenv("SENDGRID_API_KEY");
+        if (property == null) {
+            property = System.getProperty("SENDGRID_API_KEY");
+        }
+        return property;
+    }
+
 }

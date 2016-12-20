@@ -28,7 +28,7 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> fut) {
-        vertx.eventBus().consumer(Addresses.USER_DB.address(), this::handler);
+        vertx.eventBus().consumer(Addresses.AUTHENTICATION_DB.address(), this::handler);
         try {
             postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
         } catch (Exception ex) {

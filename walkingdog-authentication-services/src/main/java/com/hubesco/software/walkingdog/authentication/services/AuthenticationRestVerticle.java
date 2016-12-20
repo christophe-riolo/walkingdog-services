@@ -74,7 +74,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "signup");
         vertx
                 .eventBus()
-                .send(Addresses.USER_DB.address(), body, options, handler -> {
+                .send(Addresses.AUTHENTICATION_DB.address(), body, options, handler -> {
                     HttpServerResponse response = routingContext
                             .response()
                             .setStatusCode(201)
@@ -130,7 +130,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "login");
         vertx.eventBus()
-                .send(Addresses.USER_DB.address(), body, options, handler -> {
+                .send(Addresses.AUTHENTICATION_DB.address(), body, options, handler -> {
                     if (handler.succeeded()) {
                         promise.complete((JsonObject) handler.result().body());
                     } else {
@@ -146,7 +146,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         // Get token
         DeliveryOptions options = new DeliveryOptions().addHeader(Headers.COMMAND.header(), "generate");
         vertx.eventBus()
-                .send(Addresses.TOKEN.address(), loggedUser, options, handler -> {
+                .send(Addresses.AUTHENTICATION_JWT.address(), loggedUser, options, handler -> {
                     if (handler.succeeded()) {
                         loggedUser.put("token", (String) handler.result().body());
                         promise.complete(loggedUser);
@@ -170,7 +170,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "activate");
         vertx
                 .eventBus()
-                .send(Addresses.USER_DB.address(), data, options, handler -> {
+                .send(Addresses.AUTHENTICATION_DB.address(), data, options, handler -> {
                     int statusCode = 200;
                     String responseBody = "<html><body><h1>Account successfully activated !</h1></body></html>";
                     String statusMessage = "OK";

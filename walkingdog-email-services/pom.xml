@@ -12,13 +12,24 @@
     <dependencies>
         <dependency>
             <groupId>com.hubesco.software</groupId>
-            <artifactId>walkingdog-api</artifactId>
+            <artifactId>walkingdog-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
             <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>3.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Tests -->
         <dependency>

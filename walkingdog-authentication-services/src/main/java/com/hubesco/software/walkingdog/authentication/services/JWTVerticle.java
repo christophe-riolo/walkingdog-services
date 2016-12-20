@@ -23,7 +23,7 @@ public class JWTVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) throws Exception {
         try {
             provider = JWTAuth.create(vertx, KeystoreConfig.config());
-            vertx.eventBus().consumer(Addresses.TOKEN.address(), this::handler);
+            vertx.eventBus().consumer(Addresses.AUTHENTICATION_JWT.address(), this::handler);
             startFuture.complete();
         } catch (Exception ex) {
             Logger.getLogger(JWTVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
