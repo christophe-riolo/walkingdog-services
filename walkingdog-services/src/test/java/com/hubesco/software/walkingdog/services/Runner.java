@@ -21,6 +21,7 @@ public class Runner {
         System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:5432/walkingdog");
         System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
+        System.setProperty("SENDGRID_API_KEY", "xxx");
 
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(MainVerticle.class.getName(), (result) -> {
