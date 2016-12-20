@@ -6,6 +6,7 @@ import com.hubesco.software.walkingdog.api.commons.DogBreed;
 import com.hubesco.software.walkingdog.api.commons.DogGender;
 import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
 import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
+import com.hubesco.software.walkingdog.email.services.EmailVerticle;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -28,6 +29,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         vertx.deployVerticle(AuthenticationRestVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(UsersDbVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(JWTVerticle.class.getName(), context.asyncAssertSuccess());
+        vertx.deployVerticle(EmailVerticle.class.getName(), context.asyncAssertSuccess());
     }
 
     @After
@@ -53,7 +55,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     @Test
     public void testSignupUserDoesNotExist(TestContext context) {
         final Async async = context.async();
-
+        
         // GIVEN
         SignupData data = new SignupData();
         data.setEmail("testSignupUserDoesNotExist@walkingdog.com");

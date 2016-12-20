@@ -37,6 +37,7 @@ public abstract class AbstractVerticleTest {
         System.setProperty("http.port", String.valueOf(httpPort));
         configureJwt();
         configureEmbeddedPostgres();
+        configureSendGrid();
 //        configureLocalPostgres();
     }
 
@@ -55,6 +56,10 @@ public abstract class AbstractVerticleTest {
     private static void configureJwt() {
         System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
+    }
+
+    private static void configureSendGrid() {
+        System.setProperty("SENDGRID_API_KEY", "xxx");
     }
 
     private static void configureEmbeddedPostgres() {

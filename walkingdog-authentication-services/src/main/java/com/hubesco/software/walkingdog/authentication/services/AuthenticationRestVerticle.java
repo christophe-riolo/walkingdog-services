@@ -62,7 +62,6 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
 //                .putHeader("content-type", CONTENT_TYPE)
 //                .end(Json.encodePrettily(new EndpointHealth(EndpointStatus.OK)));
 //    }
-
     /**
      * Endpoint : /api/authentication/signup
      *
@@ -81,6 +80,9 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                             .putHeader("content-type", CONTENT_TYPE);
                     if (handler.succeeded()) {
                         JsonObject jsonToken = (JsonObject) handler.result().body();
+                        // Send activation e-mail
+                        sendActivationEmail(body.getString("email"), jsonToken.getString("token"));
+                        // Ends response
                         response.end(jsonToken.encode());
                     } else {
                         ReplyException cause = (ReplyException) handler.cause();
@@ -92,6 +94,15 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
 
                 });
 
+    }
+
+    private void sendActivationEmail(String email, String activationToken) {
+        JsonObject mail = new JsonObject()
+                .put("from", "contact@walkingdogapp.com")
+                .put("to", email)
+                .put("subject", "Walking Dog - Activation email")
+                .put("content", "Hello ! In order to activate your account, please click on the following URL : https://walkingdog-services.herokuapp.com/api/authentication/activate?token=" + activationToken);
+        vertx.eventBus().send(Addresses.EMAIL_SERVICES.address(), mail);
     }
 
     /**

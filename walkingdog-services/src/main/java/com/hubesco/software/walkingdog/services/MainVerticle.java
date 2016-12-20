@@ -3,6 +3,7 @@ package com.hubesco.software.walkingdog.services;
 import com.hubesco.software.walkingdog.authentication.services.AuthenticationRestVerticle;
 import com.hubesco.software.walkingdog.authentication.services.JWTVerticle;
 import com.hubesco.software.walkingdog.authentication.services.UsersDbVerticle;
+import com.hubesco.software.walkingdog.email.services.EmailVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationDbVerticle;
 import com.hubesco.software.walkingdog.services.location.LocationRestVerticle;
 import io.vertx.core.AbstractVerticle;
@@ -26,6 +27,9 @@ public class MainVerticle extends AbstractVerticle {
         });
         vertx.deployVerticle(JWTVerticle.class.getName(), (result) -> {
             System.out.println("TokenVerticle deployment : " + result.succeeded());
+        });
+        vertx.deployVerticle(EmailVerticle.class.getName(), (result) -> {
+            System.out.println("EmailVerticle deployment : " + result.succeeded());
         });
         DeploymentOptions optionsUsersDbVerticle = new DeploymentOptions();
         optionsUsersDbVerticle.setInstances(2);
