@@ -69,11 +69,13 @@ Walking Dog
 ### Build
 
 - `ionic serve`
+- for prod mode : `` (https://github.com/driftyco/ionic-app-scripts/blob/master/CHANGELOG.md#entry-point-changes)
 
 #### Android
 
 - `ionic build android`
 - `ionic emulate android` (needs AVD up and running)
+- For prod mode, add prod param : `ionic run android --prod`
 
 #### iOS
 
