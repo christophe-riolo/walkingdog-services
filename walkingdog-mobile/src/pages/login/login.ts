@@ -20,7 +20,6 @@ import { SecurityContextHolder } from '../../components/authentication/security-
   })
   export class LoginPage {
 
-    loader: any;
     loginForm: FormGroup;
     private apiUrl: String;
 
@@ -35,9 +34,7 @@ import { SecurityContextHolder } from '../../components/authentication/security-
         this.navCtrl.setRoot(HomePage);
       }
 
-      this.loader = this.loadingCtrl.create({
-        content: "Please wait..."
-      });
+      
 
       this.loginForm = fb.group({
         'email': ['', Validators.required],
@@ -53,29 +50,33 @@ import { SecurityContextHolder } from '../../components/authentication/security-
 
 
     login(form: any) {
-      this.loader.present();
+      // Recreated every time we need it to fix https://github.com/driftyco/ionic/issues/6209
+      let loader = this.loadingCtrl.create({
+        content: "Please wait..."
+      });
+      loader.present();
       if (form.valid) {
         let value = form.value;
         this.http
         .post(`${this.apiUrl}/login`, JSON.stringify(value))
         .subscribe((res: Response) => {
-          this.loader.dismiss();
+          loader.dismiss();
           this.securityContextHolder.setCurrentUser(res.json());
           this.navCtrl.setRoot(HomePage);
         },
         (err:Response) => {
           if (err.status == 400 && err.statusText === 'user_not_enabled') {
-            this.loader.dismiss();
+            loader.dismiss();
             alert('Your account has not been enabled yet. Please activate it by clicking on the link provided in e-mail');
             return false;
           } else {
-            this.loader.dismiss();
+            loader.dismiss();
             alert('Wrong credentials');
             return false;
           }
         });
       } else {
-        this.loader.dismiss();
+        loader.dismiss();
         alert('Required fields : email, password');
         return false;
       }
