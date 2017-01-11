@@ -26,6 +26,7 @@ public class RouterSingleton {
             Set<HttpMethod> methods = new HashSet<>();
             methods.add(HttpMethod.GET);
             methods.add(HttpMethod.POST);
+            methods.add(HttpMethod.OPTIONS);
             router = Router.router(vertx);
             CorsHandler cors = CorsHandler
                     .create("*")
