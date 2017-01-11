@@ -30,7 +30,10 @@ public class RouterSingleton {
             router = Router.router(vertx);
             CorsHandler cors = CorsHandler
                     .create("*")
-                    .allowedMethods(methods);
+                    .allowedMethods(methods)
+                    .allowedHeader("Authorization")
+                    .allowedHeader("Content-Type")
+                    .allowedHeader("Accept");
             router.route().handler(cors);
             router.route().handler(BodyHandler.create());
             provider = JWTAuth.create(vertx, KeystoreConfig.config());
