@@ -1,7 +1,7 @@
 package com.hubesco.software.walkingdog.email.services;
 
 import com.hubesco.software.walkingdog.commons.EnvironmentProperties;
-import com.hubesco.software.walkingdog.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.email.api.EventBusEndpoint;
 import com.sendgrid.Content;
 import com.sendgrid.Email;
 import com.sendgrid.Mail;
@@ -28,7 +28,7 @@ public class EmailVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         try {
-            vertx.eventBus().consumer(Addresses.EMAIL_SERVICES.address(), this::send);
+            vertx.eventBus().consumer(EventBusEndpoint.EMAIL_SERVICES.address(), this::send);
             startFuture.complete();
         } catch (Exception ex) {
             Logger.getLogger(EmailVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);

@@ -1,6 +1,6 @@
 package com.hubesco.software.walkingdog.email.services;
 
-import com.hubesco.software.walkingdog.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.email.api.EventBusEndpoint;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -37,7 +37,7 @@ public class EmailVerticleTest extends AbstractVerticleTest {
                 .put("to", "pao.esco@outlook.com")
                 .put("subject", "Test subject")
                 .put("content", "Test content");
-        vertx.eventBus().send(Addresses.EMAIL_SERVICES.address(), email, handler -> {
+        vertx.eventBus().send(EventBusEndpoint.EMAIL_SERVICES.address(), email, handler -> {
             if (handler.succeeded()) {
                 context.assertTrue(true);
             } else {

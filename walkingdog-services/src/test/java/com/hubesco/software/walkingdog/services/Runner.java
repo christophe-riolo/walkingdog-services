@@ -1,6 +1,6 @@
 package com.hubesco.software.walkingdog.services;
 
-import com.hubesco.software.walkingdog.api.location.DogLocation;
+import com.hubesco.software.walkingdog.location.api.DogLocation;
 import com.hubesco.software.walkingdog.services.location.Map;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;

@@ -12,7 +12,12 @@
     <dependencies>
         <dependency>
             <groupId>com.hubesco.software</groupId>
-            <artifactId>walkingdog-api</artifactId>
+            <artifactId>walkingdog-authentication-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hubesco.software</groupId>
+            <artifactId>walkingdog-email-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

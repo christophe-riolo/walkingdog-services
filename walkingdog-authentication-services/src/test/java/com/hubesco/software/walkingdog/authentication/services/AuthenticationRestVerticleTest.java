@@ -1,9 +1,9 @@
 package com.hubesco.software.walkingdog.authentication.services;
 
-import com.hubesco.software.walkingdog.api.authentication.LoginData;
-import com.hubesco.software.walkingdog.api.authentication.SignupData;
-import com.hubesco.software.walkingdog.api.commons.DogBreed;
-import com.hubesco.software.walkingdog.api.commons.DogGender;
+import com.hubesco.software.walkingdog.authentication.api.DogBreed;
+import com.hubesco.software.walkingdog.authentication.api.DogGender;
+import com.hubesco.software.walkingdog.authentication.api.LoginData;
+import com.hubesco.software.walkingdog.authentication.api.SignupData;
 import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
 import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import com.hubesco.software.walkingdog.email.services.EmailVerticle;
@@ -55,7 +55,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
     @Test
     public void testSignupUserDoesNotExist(TestContext context) {
         final Async async = context.async();
-        
+
         // GIVEN
         SignupData data = new SignupData();
         data.setEmail("testSignupUserDoesNotExist@walkingdog.com");

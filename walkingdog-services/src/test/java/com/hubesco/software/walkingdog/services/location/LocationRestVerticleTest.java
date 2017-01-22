@@ -1,6 +1,6 @@
 package com.hubesco.software.walkingdog.services.location;
 
-import com.hubesco.software.walkingdog.api.location.DogLocation;
+import com.hubesco.software.walkingdog.location.api.DogLocation;
 import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
 import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import com.hubesco.software.walkingdog.services.AbstractVerticleTest;

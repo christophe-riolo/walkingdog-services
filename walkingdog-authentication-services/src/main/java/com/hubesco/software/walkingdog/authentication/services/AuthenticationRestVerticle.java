@@ -1,6 +1,6 @@
 package com.hubesco.software.walkingdog.authentication.services;
 
-import com.hubesco.software.walkingdog.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.authentication.api.EventBusEndpoint;
 import com.hubesco.software.walkingdog.commons.eventbus.Headers;
 import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
 import io.vertx.core.AbstractVerticle;
@@ -73,7 +73,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "signup");
         vertx
                 .eventBus()
-                .send(Addresses.AUTHENTICATION_DB.address(), body, options, handler -> {
+                .send(EventBusEndpoint.AUTHENTICATION_DB.address(), body, options, handler -> {
                     HttpServerResponse response = routingContext
                             .response()
                             .setStatusCode(201)
@@ -102,7 +102,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
                 .put("to", email)
                 .put("subject", "Walking Dog - Activation email")
                 .put("content", "Hello ! In order to activate your account, please click on the following URL : https://walkingdog-services.herokuapp.com/api/authentication/activate?token=" + activationToken);
-        vertx.eventBus().send(Addresses.EMAIL_SERVICES.address(), mail);
+        vertx.eventBus().send(com.hubesco.software.walkingdog.email.api.EventBusEndpoint.EMAIL_SERVICES.address(), mail);
     }
 
     /**
@@ -141,7 +141,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "login");
         vertx.eventBus()
-                .send(Addresses.AUTHENTICATION_DB.address(), body, options, handler -> {
+                .send(EventBusEndpoint.AUTHENTICATION_DB.address(), body, options, handler -> {
                     if (handler.succeeded()) {
                         promise.complete((JsonObject) handler.result().body());
                     } else {
@@ -157,7 +157,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         // Get token
         DeliveryOptions options = new DeliveryOptions().addHeader(Headers.COMMAND.header(), "generate");
         vertx.eventBus()
-                .send(Addresses.AUTHENTICATION_JWT.address(), loggedUser, options, handler -> {
+                .send(EventBusEndpoint.AUTHENTICATION_JWT.address(), loggedUser, options, handler -> {
                     if (handler.succeeded()) {
                         loggedUser.put("token", (String) handler.result().body());
                         promise.complete(loggedUser);
@@ -181,7 +181,7 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "activate");
         vertx
                 .eventBus()
-                .send(Addresses.AUTHENTICATION_DB.address(), data, options, handler -> {
+                .send(EventBusEndpoint.AUTHENTICATION_DB.address(), data, options, handler -> {
                     int statusCode = 200;
                     String responseBody = "<html><body><h1>Account successfully activated !</h1></body></html>";
                     String statusMessage = "OK";

@@ -1,4 +1,4 @@
-package com.hubesco.software.walkingdog.api.authentication;
+package com.hubesco.software.walkingdog.authentication.api;
 
 /**
  *
@@ -24,5 +24,6 @@ public class LoginData {
     public void setPassword(String password) {
         this.password = password;
     }
+    
 
 }

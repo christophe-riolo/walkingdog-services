@@ -1,10 +1,10 @@
 package com.hubesco.software.walkingdog.services.location;
 
-import com.hubesco.software.walkingdog.api.location.DogLocation;
+import com.hubesco.software.walkingdog.location.api.DogLocation;
 import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
 import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
-import com.hubesco.software.walkingdog.services.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.location.api.EventBusEndpoint;
 import com.hubesco.software.walkingdog.services.commons.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -81,7 +81,7 @@ public class LocationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "dogs");
         vertx
                 .eventBus()
-                .send(Addresses.LOCATION_DB.address(), null, options, ebHandler -> {
+                .send(EventBusEndpoint.LOCATION_DB.address(), null, options, ebHandler -> {
                     // All locations
                     String jsonAllDogs = (String) ebHandler.result().body();
                     List<String> allDogs = new JsonArray(jsonAllDogs).getList();
@@ -113,7 +113,7 @@ public class LocationRestVerticle extends AbstractVerticle {
     private void register(RoutingContext routingContext) {
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "register");
-        vertx.eventBus().send(Addresses.LOCATION_DB.address(), routingContext.getBodyAsString(), options);
+        vertx.eventBus().send(EventBusEndpoint.LOCATION_DB.address(), routingContext.getBodyAsString(), options);
         routingContext
                 .response()
                 .setStatusCode(204)

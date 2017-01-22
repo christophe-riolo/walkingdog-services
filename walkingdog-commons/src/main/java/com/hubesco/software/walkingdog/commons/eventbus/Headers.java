@@ -6,7 +6,7 @@ package com.hubesco.software.walkingdog.commons.eventbus;
  */
 public enum Headers {
 
-    COMMAND("coommand");
+    COMMAND("command");
 
     private final String header;
 

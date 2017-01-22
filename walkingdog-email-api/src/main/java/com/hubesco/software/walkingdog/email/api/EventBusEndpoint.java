@@ -1,19 +1,17 @@
-package com.hubesco.software.walkingdog.commons.eventbus;
+package com.hubesco.software.walkingdog.email.api;
 
 /**
  *
  * @author paoesco
  */
-public enum Addresses {
+public enum EventBusEndpoint {
 
     LOCATION_DB("walkingdog.location.db"),
-    AUTHENTICATION_JWT("walkingdog.authentication.jwt"),
-    AUTHENTICATION_DB("walkingdog.authentication.db"),
     EMAIL_SERVICES("walkingdog.email");
 
     private final String address;
 
-    private Addresses(String address) {
+    private EventBusEndpoint(String address) {
         this.address = address;
     }
 

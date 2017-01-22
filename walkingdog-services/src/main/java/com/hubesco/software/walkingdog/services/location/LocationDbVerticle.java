@@ -1,7 +1,7 @@
 package com.hubesco.software.walkingdog.services.location;
 
-import com.hubesco.software.walkingdog.api.location.DogLocation;
-import com.hubesco.software.walkingdog.services.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.location.api.DogLocation;
+import com.hubesco.software.walkingdog.location.api.EventBusEndpoint;
 import com.hubesco.software.walkingdog.services.commons.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -22,7 +22,7 @@ public class LocationDbVerticle extends AbstractVerticle {
     @Override
     public void start(Future<Void> fut) {
         dogLocations = vertx.sharedData().getLocalMap("dogLocations");
-        vertx.eventBus().consumer(Addresses.LOCATION_DB.address(), this::handler);
+        vertx.eventBus().consumer(EventBusEndpoint.LOCATION_DB.address(), this::handler);
         fut.complete();
     }
 

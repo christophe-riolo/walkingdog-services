@@ -44,3 +44,6 @@ UserInterfaceState.xcuserstate
 /walkingdog-commons/target/
 /walkingdog-email-services/target/
 /walkingdog-authentication-services/.vertx
+/walkingdog-authentication-api/target/
+/walkingdog-email-api/target/
+/walkingdog-location-api/target/

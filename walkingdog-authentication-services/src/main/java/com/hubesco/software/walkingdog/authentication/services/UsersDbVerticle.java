@@ -1,6 +1,6 @@
 package com.hubesco.software.walkingdog.authentication.services;
 
-import com.hubesco.software.walkingdog.commons.eventbus.Addresses;
+import com.hubesco.software.walkingdog.authentication.api.EventBusEndpoint;
 import com.hubesco.software.walkingdog.commons.eventbus.Headers;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -28,7 +28,7 @@ public class UsersDbVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> fut) {
-        vertx.eventBus().consumer(Addresses.AUTHENTICATION_DB.address(), this::handler);
+        vertx.eventBus().consumer(EventBusEndpoint.AUTHENTICATION_DB.address(), this::handler);
         try {
             postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
         } catch (Exception ex) {

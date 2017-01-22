@@ -6,6 +6,6 @@
         <artifactId>walkingdog</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>walkingdog-api</artifactId>
+    <artifactId>walkingdog-email-api</artifactId>
     <packaging>jar</packaging>
 </project>

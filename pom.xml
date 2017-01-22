@@ -52,10 +52,12 @@
         </pluginManagement>
     </build>
     <modules>
-        <module>walkingdog-api</module>
         <module>walkingdog-services</module>
         <module>walkingdog-email-services</module>
         <module>walkingdog-authentication-services</module>
         <module>walkingdog-commons</module>
+        <module>walkingdog-authentication-api</module>
+        <module>walkingdog-email-api</module>
+        <module>walkingdog-location-api</module>
     </modules>
 </project>

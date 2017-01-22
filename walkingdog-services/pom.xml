@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hubesco.software</groupId>
-            <artifactId>walkingdog-api</artifactId>
+            <artifactId>walkingdog-location-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
