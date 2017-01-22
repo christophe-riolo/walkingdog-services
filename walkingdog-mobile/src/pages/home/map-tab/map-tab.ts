@@ -1,7 +1,7 @@
 import { Component,ViewChild,ElementRef } from '@angular/core';
 import { LoadingController } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { LocationTracker } from '../../../components/location/location-tracker';
 import { SecurityContextHolder } from '../../../components/authentication/security-context-holder';
 
@@ -34,12 +34,12 @@ export class MapTab {
     private http: Http,
     private loadingCtrl: LoadingController,
     private locationTracker: LocationTracker,
-    private securityContext: SecurityContextHolder
+    private securityContextHolder: SecurityContextHolder
     ) {
     this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
     //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
-    this.walking = this.securityContext.getCurrentUser().isWalking();
+    this.walking = this.securityContextHolder.getCurrentUser().isWalking();
   }
   
   // http://www.joshmorony.com/ionic-2-how-to-use-google-maps-geolocation-video-tutorial/
@@ -70,12 +70,12 @@ export class MapTab {
   }
 
   buttonStartWalk() {
-    this.walking = this.securityContext.getCurrentUser().walk();
+    this.walking = this.securityContextHolder.getCurrentUser().walk();
     this.updateMyLocation();
   }
 
   buttonStopWalk() {
-    this.walking = this.securityContext.getCurrentUser().stop();
+    this.walking = this.securityContextHolder.getCurrentUser().stop();
     this.updateMyLocation();
   }
 
@@ -141,8 +141,13 @@ export class MapTab {
       `sw-lat=${this.map.getBounds().getSouthWest().lat()}`,
       `sw-lon=${this.map.getBounds().getSouthWest().lng()}`
       ].join('&');
+
+      // Sets authorization header
+      let headers = new Headers();
+      headers.append('Authorization', this.securityContextHolder.getAuthorizationHeaderValue()); 
+
       // Sends request to backend
-      this.http.request(`${this.apiUrl}/dogsAround?${params}`)
+      this.http.request(`${this.apiUrl}/dogsAround?${params}`, {headers : headers})
       .subscribe((res: Response) => {
         // Removes previous markers
         for (let marker of this.petsAroundMarkers) {
@@ -152,7 +157,7 @@ export class MapTab {
         this.petsAroundMarkers = []; 
         // Creates new markers
         for (let pet of res.json()) {
-          if (pet.userUuid !== this.securityContext.getCurrentUser().getUuid()) { // Filters the marker of the user
+          if (pet.userUuid !== this.securityContextHolder.getCurrentUser().getUuid()) { // Filters the marker of the user
             // Adds new marker
             let marker = this.addMarker(
               pet.userUuid, 

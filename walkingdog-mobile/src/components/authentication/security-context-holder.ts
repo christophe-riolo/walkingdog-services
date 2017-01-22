@@ -7,12 +7,16 @@ export class SecurityContextHolder {
 
   constructor() {
     if (localStorage.getItem('currentUser') != null) {
-      this.setCurrentUser(localStorage.getItem('currentUser'));
+      this.setCurrentUser(JSON.parse(localStorage.getItem('currentUser')));
     }
   }
 
   public getCurrentUser(): User {
     return this.currentUser;
+  }
+
+  public getAuthorizationHeaderValue(): string {
+    return 'Bearer ' + this.getCurrentUser().getJwtToken();
   }
 
 
@@ -25,8 +29,11 @@ export class SecurityContextHolder {
       json.dogGender,
       json.dogBreed,
       json.dogBirthdate,
-      false
+      false,
+      json.token
       );
+    console.log(json);
+    console.log(JSON.stringify(this.currentUser));
     localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
   }
 
@@ -46,7 +53,8 @@ export class User {
     private dogGender: string,
     private dogBreed: string,
     private dogBirthDate: string,
-    private walking: boolean) {
+    private walking: boolean,
+    private jwtToken: string) {
 
   }
 
@@ -68,6 +76,10 @@ export class User {
 
   public getDogUuid(): string {
     return this.uuid;
+  }
+
+  public getJwtToken(): string {
+    return this.jwtToken;
   }
 
   public walk(): boolean {

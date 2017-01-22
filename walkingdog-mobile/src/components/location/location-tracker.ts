@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Geolocation, Geoposition, BackgroundGeolocation } from 'ionic-native';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { SecurityContextHolder,User } from '../authentication/security-context-holder';
 
 @Injectable()
@@ -98,6 +98,9 @@ export class LocationTracker {
   // Sends location of current user to server, to be used by others
   private registerMyLocation() {
     let currentUser: User = this.securityContextHolder.getCurrentUser();
+    let headers = new Headers();
+    headers.append('Authorization', this.securityContextHolder.getAuthorizationHeaderValue()); 
+
     this.http.post(
       `${this.apiUrl}/register`,
       JSON.stringify({
@@ -106,7 +109,8 @@ export class LocationTracker {
         latitude: this.lat,
         longitude: this.lng,
         walking : currentUser.isWalking()
-      }))
+      }),
+      {headers : headers})
     .subscribe((res: Response) => {
       // nothing
     });
