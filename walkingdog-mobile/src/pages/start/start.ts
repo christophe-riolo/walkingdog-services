@@ -31,7 +31,7 @@ import { SecurityContextHolder } from '../../components/authentication/security-
     //signupForm: FormGroup;
 
     constructor(
-      private securityContext: SecurityContextHolder,
+      private securityContextHolder: SecurityContextHolder,
       private ionicAuth: IonicAuth, 
       private googleAuth: GoogleAuth,
       private googleUser: GoogleUser,
@@ -39,7 +39,7 @@ import { SecurityContextHolder } from '../../components/authentication/security-
       private navCtrl: NavController,
       fb: FormBuilder) {
 
-      if (this.securityContext.isAuthenticated()) {
+      if (this.securityContextHolder.isAuthenticated()) {
         this.navCtrl.setRoot(HomePage);
       }
 

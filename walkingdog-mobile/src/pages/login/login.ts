@@ -28,13 +28,7 @@ import { SecurityContextHolder } from '../../components/authentication/security-
       private loadingCtrl: LoadingController,
       private navCtrl: NavController,
       private http: Http,
-      fb: FormBuilder) {
-
-      if (this.securityContextHolder.isAuthenticated()) {
-        this.navCtrl.setRoot(HomePage);
-      }
-
-      
+      fb: FormBuilder) {      
 
       this.loginForm = fb.group({
         'email': ['', Validators.required],
