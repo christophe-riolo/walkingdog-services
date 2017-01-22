@@ -32,8 +32,6 @@ export class SecurityContextHolder {
       false,
       json.token
       );
-    console.log(json);
-    console.log(JSON.stringify(this.currentUser));
     localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
   }
 
