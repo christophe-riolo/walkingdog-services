@@ -4,6 +4,7 @@ import { NavController } from 'ionic-angular';
 import { Http, Response, Headers } from '@angular/http';
 import { LocationTracker } from '../../../components/location/location-tracker';
 import { SecurityContextHolder } from '../../../components/authentication/security-context-holder';
+import { Configuration } from '../../../components/configuration';
 
 
 // Comes from Google Maps JavaScript API. See index.html
@@ -24,7 +25,6 @@ export class MapTab {
   // Stores the markers of pets around
   petsAroundMarkers: Array<any>;
 
-  private apiUrl: String;
   private loader: any;
 
   walking: boolean;
@@ -34,10 +34,9 @@ export class MapTab {
     private http: Http,
     private loadingCtrl: LoadingController,
     private locationTracker: LocationTracker,
-    private securityContextHolder: SecurityContextHolder
+    private securityContextHolder: SecurityContextHolder,
+    private configuration: Configuration
     ) {
-    this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
-    //this.apiUrl = 'http://localhost:8080/api/location';
     this.petsAroundMarkers = [];
     this.walking = this.securityContextHolder.getCurrentUser().isWalking();
   }
@@ -147,7 +146,7 @@ export class MapTab {
       headers.append('Authorization', this.securityContextHolder.getAuthorizationHeaderValue()); 
 
       // Sends request to backend
-      this.http.request(`${this.apiUrl}/dogsAround?${params}`, {headers : headers})
+      this.http.request(`${this.configuration.wdLocationApiUrl()}/dogsAround?${params}`, {headers : headers})
       .subscribe((res: Response) => {
         // Removes previous markers
         for (let marker of this.petsAroundMarkers) {

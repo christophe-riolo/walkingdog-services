@@ -9,9 +9,6 @@ import { ProfilePage } from '../pages/profile/profile';
 
 import { SecurityContextHolder } from '../components/authentication/security-context-holder';
 
-import { Auth } from '@ionic/cloud-angular';
-
-
 @Component({
   template: `
   <ion-menu [content]="content" *ngIf="securityContext.isAuthenticated()">

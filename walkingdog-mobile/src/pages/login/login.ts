@@ -6,6 +6,7 @@ import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 
 import { HomePage } from '../home/home';
 import { SecurityContextHolder } from '../../components/authentication/security-context-holder'
+import { Configuration } from '../../components/configuration';
 
 
 /*
@@ -21,22 +22,19 @@ import { SecurityContextHolder } from '../../components/authentication/security-
   export class LoginPage {
 
     loginForm: FormGroup;
-    private apiUrl: String;
 
     constructor(
       private securityContextHolder: SecurityContextHolder,
       private loadingCtrl: LoadingController,
       private navCtrl: NavController,
       private http: Http,
+      private configuration : Configuration,
       fb: FormBuilder) {      
 
       this.loginForm = fb.group({
         'email': ['', Validators.required],
         'password': ['', Validators.required]
       });
-
-      this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/authentication';
-
     }
 
     ionViewDidLoad() {
@@ -52,7 +50,7 @@ import { SecurityContextHolder } from '../../components/authentication/security-
       if (form.valid) {
         let value = form.value;
         this.http
-        .post(`${this.apiUrl}/login`, JSON.stringify(value))
+        .post(`${this.configuration.wdAuthenticationApiUrl()}/login`, JSON.stringify(value))
         .subscribe((res: Response) => {
           loader.dismiss();
           this.securityContextHolder.setCurrentUser(res.json());

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
-//import { AlertController } from 'ionic-angular';
 import { FormBuilder,FormGroup,Validators } from '@angular/forms';
 import { StartPage } from '../start/start';
 import { Http, Response } from '@angular/http';
+
+import { Configuration } from '../../components/configuration';
 
 
 @Component({
@@ -14,12 +15,12 @@ import { Http, Response } from '@angular/http';
 export class SignupPage {
 
 	signupForm: FormGroup;
-	private apiUrl: String;
 
 	constructor( 
 		private loadingCtrl: LoadingController,
 		private navCtrl: NavController,
 		private http: Http,
+		private configuration: Configuration,
 		fb: FormBuilder) {
 
 		this.signupForm = fb.group({
@@ -30,10 +31,6 @@ export class SignupPage {
 			'dogBreed': ['', Validators.required],
 			'dogBirthdate': ['', Validators.required]
 		});
-
-		this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/authentication';
-
-
 	}
 
 	ionViewDidLoad() {
@@ -48,7 +45,7 @@ export class SignupPage {
 		if (form.valid) {
 			let value = form.value;
 			this.http
-			.post(`${this.apiUrl}/signup`, JSON.stringify(value))
+			.post(`${this.configuration.wdAuthenticationApiUrl()}/signup`, JSON.stringify(value))
 			.subscribe((res: Response) => {
 				if (res.status == 201) {
 					loader.dismiss();

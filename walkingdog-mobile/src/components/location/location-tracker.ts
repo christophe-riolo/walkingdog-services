@@ -3,20 +3,21 @@ import { Geolocation, Geoposition, BackgroundGeolocation } from 'ionic-native';
 import { Http, Response, Headers } from '@angular/http';
 import { SecurityContextHolder,User } from '../authentication/security-context-holder';
 
+import { Configuration } from '../configuration';
+
 @Injectable()
 export class LocationTracker {
 
   private watch: any;    
   private lat: number = 0;
   private lng: number = 0;
-  private apiUrl: String;
   private tracking: boolean;
 
   constructor(
     private securityContextHolder: SecurityContextHolder,
     private zone: NgZone,
-    private http: Http) {
-    this.apiUrl = 'https://walkingdog-services.herokuapp.com/api/location';
+    private http: Http,
+    private configuration: Configuration) {
     this.tracking = false;
   }
 
@@ -102,7 +103,7 @@ export class LocationTracker {
     headers.append('Authorization', this.securityContextHolder.getAuthorizationHeaderValue()); 
 
     this.http.post(
-      `${this.apiUrl}/register`,
+      `${this.configuration.wdLocationApiUrl()}/register`,
       JSON.stringify({
         userUuid: currentUser.getUuid(), 
         dogName: currentUser.getDogName(),
