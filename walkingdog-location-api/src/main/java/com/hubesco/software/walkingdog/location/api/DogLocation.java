@@ -1,5 +1,7 @@
 package com.hubesco.software.walkingdog.location.api;
 
+import java.util.Date;
+
 /**
  * @author paoesco
  */
@@ -10,6 +12,7 @@ public class DogLocation {
     private double longitude;
     private double latitude;
     private boolean walking;
+    private long lastUpdated;
 
     /**
      * vertx json.
@@ -25,6 +28,7 @@ public class DogLocation {
         this.latitude = latitude;
         this.longitude = longitude;
         this.walking = walking;
+        this.lastUpdated = new Date().getTime();
     }
 
     // return distance between this location and that location
@@ -70,6 +74,10 @@ public class DogLocation {
 
     public boolean isWalking() {
         return walking;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
     }
 
 }
