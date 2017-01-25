@@ -78,5 +78,7 @@
         <module>walkingdog-authentication-api</module>
         <module>walkingdog-email-api</module>
         <module>walkingdog-location-api</module>
+        <module>walkingdog-profile-api</module>
+        <module>walkingdog-profile-services</module>
     </modules>
 </project>

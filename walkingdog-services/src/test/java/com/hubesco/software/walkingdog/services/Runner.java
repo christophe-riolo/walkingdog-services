@@ -1,9 +1,14 @@
 package com.hubesco.software.walkingdog.services;
 
+import com.hubesco.software.walkingdog.commons.authentication.KeystoreConfig;
 import com.hubesco.software.walkingdog.location.api.DogLocation;
+import static com.hubesco.software.walkingdog.services.AbstractVerticleTest.jwtToken;
 import com.hubesco.software.walkingdog.services.location.Map;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTOptions;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,6 +27,8 @@ public class Runner {
         System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
         System.setProperty("SENDGRID_API_KEY", "xxx");
+        JWTAuth provider = JWTAuth.create(Vertx.vertx(), KeystoreConfig.config());
+        String jwtToken = provider.generateToken(new JsonObject().put("email", "auth@walkingdog.com"), new JWTOptions().setAlgorithm("HS512"));
 
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(MainVerticle.class.getName(), (result) -> {
@@ -32,9 +39,8 @@ public class Runner {
                 vertx
                         .createHttpClient()
                         .post(defaultPort, "localhost", "/api/location/register")
-                        .handler(handler -> {
-                            // Not needed
-                        })
+                        .handler(null)
+                        .putHeader("Authorization", "Bearer " + jwtToken)
                         .end(Json.encode(getRandomDogLocation(i)));
 
             }

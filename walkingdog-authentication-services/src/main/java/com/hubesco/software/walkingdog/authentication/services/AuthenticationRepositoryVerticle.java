@@ -22,7 +22,7 @@ import org.mindrot.jbcrypt.BCrypt;
  *
  * @author paoesco
  */
-public class UsersDbVerticle extends AbstractVerticle {
+public class AuthenticationRepositoryVerticle extends AbstractVerticle {
 
     private AsyncSQLClient postgreSQLClient;
 
@@ -32,7 +32,7 @@ public class UsersDbVerticle extends AbstractVerticle {
         try {
             postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
         } catch (Exception ex) {
-            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
         fut.complete();
     }
@@ -57,7 +57,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                 default:
             }
         } catch (Exception ex) {
-            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             handler.fail(500, ex.getLocalizedMessage());
         }
     }
@@ -87,7 +87,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                             }
                         });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
                 handler.fail(500, "Cannot connect to database !!!");
             }
         });
@@ -134,7 +134,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                             }
                         });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
                 handler.fail(500, "Cannot connect to database !!!");
             }
         });
@@ -156,7 +156,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                             }
                         });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
                 handler.fail(500, "Cannot connect to database !!!");
             }
         });
@@ -171,7 +171,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             if (result.succeeded()) {
                 promise.complete(result.result().getNumRows() == 1);
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL FROM T_USER WHERE EMAIL = ?", result.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL FROM T_USER WHERE EMAIL = ?", result.cause());
                 promise.fail("Cannot execute query");
             }
         });
@@ -203,12 +203,12 @@ public class UsersDbVerticle extends AbstractVerticle {
                         jsonToken.put("token", token);
                         promise.complete(jsonToken);
                     } else {
-                        Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
+                        Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
                         promise.fail("Cannot execute query !");
                     }
                 });
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot execute query INSERT INTO T_USER (UUID,EMAIL,PASSWORD) values (?,?,?)", result.cause());
                 promise.fail("Cannot execute query !");
             }
         });
@@ -228,7 +228,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                     promise.complete(resultSet.getResults().get(0));
                 }
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL,PASSWORD,ENABLED,TOKEN FROM T_USER WHERE EMAIL = ?", result.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL,PASSWORD,ENABLED,TOKEN FROM T_USER WHERE EMAIL = ?", result.cause());
                 promise.fail("Cannot execute query");
             }
         });
@@ -247,7 +247,7 @@ public class UsersDbVerticle extends AbstractVerticle {
                     promise.complete();
                 }
             } else {
-                Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL FROM T_USER WHERE EMAIL = ?", result.cause());
+                Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "SELECT EMAIL FROM T_USER WHERE EMAIL = ?", result.cause());
                 promise.fail("Cannot execute query");
             }
         });
@@ -275,7 +275,7 @@ public class UsersDbVerticle extends AbstractVerticle {
             config.put("port", dbUri.getPort());
             config.put("database", dbUri.getPath().replaceAll("/", ""));
         } catch (URISyntaxException ex) {
-            Logger.getLogger(UsersDbVerticle.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, null, ex);
         }
         return config;
 
