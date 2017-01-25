@@ -22,13 +22,13 @@ public class DogLocation {
 
     // create and initialize a point with given name and
     // (latitude, longitude) specified in degrees
-    public DogLocation(String userUuid, String name, double latitude, double longitude, boolean walking) {
+    public DogLocation(String userUuid, String name, double latitude, double longitude, boolean walking, long lastUpdated) {
         this.userUuid = userUuid;
         this.dogName = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.walking = walking;
-        this.lastUpdated = new Date().getTime();
+        this.lastUpdated = lastUpdated;
     }
 
     // return distance between this location and that location

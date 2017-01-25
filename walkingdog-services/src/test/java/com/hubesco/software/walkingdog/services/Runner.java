@@ -2,7 +2,6 @@ package com.hubesco.software.walkingdog.services;
 
 import com.hubesco.software.walkingdog.commons.authentication.KeystoreConfig;
 import com.hubesco.software.walkingdog.location.api.DogLocation;
-import static com.hubesco.software.walkingdog.services.AbstractVerticleTest.jwtToken;
 import com.hubesco.software.walkingdog.services.location.Map;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
@@ -11,6 +10,7 @@ import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTOptions;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -52,7 +52,7 @@ public class Runner {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true);
+        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
         return dogLocation;
     }
 

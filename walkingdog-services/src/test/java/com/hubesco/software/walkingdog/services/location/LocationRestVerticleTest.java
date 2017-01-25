@@ -10,6 +10,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import java.awt.geom.Point2D;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -90,7 +91,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // GIVEN
-        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0, true);
+        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0, true, new Date().getTime());
         String jsonUserLocation = Json.encodePrettily(userLocation);
 
         // WHEN
@@ -122,7 +123,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true);
+        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
         return dogLocation;
     }
 

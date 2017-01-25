@@ -11,9 +11,11 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import java.awt.geom.Point2D;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,7 +115,9 @@ public class LocationRestVerticle extends AbstractVerticle {
     private void register(RoutingContext routingContext) {
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "register");
-        vertx.eventBus().send(EventBusEndpoint.LOCATION_DB.address(), routingContext.getBodyAsString(), options);
+        JsonObject dogLocation = routingContext.getBodyAsJson();
+        dogLocation.put("lastUpdated", new Date().getTime());
+        vertx.eventBus().send(EventBusEndpoint.LOCATION_DB.address(), dogLocation.toString(), options);
         routingContext
                 .response()
                 .setStatusCode(204)
