@@ -1,6 +1,10 @@
-package com.hubesco.software.walkingdog.authentication.services;
+package com.hubesco.software.walkingdog.profile.services;
 
+import com.hubesco.software.walkingdog.commons.authentication.KeystoreConfig;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,9 +27,11 @@ import ru.yandex.qatools.embed.postgresql.distribution.Version;
 public abstract class AbstractVerticleTest {
 
     protected static int httpPort;
+    private static JWTAuth provider;
+    protected static String jwtToken;
+    protected static Vertx vertx;
     protected static int postgresPort;
     private static PostgresProcess process;
-    protected static Vertx vertx;
 
     public AbstractVerticleTest() {
     }
@@ -37,8 +43,6 @@ public abstract class AbstractVerticleTest {
         System.setProperty("http.port", String.valueOf(httpPort));
         configureJwt();
         configureEmbeddedPostgres();
-        configureSendGrid();
-//        configureLocalPostgres();
     }
 
     @AfterClass
@@ -49,17 +53,22 @@ public abstract class AbstractVerticleTest {
         vertx.close();
     }
 
-    private static void configureLocalPostgres() {
-        System.setProperty("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/postgres");
-    }
-
     private static void configureJwt() {
         System.setProperty("JWT_KEYSTORE_PASSWORD", "secretpassword");
         System.setProperty("JWT_KEYSTORE_PATH", "keystore_jwt-test.jceks");
+        provider = JWTAuth.create(Vertx.vertx(), KeystoreConfig.config());
+        jwtToken = provider.generateToken(new JsonObject().put("email", "auth@walkingdog.com"), new JWTOptions().setAlgorithm("HS512"));
     }
 
-    private static void configureSendGrid() {
-        System.setProperty("SENDGRID_API_KEY", "xxx");
+    private static int randomPort() {
+        int port = -1;
+        try (ServerSocket socket = new ServerSocket(0)) {
+            port = socket.getLocalPort();
+        } catch (IOException ex) {
+            Logger.getLogger(AbstractVerticleTest.class.getName()).log(Level.SEVERE, null, ex);
+            Assert.fail(ex.getLocalizedMessage());
+        }
+        return port;
     }
 
     private static void configureEmbeddedPostgres() {
@@ -82,17 +91,6 @@ public abstract class AbstractVerticleTest {
         } catch (IOException ex) {
             Logger.getLogger(AbstractVerticleTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private static int randomPort() {
-        int port = -1;
-        try (ServerSocket socket = new ServerSocket(0)) {
-            port = socket.getLocalPort();
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractVerticleTest.class.getName()).log(Level.SEVERE, null, ex);
-            Assert.fail(ex.getLocalizedMessage());
-        }
-        return port;
     }
 
 }
