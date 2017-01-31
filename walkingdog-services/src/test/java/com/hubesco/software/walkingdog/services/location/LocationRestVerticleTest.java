@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,10 +30,6 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
                 context.asyncAssertSuccess());
         vertx.deployVerticle(LocationDbVerticle.class.getName(),
                 context.asyncAssertSuccess());
-    }
-
-    @After
-    public void tearDown(TestContext context) {
     }
 
     @Test

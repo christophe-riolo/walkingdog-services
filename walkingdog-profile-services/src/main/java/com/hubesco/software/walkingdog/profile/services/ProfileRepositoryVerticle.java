@@ -5,9 +5,11 @@ import com.hubesco.software.walkingdog.profile.api.EventBusEndpoint;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.asyncsql.AsyncSQLClient;
 import io.vertx.ext.asyncsql.PostgreSQLClient;
+import io.vertx.ext.sql.SQLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
@@ -52,7 +54,44 @@ public class ProfileRepositoryVerticle extends AbstractVerticle {
     }
 
     private void update(Message<JsonObject> handler) {
-        throw new UnsupportedOperationException("Not yet implemetend");
+        postgreSQLClient.getConnection(connectionHandler -> {
+            if (connectionHandler.succeeded()) {
+                SQLConnection connection = connectionHandler.result();
+                update(connection, handler.body())
+                        .setHandler(updateHandler -> {
+                            if (updateHandler.succeeded()) {
+                                handler.reply(handler.body());
+                            } else {
+                                handler.fail(500, updateHandler.cause().getLocalizedMessage());
+                            }
+                            connection.close();
+                        });
+
+            } else {
+                Logger.getLogger(ProfileRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
+                handler.fail(500, "Cannot connect to database !!!");
+            }
+        });
+    }
+
+    private Future<Void> update(SQLConnection connection, JsonObject profile) {
+        Future<Void> promise = Future.future();
+        JsonArray params = new JsonArray();
+        params.add(profile.getString("dogName"));
+        params.add(profile.getString("dogGender"));
+        params.add(profile.getString("dogBreed"));
+        params.add(profile.getString("dogBirthdate"));
+        params.add(profile.getString("dogUuid"));
+        params.add(profile.getString("uuid"));
+        connection.updateWithParams("UPDATE T_DOG SET NAME=?, GENDER=?, BREED=?, BIRTHDATE=? WHERE UUID=? AND USER_UUID=? ", params, handler -> {
+            if (handler.succeeded()) {
+                promise.complete();
+            } else {
+                Logger.getLogger(ProfileRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot update dog with uuid=" + profile.getString("dogUuid"), handler.cause());
+                promise.fail(handler.cause());
+            }
+        });
+        return promise;
     }
 
     private JsonObject getPostgreSQLClientConfig() {

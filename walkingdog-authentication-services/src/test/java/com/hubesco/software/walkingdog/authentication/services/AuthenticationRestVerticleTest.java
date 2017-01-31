@@ -12,7 +12,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,10 +29,6 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         vertx.deployVerticle(AuthenticationRepositoryVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(JWTVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(EmailVerticle.class.getName(), context.asyncAssertSuccess());
-    }
-
-    @After
-    public void tearDown(TestContext context) {
     }
 
     @Test

@@ -3,11 +3,15 @@ package com.hubesco.software.walkingdog.profile.services;
 import com.hubesco.software.walkingdog.commons.authentication.KeystoreConfig;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.asyncsql.AsyncSQLClient;
+import io.vertx.ext.asyncsql.PostgreSQLClient;
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTOptions;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
@@ -30,8 +34,8 @@ public abstract class AbstractVerticleTest {
     private static JWTAuth provider;
     protected static String jwtToken;
     protected static Vertx vertx;
-    protected static int postgresPort;
     private static PostgresProcess process;
+    protected static AsyncSQLClient postgreSQLClient;
 
     public AbstractVerticleTest() {
     }
@@ -43,6 +47,7 @@ public abstract class AbstractVerticleTest {
         System.setProperty("http.port", String.valueOf(httpPort));
         configureJwt();
         configureEmbeddedPostgres();
+        configureSendGrid();
     }
 
     @AfterClass
@@ -72,14 +77,14 @@ public abstract class AbstractVerticleTest {
     }
 
     private static void configureEmbeddedPostgres() {
-        postgresPort = randomPort();
+        int postgresPort = randomPort();
         System.setProperty("DATABASE_URL", "postgres://postgres:mysecretpassword@localhost:" + postgresPort + "/postgres");
         try {
             // starting Postgres
             final PostgresStarter<PostgresExecutable, PostgresProcess> runtime = PostgresStarter.getDefaultInstance();
             final PostgresConfig config
                     = new PostgresConfig(
-                            Version.V9_6_0,
+                            Version.V9_6_1,
                             new AbstractPostgresConfig.Net("localhost", postgresPort),
                             new AbstractPostgresConfig.Storage("postgres"),
                             new AbstractPostgresConfig.Timeout(),
@@ -88,9 +93,41 @@ public abstract class AbstractVerticleTest {
             process = exec.start();
             String filePath = Thread.currentThread().getContextClassLoader().getResource("1.0.0.sql").getFile();
             process.importFromFile(new File(filePath));
+            postgreSQLClient = PostgreSQLClient.createShared(vertx, getPostgreSQLClientConfig());
         } catch (IOException ex) {
             Logger.getLogger(AbstractVerticleTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private static JsonObject getPostgreSQLClientConfig() {
+        JsonObject config = new JsonObject();
+        String databaseUrl = System.getenv("DATABASE_URL");
+        if (databaseUrl == null) {
+            databaseUrl = System.getProperty("DATABASE_URL");
+        }
+        try {
+            URI dbUri = new URI(databaseUrl);
+            String username = dbUri.getUserInfo().split(":")[0];
+            config.put("username", username);
+            String password = dbUri.getUserInfo().split(":")[1];
+            config.put("password", password);
+            config.put("host", dbUri.getHost());
+            config.put("port", dbUri.getPort());
+            config.put("database", dbUri.getPath().replaceAll("/", ""));
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ProfileRepositoryVerticle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return config;
+
+    }
+
+    protected static void playSql(String fileName) {
+        String filePath = Thread.currentThread().getContextClassLoader().getResource(fileName).getFile();
+        process.importFromFile(new File(filePath));
+    }
+
+    private static void configureSendGrid() {
+        System.setProperty("SENDGRID_API_KEY", "xxx");
     }
 
 }

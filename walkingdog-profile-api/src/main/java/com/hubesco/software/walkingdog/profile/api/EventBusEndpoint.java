@@ -6,7 +6,7 @@ package com.hubesco.software.walkingdog.profile.api;
  */
 public enum EventBusEndpoint {
 
-    PROFILE_REPOSITORY("walkingdog.profiel.repository");
+    PROFILE_REPOSITORY("walkingdog.profile.repository");
 
     private final String address;
 

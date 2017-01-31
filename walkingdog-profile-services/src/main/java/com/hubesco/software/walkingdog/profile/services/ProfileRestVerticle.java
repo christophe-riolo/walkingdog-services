@@ -1,13 +1,14 @@
 package com.hubesco.software.walkingdog.profile.services;
 
+import com.hubesco.software.walkingdog.commons.eventbus.Headers;
 import com.hubesco.software.walkingdog.commons.rest.EndpointHealth;
 import com.hubesco.software.walkingdog.commons.rest.EndpointStatus;
 import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
 import com.hubesco.software.walkingdog.profile.api.EventBusEndpoint;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -55,6 +56,7 @@ public class ProfileRestVerticle extends AbstractVerticle {
      * @param routingContext
      */
     private void health(RoutingContext routingContext) {
+        System.out.println("HEALTH !");
         routingContext
                 .response()
                 .putHeader("content-type", CONTENT_TYPE)
@@ -68,14 +70,18 @@ public class ProfileRestVerticle extends AbstractVerticle {
      */
     public void update(RoutingContext routingContext) {
         //String uuid = routingContext.request().getParam("uuid");
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "update");
         vertx.eventBus().send(
                 EventBusEndpoint.PROFILE_REPOSITORY.address(),
                 routingContext.getBodyAsJson(),
+                options,
                 handler -> {
                     if (handler.succeeded()) {
                         JsonObject user = (JsonObject) handler.result().body();
+                        sendUpdateEmail(user.getString("email"));
                         routingContext.response()
-                                .setStatusCode(201)
+                                .setStatusCode(200)
                                 .putHeader("content-type", CONTENT_TYPE)
                                 .end(user.encode());
                     } else {
@@ -87,6 +93,15 @@ public class ProfileRestVerticle extends AbstractVerticle {
                                 .end();
                     }
                 });
+    }
+    
+     private void sendUpdateEmail(String email) {
+        JsonObject mail = new JsonObject()
+                .put("from", "contact@walkingdogapp.com")
+                .put("to", email)
+                .put("subject", "Walking Dog - Profile updated")
+                .put("content", "Hello ! Your profile has been successfully updated. If you didn't make any changes, please contact <a href='mailto:contact@walkingdogapp.com'>contact@walkingdogapp.com</a>");
+        vertx.eventBus().send(com.hubesco.software.walkingdog.email.api.EventBusEndpoint.EMAIL_SERVICES.address(), mail);
     }
 
 }
