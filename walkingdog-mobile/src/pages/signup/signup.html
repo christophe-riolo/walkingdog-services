@@ -23,6 +23,9 @@
 			</ion-item>
 
 			<h4>About your dog</h4>
+			<button ion-button (click)="presentActionSheet()">Choose a picture...</button>
+			<img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
+
 			<ion-item>
 				<ion-label fixed>Name</ion-label>
 				<ion-input type="text" [formControl]="signupForm.controls['dogName']"></ion-input>
