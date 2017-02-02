@@ -1,8 +1,8 @@
 Walking Dog
 ====
-- TravisCI : [![Build Status](https://travis-ci.org/paoesco/walkingdog.svg?branch=master)](https://travis-ci.org/paoesco/walkingdog)
-- Codacy : [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8cbd8954b874c5eb33aa1cd0b7f32c5)](https://www.codacy.com/app/pao-esco/walkingdog?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paoesco/walkingdog&amp;utm_campaign=Badge_Grade)
-- Codecov : [![codecov](https://codecov.io/gh/paoesco/walkingdog/branch/master/graph/badge.svg)](https://codecov.io/gh/paoesco/walkingdog)
+- TravisCI : [![Build Status](https://travis-ci.org/hubesco/walkingdog-services.svg?branch=master)](https://travis-ci.org/hubesco/walkingdog-services)
+- Codacy : [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8cbd8954b874c5eb33aa1cd0b7f32c5)](https://www.codacy.com/app/pao-esco/walkingdog-services?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paoesco/walkingdog&amp;utm_campaign=Badge_Grade)
+- Codecov : [![codecov](https://codecov.io/gh/hubesco/walkingdog-services/branch/master/graph/badge.svg)](https://codecov.io/gh/hubesco/walkingdog-services)
 
 ## API Documentation
 
@@ -24,60 +24,37 @@ Walking Dog
 `GET /api/authentication/activate?token=xxx`
 
 
-## Environment
+## DevOps
 
-- Integration : https://walkingdog-services.herokuapp.com/
+### Platforms
+
+- Integration : https://walkingdog-services-int.herokuapp.com/
+- Production : https://walkingdog-services-prod.herokuapp.com/
+
+### Dependencies
+
+- Cloudinary
+- Postgres
+- New Relic APM
+- Papertrail
+- SendGrid
+
+### Environment variables
+
+- CLOUDINARY_URL
+- JWT_KEYSTORE_PASSWORD
+- JWT_KEYSTORE_PATH
+- DATABASE_URL
+- NEW_RELIC_LICENSE_KEY
+- NEW_RELIC_LOG
+- PAPERTRAIL_API_TOKEN
+- SENDGRID_PASSWORD
+- SENDGRID_USERNAME
 
 ## Contribute
 
 ### Installation
 
-- Install nodejs
-- `npm install -g ionic`
-- `npm install -g cordova`
-- `git clone https://github.com/paoesco/walkingdog.git`
-- `cd walkingdog`
-- `git config user.name "xxx"`
-- `git config user.email "xxx@xxx.com"`
-- `cd walkingdog-mobile`
-- `npm install`
+- Install Java 8
+- Install Maven 3
 
-
-#### Android platform
-
-
-- `ionic platform add android` (inside walkingdog-mobile folder)
-- Install Java 8 (JDK)
-- Add JAVA_HOME variable (path/to/jdk)
-- Add $JAVA_HOME/bin to $PATH
-- Install Android Studio (SDK and AVD)
-- Add ANDROID_HOME variable (path/to/sdk)
-- Add $ANDROID_HOME/tools to $PATH
-- Add $ANDROID_HOME/platform-tools to $PATH
-- Install SDK API 19 (SDK Platform, Google APIs Intel X86 Atom System Image, Sources for Android SDK)
-- Install Intel HAXM (if not installed by Android Studio or Android SDK)
-
-#### iOS platform
-
-- Install Xcode
-- `xcode-select --install` (after Xcode installation finished)
-- `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`
-- `npm install -g ios-sim`
-- `sudo npm install -g ios-deploy --unsafe-perm=true --allow-root`
-- `ionic platform add ios` (inside walkingdog-mobile folder)
-
-
-### Build
-
-- `ionic serve`
-- for prod mode : `` (https://github.com/driftyco/ionic-app-scripts/blob/master/CHANGELOG.md#entry-point-changes)
-
-#### Android
-
-- `ionic build android`
-- `ionic emulate android` (needs AVD up and running)
-- For prod mode, add prod param : `ionic run android --prod`
-
-#### iOS
-
-// TBC
