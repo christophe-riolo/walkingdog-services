@@ -7,7 +7,7 @@ deploy:
     secure: 2YL8C18HRFDZd+B4rF7XyyNr//d9tverJVJtvDc6JWs+keS+8ITD1vxZFe1vOYr4CcN/ldRQ5BXW9mlBrJfM0I75yANaDlgLe6QjTTIGHK6gt4AuviyN/IFP0eOY5ElbwZRs1qA/JxkjE5edZptu2F16UQ66MpRcCL7JW9E22OlEasm3mo2+jR9u5zZYaZaMfAodpqy0uWF+h8183dThMdgJflNsT3E8jNycsNTobYKNEetxML3dlnS4bhdNmoEof94VSRrS2qsXN8f/uApyI4kyWB8WF+JLFOwVkKnJsa2EaHpf/8MM8zFyXivt+1H/uesnFurcP5ofm9g3GAuJcA1JjZhn+w1Vcx69T2zk+NJEcbdDAyPTfdaK+jPcfyYQFg1QwlMNB2ZxFZSGKmdgPjJeJ2pv/afq2pVk753PSuCnXmtGKVbpp67PXqzqR28MIY+p7dJwYIfau9GxHxbFLtFx5/VawNVVoy2BW4WlXg1bBDsB9CFIeqSWjg2PZW35RLzGT283IbEQtwv9/iiWjVfOolUyLQ/8tudDgSwnlJIpQ+mfrMa7AmFCWPD1h7r8IANgRVGB7YJ7SaO4AZcugGyirgkl2OI4NWFRz1TgC8wUt1hEqHKWgTzlaRAbeyrEMwoey20ZEhwmJbAhiqu7sWac3sqBGYH7kpUoseNQmCc=
   app: walkingdog-services-int
   on:
-    repo: hubesco/walkingdog-services
+    repo: Hubesco/walkingdog-services
     branch: develop
 after_success:
   - bash <(curl -s https://codecov.io/bash)
