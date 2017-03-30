@@ -78,12 +78,13 @@ public class ProfileRepositoryVerticle extends AbstractVerticle {
         Future<Void> promise = Future.future();
         JsonArray params = new JsonArray();
         params.add(profile.getString("dogName"));
+        params.add(profile.getString("dogBase64Image"));
         params.add(profile.getString("dogGender"));
         params.add(profile.getString("dogBreed"));
         params.add(profile.getString("dogBirthdate"));
         params.add(profile.getString("dogUuid"));
         params.add(profile.getString("uuid"));
-        connection.updateWithParams("UPDATE T_DOG SET NAME=?, GENDER=?, BREED=?, BIRTHDATE=? WHERE UUID=? AND USER_UUID=? ", params, handler -> {
+        connection.updateWithParams("UPDATE T_DOG SET NAME=?, BASE64IMAGE=?, GENDER=?, BREED=?, BIRTHDATE=? WHERE UUID=? AND USER_UUID=? ", params, handler -> {
             if (handler.succeeded()) {
                 promise.complete();
             } else {

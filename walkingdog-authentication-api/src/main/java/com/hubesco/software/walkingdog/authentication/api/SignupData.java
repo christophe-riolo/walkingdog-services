@@ -9,6 +9,7 @@ public class SignupData {
     private String email;
     private String password;
     private String dogName;
+    private String dogBase64Image;
     private DogGender dogGender;
     private DogBreed dogBreed;
     private String dogBirthdate;
@@ -31,6 +32,14 @@ public class SignupData {
 
     public String getDogName() {
         return dogName;
+    }
+
+    public String getDogBase64Image() {
+        return dogBase64Image;
+    }
+
+    public void setDogBase64Image(String dogBase64Image) {
+        this.dogBase64Image = dogBase64Image;
     }
 
     public void setDogName(String dogName) {

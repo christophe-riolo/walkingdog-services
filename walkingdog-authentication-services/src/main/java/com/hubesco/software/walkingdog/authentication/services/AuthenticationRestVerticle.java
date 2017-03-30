@@ -1,6 +1,7 @@
 package com.hubesco.software.walkingdog.authentication.services;
 
 import com.hubesco.software.walkingdog.authentication.api.EventBusEndpoint;
+import com.hubesco.software.walkingdog.commons.EnvironmentProperties;
 import com.hubesco.software.walkingdog.commons.eventbus.Headers;
 import com.hubesco.software.walkingdog.commons.rest.RouterSingleton;
 import io.vertx.core.AbstractVerticle;
@@ -98,10 +99,10 @@ public class AuthenticationRestVerticle extends AbstractVerticle {
 
     private void sendActivationEmail(String email, String activationToken) {
         JsonObject mail = new JsonObject()
-                .put("from", "contact@walkingdogapp.com")
+                .put("from", "walkingdog@hubesco.com")
                 .put("to", email)
                 .put("subject", "Walking Dog - Activation email")
-                .put("content", "Hello ! In order to activate your account, please click on the following URL : https://walkingdog-services.herokuapp.com/api/authentication/activate?token=" + activationToken);
+                .put("content", "Hello ! In order to activate your account, please click on the following URL : " + EnvironmentProperties.walkingdogAuthenticationApiUrl() + "/activate?token=" + activationToken);
         vertx.eventBus().send(com.hubesco.software.walkingdog.email.api.EventBusEndpoint.EMAIL_SERVICES.address(), mail);
     }
 

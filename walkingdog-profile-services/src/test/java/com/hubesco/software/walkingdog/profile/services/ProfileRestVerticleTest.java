@@ -91,6 +91,7 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
         profile.put("dogBreed", DogBreed.AMERICAN_WATER_SPANIEL);
         profile.put("dogName", "NewName");
         profile.put("dogBirthdate", "2000-01-01");
+        profile.put("dogBase64Image", "http://image.jpeg");
 
         // WHEN
         vertx.createHttpClient()
@@ -109,14 +110,15 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
     private void checkUpdate(TestContext context, Async async, String dogUuid) {
         postgreSQLClient.getConnection(connectionHandler -> {
             SQLConnection connection = connectionHandler.result();
-            String selectQuery = "SELECT d.UUID, d.NAME, d.GENDER, d.BREED, d.BIRTHDATE, d.USER_UUID from T_DOG d where d.UUID=? ";
+            String selectQuery = "SELECT d.UUID, d.NAME, d.BASE64IMAGE, d.GENDER, d.BREED, d.BIRTHDATE, d.USER_UUID from T_DOG d where d.UUID=? ";
             connection.queryWithParams(selectQuery, new JsonArray().add(dogUuid), resultHandler -> {
                 JsonArray dog = resultHandler.result().getResults().get(0);
                 context.assertEquals("mydogtochange", dog.getString(0));
                 context.assertEquals("NewName", dog.getString(1));
-                context.assertEquals(DogGender.MALE.toString(), dog.getString(2));
-                context.assertEquals(DogBreed.AMERICAN_WATER_SPANIEL.toString(), dog.getString(3));
-                context.assertEquals("2000-01-01", dog.getString(4));
+                context.assertEquals("http://image.jpeg", dog.getString(2));
+                context.assertEquals(DogGender.MALE.toString(), dog.getString(3));
+                context.assertEquals(DogBreed.AMERICAN_WATER_SPANIEL.toString(), dog.getString(4));
+                context.assertEquals("2000-01-01", dog.getString(5));
                 connection.close(handler -> {
                     async.complete();
                 });

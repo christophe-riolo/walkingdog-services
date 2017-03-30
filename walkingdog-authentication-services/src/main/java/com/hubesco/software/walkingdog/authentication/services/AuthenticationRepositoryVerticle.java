@@ -117,9 +117,10 @@ public class AuthenticationRepositoryVerticle extends AbstractVerticle {
                                 loggedUser.put("token", resultUser.getString(4));
                                 loggedUser.put("dogUuid", resultUser.getString(5));
                                 loggedUser.put("dogName", resultUser.getString(6));
-                                loggedUser.put("dogGender", resultUser.getString(7));
-                                loggedUser.put("dogBreed", resultUser.getString(8));
-                                loggedUser.put("dogBirthdate", resultUser.getString(9));
+                                loggedUser.put("dogBase64Image", resultUser.getString(7));
+                                loggedUser.put("dogGender", resultUser.getString(8));
+                                loggedUser.put("dogBreed", resultUser.getString(9));
+                                loggedUser.put("dogBirthdate", resultUser.getString(10));
 
                                 if (checkPassword(userInput.getString("password"), encryptedPassword)) {
                                     handler.reply(loggedUser);
@@ -191,19 +192,20 @@ public class AuthenticationRepositoryVerticle extends AbstractVerticle {
         JsonArray insertDogParams = new JsonArray();
         insertDogParams.add(generateUUID());
         insertDogParams.add(user.getString("dogName"));
+        insertDogParams.add(user.getString("dogBase64Image"));
         insertDogParams.add(user.getString("dogGender"));
         insertDogParams.add(user.getString("dogBreed"));
         insertDogParams.add(user.getString("dogBirthdate"));
         insertDogParams.add(userUuid);
         connection.updateWithParams("INSERT INTO T_USER (UUID,EMAIL,PASSWORD,TOKEN) values (?,?,?,?)", insertUserParams, result -> {
             if (result.succeeded()) {
-                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", insertDogParams, result2 -> {
+                connection.updateWithParams("INSERT INTO T_DOG (UUID,NAME,BASE64IMAGE,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?,?)", insertDogParams, result2 -> {
                     if (result2.succeeded()) {
                         JsonObject jsonToken = new JsonObject();
                         jsonToken.put("token", token);
                         promise.complete(jsonToken);
                     } else {
-                        Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?)", result.cause());
+                        Logger.getLogger(AuthenticationRepositoryVerticle.class.getName()).log(Level.SEVERE, "INSERT INTO T_DOG (UUID,NAME,BASE64IMAGE,GENDER,BREED,BIRTHDATE,USER_UUID) values (?,?,?,?,?,?,?)", result.cause());
                         promise.fail("Cannot execute query !");
                     }
                 });
@@ -219,7 +221,7 @@ public class AuthenticationRepositoryVerticle extends AbstractVerticle {
         Future<JsonArray> promise = Future.future();
         JsonArray params = new JsonArray();
         params.add(email);
-        connection.queryWithParams("SELECT u.UUID,u.EMAIL,u.PASSWORD,u.ENABLED,u.TOKEN,d.UUID,d.NAME,d.GENDER,d.BREED,d.BIRTHDATE FROM T_USER u INNER JOIN T_DOG d on d.USER_UUID = u.UUID WHERE u.EMAIL = ?", params, result -> {
+        connection.queryWithParams("SELECT u.UUID,u.EMAIL,u.PASSWORD,u.ENABLED,u.TOKEN,d.UUID,d.NAME,d.BASE64IMAGE,d.GENDER,d.BREED,d.BIRTHDATE FROM T_USER u INNER JOIN T_DOG d on d.USER_UUID = u.UUID WHERE u.EMAIL = ?", params, result -> {
             if (result.succeeded()) {
                 ResultSet resultSet = result.result();
                 if (resultSet.getResults().isEmpty()) {

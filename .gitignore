@@ -49,3 +49,5 @@ UserInterfaceState.xcuserstate
 /walkingdog-location-api/target/
 /walkingdog-profile-api/target/
 /walkingdog-profile-services/target/
+
+setenv.sh

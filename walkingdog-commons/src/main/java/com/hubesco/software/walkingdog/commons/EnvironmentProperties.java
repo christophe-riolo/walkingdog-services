@@ -32,5 +32,13 @@ public abstract class EnvironmentProperties {
         }
         return property;
     }
+    
+    public static String walkingdogAuthenticationApiUrl() {
+        String property = System.getenv("WALKINGDOG_AUTHENTICATION_API_URL");
+        if (property == null) {
+            property = System.getProperty("WALKINGDOG_AUTHENTICATION_API_URL");
+        }
+        return property;
+    }
 
 }

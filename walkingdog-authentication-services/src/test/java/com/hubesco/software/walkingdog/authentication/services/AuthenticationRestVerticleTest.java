@@ -56,6 +56,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testSignupUserDoesNotExist@walkingdog.com");
         data.setPassword("testSignupUserDoesNotExist");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
@@ -83,6 +84,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testSignupUserExists@walkingdog.com");
         data.setPassword("testSignupUserExists");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
@@ -133,6 +135,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testLoginUserExistsNotEnabled@walkingdog.com");
         data.setPassword("testLoginUserExistsNotEnabled");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
@@ -169,6 +172,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testLoginUserExistsEnabledWrongPassword@walkingdog.com");
         data.setPassword("testLoginUserExistsEnabledWrongPassword");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
@@ -214,6 +218,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testLoginOK@walkingdog.com");
         data.setPassword("testLoginOK");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");
@@ -251,6 +256,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
                                                     context.assertNotNull(loggedUser.getString("token"));
                                                     context.assertNotNull(loggedUser.getString("dogUuid"));
                                                     context.assertTrue(data.getDogName().equals(loggedUser.getString("dogName")));
+                                                    context.assertTrue(data.getDogBase64Image().equals(loggedUser.getString("dogBase64Image")));
                                                     context.assertTrue(data.getDogGender().equals(DogGender.valueOf(loggedUser.getString("dogGender"))));
                                                     context.assertTrue(data.getDogBreed().equals(DogBreed.valueOf(loggedUser.getString("dogBreed"))));
                                                     context.assertTrue(data.getDogBirthdate().equals(loggedUser.getString("dogBirthdate")));
@@ -288,6 +294,7 @@ public class AuthenticationRestVerticleTest extends AbstractVerticleTest {
         data.setEmail("testActivateUserExists@walkingdog.com");
         data.setPassword("testActivateUserExists");
         data.setDogName("Dog 1");
+        data.setDogBase64Image("http://image.png");
         data.setDogGender(DogGender.FEMALE);
         data.setDogBreed(DogBreed.SHIBA_INU);
         data.setDogBirthdate("2015-01-01");

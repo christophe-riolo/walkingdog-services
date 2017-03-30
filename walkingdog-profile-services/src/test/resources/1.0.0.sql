@@ -14,6 +14,7 @@ CREATE TABLE T_USER (
 CREATE TABLE T_DOG (
     UUID varchar(255) PRIMARY KEY,
     NAME varchar(255) NOT NULL,
+    BASE64IMAGE varchar(1000) NOT NULL,
     GENDER varchar(255) NOT NULL,
     BREED varchar (255) NOT NULL,
     BIRTHDATE date,

@@ -50,6 +50,7 @@ Walking Dog
 - PAPERTRAIL_API_TOKEN
 - SENDGRID_PASSWORD
 - SENDGRID_USERNAME
+- WALKINGDOG_AUTHENTICATION_API_URL
 
 ## Contribute
 
@@ -57,4 +58,8 @@ Walking Dog
 
 - Install Java 8
 - Install Maven 3
-
+- `mvn clean install`
+- `docker run --name walkingdogs-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres`
+- Setup schema
+- Create setenv.sh in walkingdog-services directory (ignored by git) and add all environment variables
+- Run local.sh in walking-services (current folder should be walkingdog-services)
