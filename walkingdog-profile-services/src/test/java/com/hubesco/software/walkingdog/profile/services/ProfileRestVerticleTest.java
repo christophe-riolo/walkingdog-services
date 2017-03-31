@@ -117,7 +117,9 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
                     response.bodyHandler(bodyHandler -> {
                         // THEN
                         context.assertEquals(200, response.statusCode());
-                        context.assertEquals("http://getimage.png", bodyHandler.toString());
+                        JsonObject dogImage = bodyHandler.toJsonObject();
+                        context.assertEquals("getImageDogUuid", dogImage.getString("dogUuid"));
+                        context.assertEquals("http://getimage.png", dogImage.getString("dogBase64Image"));
                     });
                 })
                 .putHeader("Authorization", "Bearer " + jwtToken);

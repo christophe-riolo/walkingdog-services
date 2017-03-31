@@ -110,7 +110,7 @@ public class ProfileRestVerticle extends AbstractVerticle {
                         routingContext.response()
                                 .setStatusCode(200)
                                 .putHeader("content-type", CONTENT_TYPE)
-                                .end(user.getString("dogBase64Image"));
+                                .end(user.encode());
                     } else {
                         ReplyException cause = (ReplyException) handler.cause();
                         routingContext.response()
