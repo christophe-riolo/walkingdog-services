@@ -70,7 +70,7 @@ public abstract class AbstractVerticleTest {
             final PostgresStarter<PostgresExecutable, PostgresProcess> runtime = PostgresStarter.getDefaultInstance();
             final PostgresConfig config
                     = new PostgresConfig(
-                            Version.V9_6_0,
+                            Version.V9_6_2,
                             new AbstractPostgresConfig.Net("localhost", postgresPort),
                             new AbstractPostgresConfig.Storage("postgres"),
                             new AbstractPostgresConfig.Timeout(),

@@ -9,14 +9,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <vertx.version>3.3.2</vertx.version>
+        <vertx.version>3.4.1</vertx.version>
+        <postgresql-embedded.version>1.23</postgresql-embedded.version>
     </properties>
-    <!--    
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.1.RELEASE</version>
-    </parent>-->
+
     
     <build>
         <plugins>
@@ -33,7 +29,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.8</version>
+                <version>0.7.9</version>
                 <executions>
                     <execution>
                         <goals>
@@ -60,13 +56,8 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
+                    <version>1.6.0</version>
                 </plugin>
-                <!--                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>1.4.1.RELEASE</version>
-                </plugin>-->
             </plugins>
         </pluginManagement>
     </build>

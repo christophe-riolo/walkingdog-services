@@ -72,7 +72,7 @@
         <dependency>
             <groupId>ru.yandex.qatools.embed</groupId>
             <artifactId>postgresql-embedded</artifactId>
-            <version>1.19</version>
+            <version>${postgresql-embedded.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
