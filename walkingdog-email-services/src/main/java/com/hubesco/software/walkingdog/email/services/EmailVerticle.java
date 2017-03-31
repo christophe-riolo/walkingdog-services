@@ -52,7 +52,7 @@ public class EmailVerticle extends AbstractVerticle {
             request.endpoint = "mail/send";
             request.body = mail.build();
             Response response = sg.api(request);
-            Object[] params = {from.getEmail(), response.statusCode};
+            Object[] params = {to.getEmail(), response.statusCode};
             List<Integer> successCodes = new ArrayList<>();
             successCodes.add(200);
             successCodes.add(202);
