@@ -29,7 +29,7 @@ public class ProfileRestVerticle extends AbstractVerticle {
 
         router.get(API_PREFIX + "/health").handler(this::health);
         router.post(API_PREFIX + "/:uuid").handler(this::update);
-        router.post(API_PREFIX + "/:uuid/dogs/:dogUuid/image").handler(this::getDogImage);
+        router.get(API_PREFIX + "/:uuid/dogs/:dogUuid/image").handler(this::getDogImage);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
