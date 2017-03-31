@@ -29,6 +29,7 @@ public class ProfileRestVerticle extends AbstractVerticle {
 
         router.get(API_PREFIX + "/health").handler(this::health);
         router.post(API_PREFIX + "/:uuid").handler(this::update);
+        router.post(API_PREFIX + "/:uuid/dogs/:dogUuid/image").handler(this::getDogImage);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
@@ -94,8 +95,34 @@ public class ProfileRestVerticle extends AbstractVerticle {
                     }
                 });
     }
-    
-     private void sendUpdateEmail(String email) {
+
+    private void getDogImage(RoutingContext routingContext) {
+        //String uuid = routingContext.request().getParam("uuid");
+        DeliveryOptions options = new DeliveryOptions();
+        options.addHeader(Headers.COMMAND.header(), "getDogImage");
+        vertx.eventBus().send(
+                EventBusEndpoint.PROFILE_REPOSITORY.address(),
+                routingContext.getBodyAsJson(),
+                options,
+                handler -> {
+                    if (handler.succeeded()) {
+                        JsonObject user = (JsonObject) handler.result().body();
+                        routingContext.response()
+                                .setStatusCode(200)
+                                .putHeader("content-type", CONTENT_TYPE)
+                                .end(user.encode());
+                    } else {
+                        ReplyException cause = (ReplyException) handler.cause();
+                        routingContext.response()
+                                .setStatusCode(cause.failureCode())
+                                .setStatusMessage(cause.getLocalizedMessage())
+                                .putHeader("content-type", CONTENT_TYPE)
+                                .end();
+                    }
+                });
+    }
+
+    private void sendUpdateEmail(String email) {
         JsonObject mail = new JsonObject()
                 .put("from", "contact@walkingdogapp.com")
                 .put("to", email)

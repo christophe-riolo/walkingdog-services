@@ -11,6 +11,7 @@ import io.vertx.ext.auth.jwt.JWTOptions;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -52,7 +53,7 @@ public class Runner {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
+        DogLocation dogLocation = new DogLocation(UUID.randomUUID().toString(), "dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
         return dogLocation;
     }
 

@@ -45,6 +45,9 @@ public class ProfileRepositoryVerticle extends AbstractVerticle {
                 case "update":
                     update(handler);
                     break;
+                case "getDogImage":
+                    getDogImage(handler);
+                    break;
                 default:
             }
         } catch (Exception ex) {
@@ -67,6 +70,29 @@ public class ProfileRepositoryVerticle extends AbstractVerticle {
                             connection.close();
                         });
 
+            } else {
+                Logger.getLogger(ProfileRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
+                handler.fail(500, "Cannot connect to database !!!");
+            }
+        });
+    }
+
+    private void getDogImage(Message<JsonObject> handler) {
+        postgreSQLClient.getConnection(connectionHandler -> {
+            if (connectionHandler.succeeded()) {
+                SQLConnection connection = connectionHandler.result();
+                JsonArray params = new JsonArray();
+                params.add(handler.body().getString("dogUuid"));
+                connection.queryWithParams("SELECT BASE64IMAGE from T_DOG where UUID=?", params, queryHandler -> {
+                    if (queryHandler.succeeded()) {
+                        JsonObject result = new JsonObject();
+                        result.put("dogUuid", handler.body().getString("dogUuid"));
+                        result.put("dogBase64Image", queryHandler.result().getResults().get(0).getString(0));
+                        handler.reply(result);
+                    } else {
+                        handler.fail(500, "Failed SELECT BASE64IMAGE from T_DOG where UUID=? / " + params);
+                    }
+                });
             } else {
                 Logger.getLogger(ProfileRepositoryVerticle.class.getName()).log(Level.SEVERE, "Cannot connect to database !!!", connectionHandler.cause());
                 handler.fail(500, "Cannot connect to database !!!");

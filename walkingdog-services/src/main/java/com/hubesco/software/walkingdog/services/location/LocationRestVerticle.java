@@ -117,7 +117,7 @@ public class LocationRestVerticle extends AbstractVerticle {
         options.addHeader(Headers.COMMAND.header(), "register");
         JsonObject dogLocation = routingContext.getBodyAsJson();
         dogLocation.put("lastUpdated", new Date().getTime());
-        vertx.eventBus().send(EventBusEndpoint.LOCATION_DB.address(), dogLocation.toString(), options);
+        vertx.eventBus().send(EventBusEndpoint.LOCATION_DB.address(), dogLocation.encode(), options);
         routingContext
                 .response()
                 .setStatusCode(204)

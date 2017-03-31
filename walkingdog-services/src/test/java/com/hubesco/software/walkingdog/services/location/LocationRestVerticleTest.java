@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
         final Async async = context.async();
 
         // GIVEN
-        DogLocation userLocation = new DogLocation("azertyuiop", "My dog", 0.0, 0.0, true, new Date().getTime());
+        DogLocation userLocation = new DogLocation(UUID.randomUUID().toString(), "azertyuiop", "My dog", 0.0, 0.0, true, new Date().getTime());
         String jsonUserLocation = Json.encodePrettily(userLocation);
 
         // WHEN
@@ -118,7 +119,7 @@ public class LocationRestVerticleTest extends AbstractVerticleTest {
     private static DogLocation getRandomDogLocation(int index) {
         Map map = createMap();
         Point2D randomPoint = getRandomPointInsideMap(map);
-        DogLocation dogLocation = new DogLocation("dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
+        DogLocation dogLocation = new DogLocation(UUID.randomUUID().toString(), "dog" + index, "Dog " + index, randomPoint.getY(), randomPoint.getX(), true, new Date().getTime());
         return dogLocation;
     }
 

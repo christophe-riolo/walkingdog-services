@@ -1,13 +1,12 @@
 package com.hubesco.software.walkingdog.location.api;
 
-import java.util.Date;
-
 /**
  * @author paoesco
  */
 public class DogLocation {
 
     private String userUuid;
+    private String dogUuid;
     private String dogName;
     private double longitude;
     private double latitude;
@@ -22,9 +21,10 @@ public class DogLocation {
 
     // create and initialize a point with given name and
     // (latitude, longitude) specified in degrees
-    public DogLocation(String userUuid, String name, double latitude, double longitude, boolean walking, long lastUpdated) {
+    public DogLocation(String userUuid, String dogUuid, String name, double latitude, double longitude, boolean walking, long lastUpdated) {
         this.userUuid = userUuid;
         this.dogName = name;
+        this.dogUuid = dogUuid;
         this.latitude = latitude;
         this.longitude = longitude;
         this.walking = walking;
@@ -53,11 +53,15 @@ public class DogLocation {
     // return string representation of this point
     @Override
     public String toString() {
-        return dogName + " (" + latitude + ", " + longitude + ")";
+        return "DogLocation{" + "userUuid=" + userUuid + ", dogUuid=" + dogUuid + ", dogName=" + dogName + ", longitude=" + longitude + ", latitude=" + latitude + ", walking=" + walking + ", lastUpdated=" + lastUpdated + '}';
     }
 
     public String getUserUuid() {
         return userUuid;
+    }
+
+    public String getDogUuid() {
+        return dogUuid;
     }
 
     public String getDogName() {

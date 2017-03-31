@@ -50,7 +50,7 @@ public class LocationDbVerticle extends AbstractVerticle {
 
     private void register(Message<String> handler) {
         DogLocation dogLocation = Json.decodeValue(handler.body(), DogLocation.class);
-        dogLocations.put(dogLocation.getUserUuid(), handler.body());
+        dogLocations.put(dogLocation.getDogUuid(), handler.body());
     }
 
     private void dogs(Message<String> handler) {
@@ -67,13 +67,13 @@ public class LocationDbVerticle extends AbstractVerticle {
         long currentTimestamp = new Date().getTime();
         // Collects locations to be removed
         List<String> locationsToRemove = new ArrayList<>();
-        dogLocations.keySet().stream().filter((uuid) -> {
-            DogLocation dogLocation = Json.decodeValue(dogLocations.get(uuid), DogLocation.class);
+        dogLocations.keySet().stream().filter((dogUuid) -> {
+            DogLocation dogLocation = Json.decodeValue(dogLocations.get(dogUuid), DogLocation.class);
             return (currentTimestamp - dogLocation.getLastUpdated()) > getOneMinute();
         }).collect(Collectors.toList());
         // Removes all the location
-        locationsToRemove.forEach(uuid -> {
-            dogLocations.remove(uuid);
+        locationsToRemove.forEach(dogUuid -> {
+            dogLocations.remove(dogUuid);
         });
         log.debug("END cleanLocations");
     }

@@ -28,6 +28,7 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
         vertx.deployVerticle(ProfileRestVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(ProfileRepositoryVerticle.class.getName(), context.asyncAssertSuccess());
         vertx.deployVerticle(EmailVerticle.class.getName(), context.asyncAssertSuccess());
+        playSql("ProfileRestVerticleTest.sql");
     }
 
     @Test
@@ -78,8 +79,6 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
 
         // GIVEN
         // User in base
-        playSql("ProfileRestVerticleTest.sql");
-
         // Request
         JsonObject profile = new JsonObject();
         String uuid = "userwithdog";
@@ -104,6 +103,26 @@ public class ProfileRestVerticleTest extends AbstractVerticleTest {
                 })
                 .putHeader("Authorization", "Bearer " + jwtToken)
                 .end(profile.encode());
+
+    }
+
+    @Test
+    public void testGetDogImage(TestContext context) {
+        // GIVEN
+        // User in base
+
+        // WHEN
+        vertx.createHttpClient()
+                .get(httpPort, "localhost", "/api/profile/getImageUserUuid/dogs/getImageDogUuid/image", response -> {
+                    response.bodyHandler(bodyHandler -> {
+                        // THEN
+                        context.assertEquals(200, response.statusCode());
+                        JsonObject dogImage = bodyHandler.toJsonObject();
+                        context.assertEquals("getImageDogUuid", dogImage.getString("dogUuid"));
+                        context.assertEquals("http://getimage.png", dogImage.getString("dogBase64Image"));
+                    });
+                })
+                .putHeader("Authorization", "Bearer " + jwtToken);
 
     }
 
