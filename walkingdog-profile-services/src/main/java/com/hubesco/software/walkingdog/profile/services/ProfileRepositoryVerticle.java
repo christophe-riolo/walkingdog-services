@@ -81,16 +81,18 @@ public class ProfileRepositoryVerticle extends AbstractVerticle {
         postgreSQLClient.getConnection(connectionHandler -> {
             if (connectionHandler.succeeded()) {
                 SQLConnection connection = connectionHandler.result();
+                JsonObject body = handler.body();
                 JsonArray params = new JsonArray();
-                params.add(handler.body().getString("dogUuid"));
-                connection.queryWithParams("SELECT BASE64IMAGE from T_DOG where UUID=?", params, queryHandler -> {
+                params.add(body.getString("dogUuid"));
+                params.add(body.getString("uuid"));
+                connection.queryWithParams("SELECT BASE64IMAGE from T_DOG where UUID=? and USER_UUID=?", params, queryHandler -> {
                     if (queryHandler.succeeded()) {
                         JsonObject result = new JsonObject();
                         result.put("dogUuid", handler.body().getString("dogUuid"));
                         result.put("dogBase64Image", queryHandler.result().getResults().get(0).getString(0));
                         handler.reply(result);
                     } else {
-                        handler.fail(500, "Failed SELECT BASE64IMAGE from T_DOG where UUID=? / " + params);
+                        handler.fail(500, "Failed SELECT BASE64IMAGE from T_DOG where UUID=? and USER_UUID=? / " + params);
                     }
                 });
             } else {

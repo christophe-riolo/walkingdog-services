@@ -97,12 +97,16 @@ public class ProfileRestVerticle extends AbstractVerticle {
     }
 
     private void getDogImage(RoutingContext routingContext) {
-        //String uuid = routingContext.request().getParam("uuid");
+        String uuid = routingContext.request().getParam("uuid");
+        String dogUuid = routingContext.request().getParam("dogUuid");
+        JsonObject params = new JsonObject()
+                .put("uuid", uuid)
+                .put("dogUuid", dogUuid);
         DeliveryOptions options = new DeliveryOptions();
         options.addHeader(Headers.COMMAND.header(), "getDogImage");
         vertx.eventBus().send(
                 EventBusEndpoint.PROFILE_REPOSITORY.address(),
-                routingContext.getBodyAsJson(),
+                params,
                 options,
                 handler -> {
                     if (handler.succeeded()) {
