@@ -15,6 +15,7 @@
 # pylint: disable=too-few-public-methods,function-redefined
 
 from datetime import datetime
+import _io
 import attr
 
 
@@ -49,7 +50,7 @@ class Dog:
     """
     uuid: str = attr.ib()
     name: str = attr.ib()
-    picture: str = attr.ib()
+    picture: _io.BufferedReader = attr.ib()
     rate: float = attr.ib()
     location: Location = attr.ib()
     masters: list = attr.ib()
